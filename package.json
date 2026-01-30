@@ -11,12 +11,16 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
-    "db:test": "tsx src/db/test.ts"
+    "db:test": "tsx --env-file=.env src/db/test.ts",
+    "db:seed": "tsx --env-file=.env src/db/seed.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.37.1",
     "@clerk/themes": "^2.4.51",
     "@neondatabase/serverless": "^1.0.2",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

@@ -1,7 +1,9 @@
-import { usersTable } from './schema';
+import { customersTable, customerNotesTable } from './schema';
 
-// Type for inserting a new user (without auto-generated fields)
-export type InsertUser = typeof usersTable.$inferInsert;
+// Customer types
+export type InsertCustomer = typeof customersTable.$inferInsert;
+export type SelectCustomer = typeof customersTable.$inferSelect;
 
-// Type for selecting a user (with all fields including auto-generated ones)
-export type SelectUser = typeof usersTable.$inferSelect;
+// Customer Note types
+export type InsertCustomerNote = typeof customerNotesTable.$inferInsert;
+export type SelectCustomerNote = typeof customerNotesTable.$inferSelect;

@@ -9,14 +9,14 @@ All database interactions in this project **must** use Drizzle ORM with the sche
 
 - **Database schema**: [src/db/schema.ts](mdc:src/db/schema.ts)
 - All table definitions are exported from this file
-- Currently defined tables: `usersTable`
+- Currently defined tables: `customersTable`, `customerNotesTable`
 
 ## Guidelines
 
 ### 1. Always Import from Schema
 
 ```typescript
-import { usersTable } from "@/db/schema";
+import { customersTable, customerNotesTable } from "@/db/schema";
 ```
 
 ### 2. Use Drizzle Query Syntax
@@ -26,47 +26,88 @@ Always use Drizzle's query builder methods instead of raw SQL:
 ```typescript
 // ✅ Correct - Use Drizzle queries
 import { db } from "@/db";
-import { usersTable } from "@/db/schema";
+import { customersTable, customerNotesTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-// Select
-const users = await db.select().from(usersTable);
-const user = await db.select().from(usersTable).where(eq(usersTable.id, 1));
+// Select customers for a user
+const customers = await db
+  .select()
+  .from(customersTable)
+  .where(eq(customersTable.userId, userId));
 
-// Insert
-const newUser = await db.insert(usersTable).values({
-  name: "John Doe",
-  age: 30,
-  email: "john@example.com"
-}).returning();
+// Get a specific customer
+const customer = await db
+  .select()
+  .from(customersTable)
+  .where(eq(customersTable.id, 1));
 
-// Update
-await db.update(usersTable)
-  .set({ age: 31 })
-  .where(eq(usersTable.id, 1));
+// Insert a customer
+const newCustomer = await db
+  .insert(customersTable)
+  .values({
+    name: "Acme Corp",
+    lastPatchDate: new Date("2024-01-15"),
+    topology: "prod",
+    dumbledoreStage: 5,
+    userId: "user_123",
+  })
+  .returning();
 
-// Delete
-await db.delete(usersTable).where(eq(usersTable.id, 1));
+// Add a note to a customer
+const newNote = await db
+  .insert(customerNotesTable)
+  .values({
+    customerId: 1,
+    note: "Initial setup completed",
+    userId: "user_123",
+  })
+  .returning();
+
+// Get all notes for a customer
+const notes = await db
+  .select()
+  .from(customerNotesTable)
+  .where(eq(customerNotesTable.customerId, 1));
+
+// Update customer
+await db
+  .update(customersTable)
+  .set({ 
+    lastPatchDate: new Date(),
+    topology: "stage",
+    dumbledoreStage: 6,
+    updatedAt: new Date(),
+  })
+  .where(eq(customersTable.id, 1));
+
+// Delete customer (notes will cascade delete)
+await db
+  .delete(customersTable)
+  .where(eq(customersTable.id, 1));
 ```
 
 ### 3. Never Use Raw SQL
 
 ```typescript
 // ❌ Incorrect - Do not use raw SQL queries
-await db.execute("SELECT * FROM users");
+await db.execute("SELECT * FROM customers");
 ```
 
 ### 4. Type Safety
 
 - Leverage Drizzle's type inference for type-safe queries
-- Use `InferSelectModel` and `InferInsertModel` for type definitions:
+- Use `$inferInsert` and `$inferSelect` for type definitions:
 
 ```typescript
-import { type InferSelectModel, type InferInsertModel } from "drizzle-orm";
-import { usersTable } from "@/db/schema";
+import { customersTable, customerNotesTable } from "@/db/schema";
 
-export type User = InferSelectModel<typeof usersTable>;
-export type NewUser = InferInsertModel<typeof usersTable>;
+// Customer types
+export type InsertCustomer = typeof customersTable.$inferInsert;
+export type SelectCustomer = typeof customersTable.$inferSelect;
+
+// Customer Note types
+export type InsertCustomerNote = typeof customerNotesTable.$inferInsert;
+export type SelectCustomerNote = typeof customerNotesTable.$inferSelect;
 ```
 
 ### 5. Add New Tables to Schema
