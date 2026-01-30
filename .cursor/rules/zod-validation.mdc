@@ -1,0 +1,460 @@
+---
+alwaysApply: true
+---
+
+# Zod Validation for Server Actions
+
+**All data passed to server actions MUST be validated using Zod.**
+
+## 🔒 CRITICAL RULES
+
+### 1. NEVER Use FormData as Type
+
+**❌ FORBIDDEN - FormData as parameter type:**
+
+```typescript
+// ❌ NEVER do this
+"use server";
+
+export async function createPost(formData: FormData) {
+  const title = formData.get("title") as string;
+  const content = formData.get("content") as string;
+  // No validation!
+}
+```
+
+### 2. ALWAYS Use Zod Schema + TypeScript Type
+
+**✅ CORRECT - Zod validation with TypeScript types:**
+
+```typescript
+// app/actions/posts.ts
+"use server";
+
+import { z } from "zod";
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/db";
+import { postsTable } from "@/db/schema";
+import { revalidatePath } from "next/cache";
+
+// 1. Define Zod schema
+const createPostSchema = z.object({
+  title: z.string().min(1, "Title is required").max(200, "Title too long"),
+  content: z.string().min(10, "Content must be at least 10 characters"),
+});
+
+// 2. Infer TypeScript type from schema
+type CreatePostInput = z.infer<typeof createPostSchema>;
+
+// 3. Use typed parameter and validate
+export async function createPost(data: CreatePostInput) {
+  const { userId } = await auth();
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+  
+  // Validate input data
+  const validatedData = createPostSchema.parse(data);
+  
+  await db.insert(postsTable).values({
+    ...validatedData,
+    userId,
+  });
+  
+  revalidatePath("/dashboard");
+}
+```
+
+## 📋 Complete Pattern Examples
+
+### Example 1: Create Operation
+
+```typescript
+// app/actions/posts.ts
+"use server";
+
+import { z } from "zod";
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/db";
+import { postsTable } from "@/db/schema";
+import { revalidatePath } from "next/cache";
+
+// Schema definition
+const createPostSchema = z.object({
+  title: z.string().min(1).max(200),
+  content: z.string().min(10).max(10000),
+  tags: z.array(z.string()).optional(),
+});
+
+// Type inference
+type CreatePostInput = z.infer<typeof createPostSchema>;
+
+// Server action
+export async function createPost(data: CreatePostInput) {
+  const { userId } = await auth();
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+  
+  // Validate - throws ZodError if invalid
+  const validated = createPostSchema.parse(data);
+  
+  await db.insert(postsTable).values({
+    ...validated,
+    userId,
+  });
+  
+  revalidatePath("/posts");
+  
+  return { success: true };
+}
+```
+
+**Client Component calling the action:**
+
+```typescript
+// app/components/CreatePostForm.tsx
+"use client";
+
+import { createPost } from "@/app/actions/posts";
+import { useTransition } from "react";
+import { toast } from "sonner";
+
+export function CreatePostForm() {
+  const [isPending, startTransition] = useTransition();
+  
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    
+    // Extract and type data
+    const data = {
+      title: formData.get("title") as string,
+      content: formData.get("content") as string,
+    };
+    
+    startTransition(async () => {
+      try {
+        await createPost(data);
+        toast.success("Post created!");
+        e.currentTarget.reset();
+      } catch (error) {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        }
+      }
+    });
+  };
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="title" required />
+      <textarea name="content" required />
+      <button type="submit" disabled={isPending}>
+        {isPending ? "Creating..." : "Create"}
+      </button>
+    </form>
+  );
+}
+```
+
+### Example 2: Update Operation
+
+```typescript
+// app/actions/posts.ts
+"use server";
+
+import { z } from "zod";
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/db";
+import { postsTable } from "@/db/schema";
+import { eq, and } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+
+const updatePostSchema = z.object({
+  id: z.number().positive(),
+  title: z.string().min(1).max(200).optional(),
+  content: z.string().min(10).max(10000).optional(),
+});
+
+type UpdatePostInput = z.infer<typeof updatePostSchema>;
+
+export async function updatePost(data: UpdatePostInput) {
+  const { userId } = await auth();
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+  
+  const validated = updatePostSchema.parse(data);
+  
+  const result = await db
+    .update(postsTable)
+    .set({
+      title: validated.title,
+      content: validated.content,
+    })
+    .where(
+      and(
+        eq(postsTable.id, validated.id),
+        eq(postsTable.userId, userId)
+      )
+    )
+    .returning();
+  
+  if (result.length === 0) {
+    throw new Error("Post not found or unauthorized");
+  }
+  
+  revalidatePath("/posts");
+  
+  return { success: true };
+}
+```
+
+### Example 3: Delete Operation
+
+```typescript
+// app/actions/posts.ts
+"use server";
+
+import { z } from "zod";
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/db";
+import { postsTable } from "@/db/schema";
+import { eq, and } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+
+const deletePostSchema = z.object({
+  id: z.number().positive(),
+});
+
+type DeletePostInput = z.infer<typeof deletePostSchema>;
+
+export async function deletePost(data: DeletePostInput) {
+  const { userId } = await auth();
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+  
+  const validated = deletePostSchema.parse(data);
+  
+  const result = await db
+    .delete(postsTable)
+    .where(
+      and(
+        eq(postsTable.id, validated.id),
+        eq(postsTable.userId, userId)
+      )
+    )
+    .returning();
+  
+  if (result.length === 0) {
+    throw new Error("Post not found or unauthorized");
+  }
+  
+  revalidatePath("/posts");
+  
+  return { success: true };
+}
+```
+
+### Example 4: Complex Nested Schema
+
+```typescript
+// app/actions/users.ts
+"use server";
+
+import { z } from "zod";
+
+const updateProfileSchema = z.object({
+  name: z.string().min(2).max(100),
+  email: z.string().email(),
+  age: z.number().int().min(13).max(120).optional(),
+  preferences: z.object({
+    newsletter: z.boolean(),
+    notifications: z.object({
+      email: z.boolean(),
+      push: z.boolean(),
+    }),
+  }).optional(),
+  socialLinks: z.array(
+    z.object({
+      platform: z.enum(["twitter", "github", "linkedin"]),
+      url: z.string().url(),
+    })
+  ).optional(),
+});
+
+type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
+
+export async function updateProfile(data: UpdateProfileInput) {
+  const { userId } = await auth();
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+  
+  // Validate with custom error handling
+  const result = updateProfileSchema.safeParse(data);
+  
+  if (!result.success) {
+    const errors = result.error.flatten().fieldErrors;
+    throw new Error(`Validation failed: ${JSON.stringify(errors)}`);
+  }
+  
+  const validated = result.data;
+  
+  // Proceed with database update
+  // ...
+  
+  revalidatePath("/profile");
+  
+  return { success: true };
+}
+```
+
+## 📋 Best Practices
+
+### 1. Schema Organization
+
+```typescript
+// lib/validations/posts.ts
+import { z } from "zod";
+
+export const createPostSchema = z.object({
+  title: z.string().min(1).max(200),
+  content: z.string().min(10).max(10000),
+});
+
+export const updatePostSchema = z.object({
+  id: z.number().positive(),
+  title: z.string().min(1).max(200).optional(),
+  content: z.string().min(10).max(10000).optional(),
+});
+
+export type CreatePostInput = z.infer<typeof createPostSchema>;
+export type UpdatePostInput = z.infer<typeof updatePostSchema>;
+```
+
+```typescript
+// app/actions/posts.ts
+"use server";
+
+import { createPostSchema, type CreatePostInput } from "@/lib/validations/posts";
+
+export async function createPost(data: CreatePostInput) {
+  const validated = createPostSchema.parse(data);
+  // ...
+}
+```
+
+### 2. Error Handling Options
+
+**Option A: Let Zod throw (simple):**
+
+```typescript
+export async function createPost(data: CreatePostInput) {
+  const validated = createPostSchema.parse(data); // Throws on invalid
+  // ...
+}
+```
+
+**Option B: Safe parse with custom errors:**
+
+```typescript
+export async function createPost(data: CreatePostInput) {
+  const result = createPostSchema.safeParse(data);
+  
+  if (!result.success) {
+    const errors = result.error.flatten().fieldErrors;
+    throw new Error(`Invalid data: ${JSON.stringify(errors)}`);
+  }
+  
+  const validated = result.data;
+  // ...
+}
+```
+
+### 3. Reusable Validation Helpers
+
+```typescript
+// lib/validations/common.ts
+import { z } from "zod";
+
+export const idSchema = z.number().positive();
+export const emailSchema = z.string().email();
+export const urlSchema = z.string().url();
+export const slugSchema = z.string().regex(/^[a-z0-9-]+$/);
+```
+
+```typescript
+// lib/validations/posts.ts
+import { z } from "zod";
+import { idSchema, slugSchema } from "./common";
+
+export const createPostSchema = z.object({
+  title: z.string().min(1).max(200),
+  slug: slugSchema,
+  content: z.string().min(10),
+});
+
+export const deletePostSchema = z.object({
+  id: idSchema,
+});
+```
+
+## ❌ FORBIDDEN PATTERNS
+
+```typescript
+// ❌ NEVER use FormData as type
+export async function createPost(formData: FormData) { }
+
+// ❌ NEVER use any
+export async function createPost(data: any) { }
+
+// ❌ NEVER skip validation
+export async function createPost(data: CreatePostInput) {
+  // Missing: schema.parse(data)
+  await db.insert(postsTable).values(data);
+}
+
+// ❌ NEVER use untyped objects
+export async function createPost(data: { title: string }) {
+  // Missing: Zod schema definition
+}
+
+// ❌ NEVER trust client data without validation
+export async function createPost(data: CreatePostInput) {
+  // Even if TypeScript types match, still validate!
+  const validated = createPostSchema.parse(data);
+}
+```
+
+## ✅ CHECKLIST
+
+Before creating a server action, verify:
+
+- [ ] Zod schema is defined for input validation
+- [ ] TypeScript type is inferred using `z.infer<typeof schema>`
+- [ ] Server action parameter uses the inferred type (NOT FormData)
+- [ ] `schema.parse(data)` or `schema.safeParse(data)` is called
+- [ ] Validation happens before any database operations
+- [ ] Schemas are organized in `lib/validations/` for reuse
+- [ ] Error handling is implemented (try/catch or safeParse)
+
+## 📚 Reference
+
+- Zod documentation: https://zod.dev
+- Next.js Server Actions: https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations
+
+## 🔧 Installation
+
+If Zod is not installed:
+
+```bash
+npm install zod
+```
