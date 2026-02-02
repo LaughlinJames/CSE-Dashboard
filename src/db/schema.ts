@@ -1,4 +1,4 @@
-import { integer, pgTable, varchar, text, timestamp, date } from "drizzle-orm/pg-core";
+import { integer, pgTable, varchar, text, timestamp, date, boolean } from "drizzle-orm/pg-core";
 
 // Customers table - track customer details
 export const customersTable = pgTable("customers", {
@@ -7,6 +7,7 @@ export const customersTable = pgTable("customers", {
   lastPatchDate: date("last_patch_date"),
   topology: varchar({ length: 20 }).notNull().default("dev"), // dev, qa, stage, prod
   dumbledoreStage: integer("dumbledore_stage").notNull().default(1), // 1-9
+  archived: boolean().notNull().default(false), // Archive status
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   userId: text("user_id").notNull(), // Clerk user ID who owns this customer record
