@@ -119,7 +119,7 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
                 Latest Note ({formatDate(customer.latestNoteDate)}):
               </p>
               <div 
-                className="text-sm line-clamp-3 prose prose-sm max-w-none prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline"
+                className="text-sm text-foreground line-clamp-3 prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline"
                 dangerouslySetInnerHTML={{ __html: customer.latestNote }}
               />
             </div>
