@@ -3,10 +3,9 @@ import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { customersTable, customerNotesTable } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { AddCustomerDialog } from "@/components/add-customer-dialog";
-import { ArchiveButton } from "@/components/archive-button";
+import { CustomerCard } from "@/components/customer-card";
 
 // Define types for the query results
 type CustomerWithNote = {
@@ -61,33 +60,6 @@ export default async function DashboardPage() {
   const activeCustomers = customers.filter(c => !c.archived);
   const archivedCustomers = customers.filter(c => c.archived);
 
-  // Helper function to format dates
-  const formatDate = (date: string | Date | null) => {
-    if (!date) return "N/A";
-    const d = typeof date === "string" ? new Date(date) : date;
-    return d.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  // Helper function to get badge variant based on topology
-  const getTopologyVariant = (topology: string): "default" | "secondary" | "destructive" | "outline" => {
-    switch (topology.toLowerCase()) {
-      case "prod":
-        return "destructive";
-      case "stage":
-        return "default";
-      case "qa":
-        return "secondary";
-      case "dev":
-        return "outline";
-      default:
-        return "secondary";
-    }
-  };
-
   return (
     <div className="container mx-auto p-6">
       <div className="mb-8">
@@ -118,62 +90,7 @@ export default async function DashboardPage() {
               <h2 className="text-2xl font-semibold mb-4">Active Customers</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {activeCustomers.map((customer) => (
-                  <Card key={customer.id} className="flex flex-col">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <CardTitle className="text-xl flex-1">{customer.name}</CardTitle>
-                        <div className="flex gap-2 items-start">
-                          <div className="flex gap-2">
-                            <Badge variant={getTopologyVariant(customer.topology)}>
-                              {customer.topology.toUpperCase()}
-                            </Badge>
-                            <Badge variant="outline">
-                              Stage {customer.dumbledoreStage}
-                            </Badge>
-                          </div>
-                          <ArchiveButton customerId={customer.id} archived={customer.archived} />
-                        </div>
-                      </div>
-                      <CardDescription>
-                        Customer ID: {customer.id}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-1 space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Last Patch:</span>
-                          <span className="font-medium">
-                            {formatDate(customer.lastPatchDate)}
-                          </span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Updated:</span>
-                          <span className="font-medium">
-                            {formatDate(customer.updatedAt)}
-                          </span>
-                        </div>
-                      </div>
-
-                      {customer.latestNote && (
-                        <div className="pt-4 border-t">
-                          <p className="text-xs text-muted-foreground mb-2">
-                            Latest Note ({formatDate(customer.latestNoteDate)}):
-                          </p>
-                          <p className="text-sm line-clamp-3">
-                            {customer.latestNote}
-                          </p>
-                        </div>
-                      )}
-
-                      {!customer.latestNote && (
-                        <div className="pt-4 border-t">
-                          <p className="text-xs text-muted-foreground italic">
-                            No notes yet
-                          </p>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                  <CustomerCard key={customer.id} customer={customer} />
                 ))}
               </div>
             </div>
@@ -190,62 +107,7 @@ export default async function DashboardPage() {
               <h2 className="text-2xl font-semibold mb-4 text-muted-foreground">Archived Customers</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {archivedCustomers.map((customer) => (
-                  <Card key={customer.id} className="flex flex-col opacity-60">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <CardTitle className="text-xl flex-1">{customer.name}</CardTitle>
-                        <div className="flex gap-2 items-start">
-                          <div className="flex gap-2">
-                            <Badge variant={getTopologyVariant(customer.topology)}>
-                              {customer.topology.toUpperCase()}
-                            </Badge>
-                            <Badge variant="outline">
-                              Stage {customer.dumbledoreStage}
-                            </Badge>
-                          </div>
-                          <ArchiveButton customerId={customer.id} archived={customer.archived} />
-                        </div>
-                      </div>
-                      <CardDescription>
-                        Customer ID: {customer.id}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-1 space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Last Patch:</span>
-                          <span className="font-medium">
-                            {formatDate(customer.lastPatchDate)}
-                          </span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Updated:</span>
-                          <span className="font-medium">
-                            {formatDate(customer.updatedAt)}
-                          </span>
-                        </div>
-                      </div>
-
-                      {customer.latestNote && (
-                        <div className="pt-4 border-t">
-                          <p className="text-xs text-muted-foreground mb-2">
-                            Latest Note ({formatDate(customer.latestNoteDate)}):
-                          </p>
-                          <p className="text-sm line-clamp-3">
-                            {customer.latestNote}
-                          </p>
-                        </div>
-                      )}
-
-                      {!customer.latestNote && (
-                        <div className="pt-4 border-t">
-                          <p className="text-xs text-muted-foreground italic">
-                            No notes yet
-                          </p>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                  <CustomerCard key={customer.id} customer={customer} archived />
                 ))}
               </div>
             </div>
