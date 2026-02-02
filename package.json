@@ -12,7 +12,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:test": "tsx --env-file=.env src/db/test.ts",
-    "db:seed": "tsx --env-file=.env src/db/seed.ts"
+    "db:seed": "tsx --env-file=.env src/db/seed.ts",
+    "db:clear-notes": "tsx --env-file=.env src/db/clear-notes.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.37.1",
