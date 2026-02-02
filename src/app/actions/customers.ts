@@ -201,3 +201,88 @@ export async function getCustomerNotes(customerId: number) {
 
   return notes;
 }
+
+// Zod schema for weekly report
+const weeklyReportSchema = z.object({
+  weekEndingDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
+});
+
+type WeeklyReportInput = z.infer<typeof weeklyReportSchema>;
+
+export type WeeklyReportData = {
+  customer: {
+    id: number;
+    name: string;
+    lastPatchDate: string | null;
+    lastPatchVersion: string | null;
+    topology: string;
+    dumbledoreStage: number;
+  };
+  notes: Array<{
+    id: number;
+    note: string;
+    createdAt: Date;
+  }>;
+};
+
+export async function getWeeklyReport(data: WeeklyReportInput) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  // Validate input data
+  const validatedData = weeklyReportSchema.parse(data);
+
+  // Calculate week start date (7 days before end date)
+  const weekEndDate = new Date(validatedData.weekEndingDate);
+  weekEndDate.setHours(23, 59, 59, 999);
+  
+  const weekStartDate = new Date(weekEndDate);
+  weekStartDate.setDate(weekStartDate.getDate() - 6);
+  weekStartDate.setHours(0, 0, 0, 0);
+
+  // Fetch all customers for this user
+  const customers = await db
+    .select()
+    .from(customersTable)
+    .where(eq(customersTable.userId, userId));
+
+  // Fetch all notes for the week for all customers
+  const allNotes = await db
+    .select()
+    .from(customerNotesTable)
+    .where(eq(customerNotesTable.userId, userId));
+
+  // Filter notes by date range in JavaScript (since Drizzle filtering by date can be tricky)
+  const weekNotes = allNotes.filter(note => {
+    const noteDate = new Date(note.createdAt);
+    return noteDate >= weekStartDate && noteDate <= weekEndDate;
+  });
+
+  // Build report data
+  const reportData: WeeklyReportData[] = customers.map(customer => {
+    const customerNotes = weekNotes
+      .filter(note => note.customerId === customer.id)
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+
+    return {
+      customer: {
+        id: customer.id,
+        name: customer.name,
+        lastPatchDate: customer.lastPatchDate,
+        lastPatchVersion: customer.lastPatchVersion,
+        topology: customer.topology,
+        dumbledoreStage: customer.dumbledoreStage,
+      },
+      notes: customerNotes.map(note => ({
+        id: note.id,
+        note: note.note,
+        createdAt: note.createdAt,
+      })),
+    };
+  });
+
+  return reportData;
+}

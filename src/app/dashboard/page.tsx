@@ -6,6 +6,7 @@ import { eq, asc, desc } from "drizzle-orm";
 import { Card, CardContent } from "@/components/ui/card";
 import { AddCustomerDialog } from "@/components/add-customer-dialog";
 import { CustomerCard } from "@/components/customer-card";
+import { WeeklyReportButton } from "@/components/weekly-report-button";
 
 // Define types for the query results
 type CustomerWithNote = {
@@ -17,6 +18,7 @@ type CustomerWithNote = {
   dumbledoreStage: number;
   mscUrl: string | null;
   runbookUrl: string | null;
+  snowUrl: string | null;
   archived: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -73,7 +75,10 @@ export default async function DashboardPage() {
               Manage and track your customer success engineering activities
             </p>
           </div>
-          <AddCustomerDialog />
+          <div className="flex gap-2">
+            <WeeklyReportButton />
+            <AddCustomerDialog />
+          </div>
         </div>
       </div>
 
