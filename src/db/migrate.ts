@@ -31,8 +31,10 @@ async function migrate() {
         id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
         name varchar(255) NOT NULL,
         last_patch_date date,
+        last_patch_version varchar(100),
         topology varchar(20) DEFAULT 'dev' NOT NULL,
         dumbledore_stage integer DEFAULT 1 NOT NULL,
+        archived boolean DEFAULT false NOT NULL,
         created_at timestamp DEFAULT now() NOT NULL,
         updated_at timestamp DEFAULT now() NOT NULL,
         user_id text NOT NULL

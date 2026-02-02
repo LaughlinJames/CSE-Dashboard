@@ -15,6 +15,7 @@ type Customer = {
   id: number;
   name: string;
   lastPatchDate: string | null;
+  lastPatchVersion: string | null;
   topology: string;
   dumbledoreStage: number;
   archived: boolean;
@@ -48,6 +49,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   // Form state for editing
   const [name, setName] = useState("");
   const [lastPatchDate, setLastPatchDate] = useState("");
+  const [lastPatchVersion, setLastPatchVersion] = useState("");
   const [topology, setTopology] = useState<"dev" | "qa" | "stage" | "prod">("dev");
   const [dumbledoreStage, setDumbledoreStage] = useState(1);
 
@@ -56,6 +58,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
     if (open && customer) {
       setName(customer.name);
       setLastPatchDate(customer.lastPatchDate || "");
+      setLastPatchVersion(customer.lastPatchVersion || "");
       setTopology(customer.topology as "dev" | "qa" | "stage" | "prod");
       setDumbledoreStage(customer.dumbledoreStage);
       setNewNote("");
@@ -91,6 +94,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
           id: customer.id,
           name,
           lastPatchDate: lastPatchDate || null,
+          lastPatchVersion: lastPatchVersion || null,
           topology,
           dumbledoreStage,
         });
@@ -179,6 +183,17 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                   type="date"
                   value={formatDateInput(lastPatchDate)}
                   onChange={(e) => setLastPatchDate(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="lastPatchVersion">Last Patch Version</Label>
+                <Input
+                  id="lastPatchVersion"
+                  type="text"
+                  placeholder="e.g., v1.2.3"
+                  value={lastPatchVersion}
+                  onChange={(e) => setLastPatchVersion(e.target.value)}
                 />
               </div>
 

@@ -4,6 +4,7 @@ import { z } from "zod";
 export const createCustomerSchema = z.object({
   name: z.string().min(1, "Customer name is required").max(255, "Name is too long"),
   lastPatchDate: z.string().optional(),
+  lastPatchVersion: z.string().max(100, "Version is too long").optional(),
   topology: z.enum(["dev", "qa", "stage", "prod"]).default("dev"),
   dumbledoreStage: z.number().int().min(1).max(9).default(1),
 });
@@ -13,6 +14,7 @@ export const updateCustomerSchema = z.object({
   id: z.number().positive(),
   name: z.string().min(1, "Customer name is required").max(255, "Name is too long"),
   lastPatchDate: z.string().optional().nullable(),
+  lastPatchVersion: z.string().max(100, "Version is too long").optional().nullable(),
   topology: z.enum(["dev", "qa", "stage", "prod"]),
   dumbledoreStage: z.number().int().min(1).max(9),
 });

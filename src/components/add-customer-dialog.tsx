@@ -36,6 +36,7 @@ export function AddCustomerDialog() {
     const data = {
       name: formData.get("name") as string,
       lastPatchDate: formData.get("lastPatchDate") as string,
+      lastPatchVersion: formData.get("lastPatchVersion") as string,
       topology: formData.get("topology") as "dev" | "qa" | "stage" | "prod",
       dumbledoreStage: parseInt(formData.get("dumbledoreStage") as string),
     };
@@ -88,6 +89,17 @@ export function AddCustomerDialog() {
               id="lastPatchDate"
               name="lastPatchDate"
               type="date"
+              disabled={isPending}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="lastPatchVersion">Last Patch Version</Label>
+            <Input
+              id="lastPatchVersion"
+              name="lastPatchVersion"
+              type="text"
+              placeholder="e.g., v1.2.3"
               disabled={isPending}
             />
           </div>

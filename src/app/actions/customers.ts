@@ -25,14 +25,10 @@ export async function createCustomer(data: CreateCustomerInput) {
   // Validate input data
   const validatedData = createCustomerSchema.parse(data);
 
-  // Convert lastPatchDate string to Date if provided
-  const lastPatchDate = validatedData.lastPatchDate
-    ? new Date(validatedData.lastPatchDate)
-    : null;
-
   await db.insert(customersTable).values({
     name: validatedData.name,
-    lastPatchDate: lastPatchDate,
+    lastPatchDate: validatedData.lastPatchDate || null,
+    lastPatchVersion: validatedData.lastPatchVersion || null,
     topology: validatedData.topology,
     dumbledoreStage: validatedData.dumbledoreStage,
     userId,
@@ -95,17 +91,13 @@ export async function updateCustomer(data: UpdateCustomerInput) {
   // Validate input data
   const validatedData = updateCustomerSchema.parse(data);
 
-  // Convert lastPatchDate string to Date if provided
-  const lastPatchDate = validatedData.lastPatchDate
-    ? new Date(validatedData.lastPatchDate)
-    : null;
-
   // Update the customer, but only if they own it
   const result = await db
     .update(customersTable)
     .set({
       name: validatedData.name,
-      lastPatchDate: lastPatchDate,
+      lastPatchDate: validatedData.lastPatchDate || null,
+      lastPatchVersion: validatedData.lastPatchVersion || null,
       topology: validatedData.topology,
       dumbledoreStage: validatedData.dumbledoreStage,
       updatedAt: new Date(),

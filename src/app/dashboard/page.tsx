@@ -12,6 +12,7 @@ type CustomerWithNote = {
   id: number;
   name: string;
   lastPatchDate: string | null;
+  lastPatchVersion: string | null;
   topology: string;
   dumbledoreStage: number;
   archived: boolean;

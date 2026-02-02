@@ -10,6 +10,7 @@ type Customer = {
   id: number;
   name: string;
   lastPatchDate: string | null;
+  lastPatchVersion: string | null;
   topology: string;
   dumbledoreStage: number;
   archived: boolean;
@@ -94,6 +95,14 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
                 {formatDate(customer.lastPatchDate)}
               </span>
             </div>
+            {customer.lastPatchVersion && (
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Patch Version:</span>
+                <span className="font-medium">
+                  {customer.lastPatchVersion}
+                </span>
+              </div>
+            )}
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Updated:</span>
               <span className="font-medium">
