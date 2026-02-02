@@ -42,7 +42,14 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
   };
 
   const formatDate = (date: Date | string) => {
-    const d = typeof date === "string" ? new Date(date) : date;
+    let d: Date;
+    if (typeof date === "string") {
+      // Parse YYYY-MM-DD format in local timezone to avoid timezone issues
+      const [year, month, day] = date.split('-').map(Number);
+      d = new Date(year, month - 1, day);
+    } else {
+      d = date;
+    }
     return d.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
@@ -63,9 +70,16 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
 
   const getWeekStartDate = () => {
     if (!weekEndingDate) return "";
-    const endDate = new Date(weekEndingDate);
+    // Parse YYYY-MM-DD format in local timezone to avoid timezone issues
+    const [year, month, day] = weekEndingDate.split('-').map(Number);
+    const endDate = new Date(year, month - 1, day);
     const startDate = new Date(endDate);
-    startDate.setDate(startDate.getDate() - 6);
+    // Get day of week (0 = Sunday, 1 = Monday, etc.)
+    const dayOfWeek = startDate.getDay();
+    // Calculate days to subtract to get to Monday
+    // If Sunday (0), go back 6 days; otherwise go back (dayOfWeek - 1) days
+    const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    startDate.setDate(startDate.getDate() - daysToSubtract);
     return formatDate(startDate);
   };
 

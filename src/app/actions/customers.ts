@@ -12,7 +12,7 @@ import {
   type UpdateCustomerInput,
   type AddNoteInput
 } from "@/lib/validations/customers";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, gte, lte, between } from "drizzle-orm";
 import { z } from "zod";
 
 export async function createCustomer(data: CreateCustomerInput) {
@@ -235,13 +235,19 @@ export async function getWeeklyReport(data: WeeklyReportInput) {
   // Validate input data
   const validatedData = weeklyReportSchema.parse(data);
 
-  // Calculate week start date (7 days before end date)
-  const weekEndDate = new Date(validatedData.weekEndingDate);
-  weekEndDate.setHours(23, 59, 59, 999);
+  // Calculate week start date (previous Monday relative to end date)
+  // Parse YYYY-MM-DD format and work in UTC to avoid timezone issues
+  const [year, month, day] = validatedData.weekEndingDate.split('-').map(Number);
+  const weekEndDate = new Date(Date.UTC(year, month - 1, day, 23, 59, 59, 999));
   
   const weekStartDate = new Date(weekEndDate);
-  weekStartDate.setDate(weekStartDate.getDate() - 6);
-  weekStartDate.setHours(0, 0, 0, 0);
+  // Get day of week in UTC (0 = Sunday, 1 = Monday, etc.)
+  const dayOfWeek = weekStartDate.getUTCDay();
+  // Calculate days to subtract to get to Monday
+  // If Sunday (0), go back 6 days; otherwise go back (dayOfWeek - 1) days
+  const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  weekStartDate.setUTCDate(weekStartDate.getUTCDate() - daysToSubtract);
+  weekStartDate.setUTCHours(0, 0, 0, 0);
 
   // Fetch all customers for this user
   const customers = await db
@@ -249,17 +255,17 @@ export async function getWeeklyReport(data: WeeklyReportInput) {
     .from(customersTable)
     .where(eq(customersTable.userId, userId));
 
-  // Fetch all notes for the week for all customers
-  const allNotes = await db
+  // Fetch notes for the week using SQL-level date filtering
+  const weekNotes = await db
     .select()
     .from(customerNotesTable)
-    .where(eq(customerNotesTable.userId, userId));
-
-  // Filter notes by date range in JavaScript (since Drizzle filtering by date can be tricky)
-  const weekNotes = allNotes.filter(note => {
-    const noteDate = new Date(note.createdAt);
-    return noteDate >= weekStartDate && noteDate <= weekEndDate;
-  });
+    .where(
+      and(
+        eq(customerNotesTable.userId, userId),
+        gte(customerNotesTable.createdAt, weekStartDate),
+        lte(customerNotesTable.createdAt, weekEndDate)
+      )
+    );
 
   // Build report data
   const reportData: WeeklyReportData[] = customers.map(customer => {
