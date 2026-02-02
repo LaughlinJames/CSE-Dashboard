@@ -9,6 +9,7 @@ export const createCustomerSchema = z.object({
   dumbledoreStage: z.number().int().min(1).max(9).default(1),
   mscUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   runbookUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  snowUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
 });
 
 // Schema for updating a customer
@@ -21,6 +22,7 @@ export const updateCustomerSchema = z.object({
   dumbledoreStage: z.number().int().min(1).max(9),
   mscUrl: z.string().url("Must be a valid URL").optional().nullable().or(z.literal("")),
   runbookUrl: z.string().url("Must be a valid URL").optional().nullable().or(z.literal("")),
+  snowUrl: z.string().url("Must be a valid URL").optional().nullable().or(z.literal("")),
 });
 
 // Schema for adding a note

@@ -10,6 +10,7 @@ export const customersTable = pgTable("customers", {
   dumbledoreStage: integer("dumbledore_stage").notNull().default(1), // 1-9
   mscUrl: text("msc_url"), // URL for MSC button
   runbookUrl: text("runbook_url"), // URL for Runbook button
+  snowUrl: text("snow_url"), // URL for SNOW button
   archived: boolean().notNull().default(false), // Archive status
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

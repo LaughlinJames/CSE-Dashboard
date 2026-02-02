@@ -33,6 +33,7 @@ export async function createCustomer(data: CreateCustomerInput) {
     dumbledoreStage: validatedData.dumbledoreStage,
     mscUrl: validatedData.mscUrl || null,
     runbookUrl: validatedData.runbookUrl || null,
+    snowUrl: validatedData.snowUrl || null,
     userId,
   });
 
@@ -104,6 +105,7 @@ export async function updateCustomer(data: UpdateCustomerInput) {
       dumbledoreStage: validatedData.dumbledoreStage,
       mscUrl: validatedData.mscUrl || null,
       runbookUrl: validatedData.runbookUrl || null,
+      snowUrl: validatedData.snowUrl || null,
       updatedAt: new Date(),
     })
     .where(

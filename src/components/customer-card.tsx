@@ -17,6 +17,7 @@ type Customer = {
   dumbledoreStage: number;
   mscUrl: string | null;
   runbookUrl: string | null;
+  snowUrl: string | null;
   archived: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -131,8 +132,8 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
             </div>
           )}
 
-          {/* MSC and Runbook Buttons */}
-          {(customer.mscUrl || customer.runbookUrl) && (
+          {/* MSC, Runbook, and SNOW Buttons */}
+          {(customer.mscUrl || customer.runbookUrl || customer.snowUrl) && (
             <div className="pt-4 border-t flex gap-2">
               {customer.mscUrl && (
                 <Button
@@ -160,6 +161,20 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
                 >
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Runbook
+                </Button>
+              )}
+              {customer.snowUrl && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(customer.snowUrl!, "_blank", "noopener,noreferrer");
+                  }}
+                  className="flex-1"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  SNOW
                 </Button>
               )}
             </div>

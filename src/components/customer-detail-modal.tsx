@@ -20,6 +20,7 @@ type Customer = {
   dumbledoreStage: number;
   mscUrl: string | null;
   runbookUrl: string | null;
+  snowUrl: string | null;
   archived: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -56,6 +57,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   const [dumbledoreStage, setDumbledoreStage] = useState(1);
   const [mscUrl, setMscUrl] = useState("");
   const [runbookUrl, setRunbookUrl] = useState("");
+  const [snowUrl, setSnowUrl] = useState("");
 
   // Load customer data and notes when modal opens
   useEffect(() => {
@@ -67,6 +69,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
       setDumbledoreStage(customer.dumbledoreStage);
       setMscUrl(customer.mscUrl || "");
       setRunbookUrl(customer.runbookUrl || "");
+      setSnowUrl(customer.snowUrl || "");
       setNewNote("");
       setError(null);
       setSuccess(null);
@@ -105,6 +108,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
           dumbledoreStage,
           mscUrl: mscUrl || null,
           runbookUrl: runbookUrl || null,
+          snowUrl: snowUrl || null,
         });
 
         // Add note only if there is content
@@ -260,6 +264,17 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                   placeholder="https://example.com/runbook"
                   value={runbookUrl}
                   onChange={(e) => setRunbookUrl(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="snowUrl">SNOW URL (Optional)</Label>
+                <Input
+                  id="snowUrl"
+                  type="url"
+                  placeholder="https://example.com/snow"
+                  value={snowUrl}
+                  onChange={(e) => setSnowUrl(e.target.value)}
                 />
               </div>
             </div>
