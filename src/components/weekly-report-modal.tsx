@@ -125,6 +125,7 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
       report += `LTS Progress: [${item.customer.topology.toUpperCase()}] Stage ${item.customer.dumbledoreStage}\n`;
       report += `Last Patch Date: ${item.customer.lastPatchDate ? formatDate(item.customer.lastPatchDate) : "N/A"}\n`;
       report += `Last Patch Version: ${item.customer.lastPatchVersion || "N/A"}\n`;
+      report += `Temperament: ${item.customer.temperament.charAt(0).toUpperCase() + item.customer.temperament.slice(1)}\n`;
       report += "\n";
 
       // Notes section
