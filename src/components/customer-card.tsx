@@ -74,9 +74,16 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
           <div className="flex items-start justify-between">
             <CardTitle className="text-xl flex-1">{customer.name}</CardTitle>
             <div 
-              className="flex gap-2 items-start"
               onClick={(e) => e.stopPropagation()}
             >
+              <ArchiveButton customerId={customer.id} archived={customer.archived} />
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="flex-1 space-y-4">
+          <div className="space-y-2">
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">LTS Progress:</span>
               <div className="flex gap-2">
                 <Badge variant={getTopologyVariant(customer.topology)}>
                   {customer.topology.toUpperCase()}
@@ -85,12 +92,7 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
                   Stage {customer.dumbledoreStage}
                 </Badge>
               </div>
-              <ArchiveButton customerId={customer.id} archived={customer.archived} />
             </div>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-1 space-y-4">
-          <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Last Patch:</span>
               <span className="font-medium">
