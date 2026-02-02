@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useRef } from "react";
+import { useState, useTransition, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,15 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
   const [error, setError] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
   const reportTextRef = useRef<HTMLPreElement>(null);
+
+  // Reset the report data when modal opens
+  useEffect(() => {
+    if (open) {
+      setReportData(null);
+      setError(null);
+      setCopySuccess(false);
+    }
+  }, [open]);
 
   const handleGenerateReport = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -93,8 +102,8 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
     if (!reportData) return "";
 
     let report = "";
-    const separator = "=".repeat(80);
-    const thinSeparator = "-".repeat(80);
+    const separator = "=".repeat(42);
+    const thinSeparator = "-".repeat(50);
 
     // Header
     report += separator + "\n";
@@ -113,9 +122,9 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
       report += thinSeparator + "\n\n";
 
       // Customer details
-      report += `LTS Progress:        [${item.customer.topology.toUpperCase()}] Stage ${item.customer.dumbledoreStage}\n`;
-      report += `Last Patch Date:     ${item.customer.lastPatchDate ? formatDate(item.customer.lastPatchDate) : "N/A"}\n`;
-      report += `Last Patch Version:  ${item.customer.lastPatchVersion || "N/A"}\n`;
+      report += `LTS Progress: [${item.customer.topology.toUpperCase()}] Stage ${item.customer.dumbledoreStage}\n`;
+      report += `Last Patch Date: ${item.customer.lastPatchDate ? formatDate(item.customer.lastPatchDate) : "N/A"}\n`;
+      report += `Last Patch Version: ${item.customer.lastPatchVersion || "N/A"}\n`;
       report += "\n";
 
       // Notes section
@@ -158,7 +167,7 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Generate Weekly Report</DialogTitle>
           <DialogDescription>
@@ -216,7 +225,8 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
             <div className="relative">
               <pre
                 ref={reportTextRef}
-                className="bg-zinc-900 text-zinc-100 dark:bg-zinc-950 dark:text-zinc-50 p-6 rounded-lg overflow-x-auto text-sm font-mono whitespace-pre-wrap border border-zinc-700"
+                className="bg-zinc-900 text-zinc-100 dark:bg-zinc-950 dark:text-zinc-50 p-4 rounded-lg text-sm font-mono whitespace-pre-wrap break-words border border-zinc-700 overflow-hidden"
+                style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
               >
                 {generateAsciiReport()}
               </pre>
