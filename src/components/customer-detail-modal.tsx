@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { RichTextEditor } from "@/components/rich-text-editor";
 import { updateCustomer, addNote, getCustomerNotes } from "@/app/actions/customers";
 import { useEffect } from "react";
 
@@ -45,7 +45,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   const [isPending, startTransition] = useTransition();
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoadingNotes, setIsLoadingNotes] = useState(false);
-  const [newNote, setNewNote] = useState("");
+  const [newNote, setNewNote] = useState("<p></p>");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -70,7 +70,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
       setMscUrl(customer.mscUrl || "");
       setRunbookUrl(customer.runbookUrl || "");
       setSnowUrl(customer.snowUrl || "");
-      setNewNote("");
+      setNewNote("<p></p>");
       setError(null);
       setSuccess(null);
 
@@ -111,8 +111,9 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
           snowUrl: snowUrl || null,
         });
 
-        // Add note only if there is content
-        if (newNote.trim()) {
+        // Add note only if there is content (strip HTML tags to check)
+        const noteText = newNote.replace(/<[^>]*>/g, '').trim();
+        if (noteText) {
           await addNote({
             customerId: customer.id,
             note: newNote,
@@ -121,7 +122,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
           // Refresh notes list
           const updatedNotes = await getCustomerNotes(customer.id);
           setNotes(updatedNotes);
-          setNewNote("");
+          setNewNote("<p></p>");
         }
 
         setSuccess("Customer updated successfully!");
@@ -285,12 +286,10 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
             <h3 className="text-lg font-semibold mb-4">Add Note (Optional)</h3>
             <div className="space-y-2">
               <Label htmlFor="newNote">New Note</Label>
-              <Textarea
-                id="newNote"
-                placeholder="Enter a note (optional)..."
+              <RichTextEditor
                 value={newNote}
-                onChange={(e) => setNewNote(e.target.value)}
-                rows={3}
+                onChange={setNewNote}
+                placeholder="Enter a note (optional)..."
               />
             </div>
           </div>
@@ -322,7 +321,10 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                           {formatDate(note.createdAt)}
                         </Badge>
                       </div>
-                      <p className="text-sm whitespace-pre-wrap">{note.note}</p>
+                      <div 
+                        className="text-sm prose prose-sm max-w-none prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline"
+                        dangerouslySetInnerHTML={{ __html: note.note }}
+                      />
                     </div>
                   ))}
                 </div>
