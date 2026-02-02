@@ -29,6 +29,7 @@ export async function createCustomer(data: CreateCustomerInput) {
     name: validatedData.name,
     lastPatchDate: validatedData.lastPatchDate || null,
     lastPatchVersion: validatedData.lastPatchVersion || null,
+    temperament: validatedData.temperament,
     topology: validatedData.topology,
     dumbledoreStage: validatedData.dumbledoreStage,
     mscUrl: validatedData.mscUrl || null,
@@ -101,6 +102,7 @@ export async function updateCustomer(data: UpdateCustomerInput) {
       name: validatedData.name,
       lastPatchDate: validatedData.lastPatchDate || null,
       lastPatchVersion: validatedData.lastPatchVersion || null,
+      temperament: validatedData.temperament,
       topology: validatedData.topology,
       dumbledoreStage: validatedData.dumbledoreStage,
       mscUrl: validatedData.mscUrl || null,
@@ -215,6 +217,7 @@ export type WeeklyReportData = {
     name: string;
     lastPatchDate: string | null;
     lastPatchVersion: string | null;
+    temperament: string;
     topology: string;
     dumbledoreStage: number;
   };
@@ -279,6 +282,7 @@ export async function getWeeklyReport(data: WeeklyReportInput) {
         name: customer.name,
         lastPatchDate: customer.lastPatchDate,
         lastPatchVersion: customer.lastPatchVersion,
+        temperament: customer.temperament,
         topology: customer.topology,
         dumbledoreStage: customer.dumbledoreStage,
       },

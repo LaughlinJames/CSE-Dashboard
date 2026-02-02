@@ -13,6 +13,7 @@ type Customer = {
   name: string;
   lastPatchDate: string | null;
   lastPatchVersion: string | null;
+  temperament: string;
   topology: string;
   dumbledoreStage: number;
   mscUrl: string | null;
@@ -64,6 +65,24 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
     }
   };
 
+  // Helper function to get badge variant and emoji based on temperament
+  const getTemperamentDisplay = (temperament: string): { variant: "default" | "secondary" | "destructive" | "outline", label: string } => {
+    switch (temperament.toLowerCase()) {
+      case "happy":
+        return { variant: "default", label: "😊 Happy" };
+      case "satisfied":
+        return { variant: "default", label: "🙂 Satisfied" };
+      case "neutral":
+        return { variant: "secondary", label: "😐 Neutral" };
+      case "concerned":
+        return { variant: "outline", label: "😟 Concerned" };
+      case "frustrated":
+        return { variant: "destructive", label: "😤 Frustrated" };
+      default:
+        return { variant: "secondary", label: "😐 Neutral" };
+    }
+  };
+
   return (
     <>
       <Card 
@@ -82,6 +101,12 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
         </CardHeader>
         <CardContent className="flex-1 space-y-4">
           <div className="space-y-2">
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">Customer Temperament:</span>
+              <Badge variant={getTemperamentDisplay(customer.temperament).variant}>
+                {getTemperamentDisplay(customer.temperament).label}
+              </Badge>
+            </div>
             <div className="flex justify-between items-center text-sm">
               <span className="text-muted-foreground">LTS Progress:</span>
               <div className="flex gap-2">

@@ -16,6 +16,7 @@ type Customer = {
   name: string;
   lastPatchDate: string | null;
   lastPatchVersion: string | null;
+  temperament: string;
   topology: string;
   dumbledoreStage: number;
   mscUrl: string | null;
@@ -53,6 +54,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   const [name, setName] = useState("");
   const [lastPatchDate, setLastPatchDate] = useState("");
   const [lastPatchVersion, setLastPatchVersion] = useState("");
+  const [temperament, setTemperament] = useState<"happy" | "satisfied" | "neutral" | "concerned" | "frustrated">("neutral");
   const [topology, setTopology] = useState<"dev" | "qa" | "stage" | "prod">("dev");
   const [dumbledoreStage, setDumbledoreStage] = useState(1);
   const [mscUrl, setMscUrl] = useState("");
@@ -65,6 +67,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
       setName(customer.name);
       setLastPatchDate(customer.lastPatchDate || "");
       setLastPatchVersion(customer.lastPatchVersion || "");
+      setTemperament(customer.temperament as "happy" | "satisfied" | "neutral" | "concerned" | "frustrated");
       setTopology(customer.topology as "dev" | "qa" | "stage" | "prod");
       setDumbledoreStage(customer.dumbledoreStage);
       setMscUrl(customer.mscUrl || "");
@@ -104,6 +107,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
           name,
           lastPatchDate: lastPatchDate || null,
           lastPatchVersion: lastPatchVersion || null,
+          temperament,
           topology,
           dumbledoreStage,
           mscUrl: mscUrl || null,
@@ -208,6 +212,22 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                   value={lastPatchVersion}
                   onChange={(e) => setLastPatchVersion(e.target.value)}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="temperament">Customer Temperament</Label>
+                <Select value={temperament} onValueChange={(value: "happy" | "satisfied" | "neutral" | "concerned" | "frustrated") => setTemperament(value)}>
+                  <SelectTrigger id="temperament">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="happy">😊 Happy</SelectItem>
+                    <SelectItem value="satisfied">🙂 Satisfied</SelectItem>
+                    <SelectItem value="neutral">😐 Neutral</SelectItem>
+                    <SelectItem value="concerned">😟 Concerned</SelectItem>
+                    <SelectItem value="frustrated">😤 Frustrated</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="grid grid-cols-2 gap-4">

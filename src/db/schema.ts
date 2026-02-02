@@ -6,6 +6,7 @@ export const customersTable = pgTable("customers", {
   name: varchar({ length: 255 }).notNull(),
   lastPatchDate: date("last_patch_date"),
   lastPatchVersion: varchar("last_patch_version", { length: 100 }),
+  temperament: varchar({ length: 20 }).notNull().default("neutral"), // happy, satisfied, neutral, concerned, frustrated
   topology: varchar({ length: 20 }).notNull().default("dev"), // dev, qa, stage, prod
   dumbledoreStage: integer("dumbledore_stage").notNull().default(1), // 1-9
   mscUrl: text("msc_url"), // URL for MSC button

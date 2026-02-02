@@ -37,6 +37,7 @@ export function AddCustomerDialog() {
       name: formData.get("name") as string,
       lastPatchDate: formData.get("lastPatchDate") as string,
       lastPatchVersion: formData.get("lastPatchVersion") as string,
+      temperament: formData.get("temperament") as "happy" | "satisfied" | "neutral" | "concerned" | "frustrated",
       topology: formData.get("topology") as "dev" | "qa" | "stage" | "prod",
       dumbledoreStage: parseInt(formData.get("dumbledoreStage") as string),
     };
@@ -102,6 +103,22 @@ export function AddCustomerDialog() {
               placeholder="e.g., v1.2.3"
               disabled={isPending}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="temperament">Customer Temperament *</Label>
+            <Select name="temperament" defaultValue="neutral" disabled={isPending}>
+              <SelectTrigger id="temperament">
+                <SelectValue placeholder="Select temperament" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="happy">😊 Happy</SelectItem>
+                <SelectItem value="satisfied">🙂 Satisfied</SelectItem>
+                <SelectItem value="neutral">😐 Neutral</SelectItem>
+                <SelectItem value="concerned">😟 Concerned</SelectItem>
+                <SelectItem value="frustrated">😤 Frustrated</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
