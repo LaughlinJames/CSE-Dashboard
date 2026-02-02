@@ -49,11 +49,11 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
     });
   };
 
-  // Helper function to get badge variant based on topology
+  // Helper function to get badge variant and color based on topology
   const getTopologyVariant = (topology: string): "default" | "secondary" | "destructive" | "outline" => {
     switch (topology.toLowerCase()) {
       case "prod":
-        return "destructive";
+        return "default"; // Changed to default for green styling
       case "stage":
         return "default";
       case "qa":
@@ -62,6 +62,22 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
         return "outline";
       default:
         return "secondary";
+    }
+  };
+
+  // Helper function to get custom color class for topology badges
+  const getTopologyColorClass = (topology: string): string => {
+    switch (topology.toLowerCase()) {
+      case "prod":
+        return "bg-green-600 hover:bg-green-700 text-white";
+      case "stage":
+        return "";
+      case "qa":
+        return "";
+      case "dev":
+        return "";
+      default:
+        return "";
     }
   };
 
@@ -75,12 +91,33 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
       case "neutral":
         return { variant: "secondary", label: "😐 Neutral" };
       case "concerned":
-        return { variant: "outline", label: "😟 Concerned" };
+        return { variant: "destructive", label: "😟 Concerned" };
       case "frustrated":
         return { variant: "destructive", label: "😤 Frustrated" };
       default:
         return { variant: "secondary", label: "😐 Neutral" };
     }
+  };
+
+  // Helper function to get custom color class for temperament badges
+  const getTemperamentColorClass = (temperament: string): string => {
+    switch (temperament.toLowerCase()) {
+      case "happy":
+      case "satisfied":
+        return "bg-green-600 hover:bg-green-700 text-white";
+      case "neutral":
+        return "";
+      case "concerned":
+      case "frustrated":
+        return "bg-red-600 hover:bg-red-700 text-white";
+      default:
+        return "";
+    }
+  };
+
+  // Helper function to get custom color class for stage badges
+  const getStageColorClass = (stage: number): string => {
+    return stage === 9 ? "bg-green-600 hover:bg-green-700 text-white border-green-600" : "";
   };
 
   return (
@@ -103,17 +140,26 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
           <div className="space-y-2">
             <div className="flex justify-between items-center text-sm">
               <span className="text-muted-foreground">Customer Temperament:</span>
-              <Badge variant={getTemperamentDisplay(customer.temperament).variant}>
+              <Badge 
+                variant={getTemperamentDisplay(customer.temperament).variant}
+                className={getTemperamentColorClass(customer.temperament)}
+              >
                 {getTemperamentDisplay(customer.temperament).label}
               </Badge>
             </div>
             <div className="flex justify-between items-center text-sm">
               <span className="text-muted-foreground">LTS Progress:</span>
               <div className="flex gap-2">
-                <Badge variant={getTopologyVariant(customer.topology)}>
+                <Badge 
+                  variant={getTopologyVariant(customer.topology)}
+                  className={getTopologyColorClass(customer.topology)}
+                >
                   {customer.topology.toUpperCase()}
                 </Badge>
-                <Badge variant="outline">
+                <Badge 
+                  variant="outline"
+                  className={getStageColorClass(customer.dumbledoreStage)}
+                >
                   Stage {customer.dumbledoreStage}
                 </Badge>
               </div>
