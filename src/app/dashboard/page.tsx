@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { customersTable, customerNotesTable } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, asc, desc } from "drizzle-orm";
 import { Card, CardContent } from "@/components/ui/card";
 import { AddCustomerDialog } from "@/components/add-customer-dialog";
 import { CustomerCard } from "@/components/customer-card";
@@ -34,7 +34,7 @@ export default async function DashboardPage() {
     .select()
     .from(customersTable)
     .where(eq(customersTable.userId, userId))
-    .orderBy(desc(customersTable.updatedAt));
+    .orderBy(asc(customersTable.name));
 
   // Fetch all notes for these customers
   const allNotes = await db

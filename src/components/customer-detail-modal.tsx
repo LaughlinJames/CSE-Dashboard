@@ -79,13 +79,14 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
 
   if (!customer) return null;
 
-  const handleUpdateCustomer = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
 
     startTransition(async () => {
       try {
+        // Update customer information
         await updateCustomer({
           id: customer.id,
           name,
@@ -93,36 +94,26 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
           topology,
           dumbledoreStage,
         });
+
+        // Add note only if there is content
+        if (newNote.trim()) {
+          await addNote({
+            customerId: customer.id,
+            note: newNote,
+          });
+          
+          // Refresh notes list
+          const updatedNotes = await getCustomerNotes(customer.id);
+          setNotes(updatedNotes);
+          setNewNote("");
+        }
+
         setSuccess("Customer updated successfully!");
-        setTimeout(() => setSuccess(null), 3000);
+        
+        // Close the modal after successful update
+        onOpenChange(false);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to update customer");
-      }
-    });
-  };
-
-  const handleAddNote = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!newNote.trim()) return;
-
-    setError(null);
-    setSuccess(null);
-
-    startTransition(async () => {
-      try {
-        await addNote({
-          customerId: customer.id,
-          note: newNote,
-        });
-        
-        // Refresh notes list
-        const updatedNotes = await getCustomerNotes(customer.id);
-        setNotes(updatedNotes);
-        setNewNote("");
-        setSuccess("Note added successfully!");
-        setTimeout(() => setSuccess(null), 3000);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to add note");
       }
     });
   };
@@ -166,11 +157,11 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
           </div>
         )}
 
-        <div className="space-y-6">
-          {/* Customer Details Form */}
+        <form onSubmit={handleUpdate} className="space-y-6">
+          {/* Customer Details Section */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Customer Information</h3>
-            <form onSubmit={handleUpdateCustomer} className="space-y-4">
+            <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Customer Name</Label>
                 <Input
@@ -226,37 +217,35 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                   </Select>
                 </div>
               </div>
-
-              <Button type="submit" disabled={isPending}>
-                {isPending ? "Updating..." : "Update Customer"}
-              </Button>
-            </form>
+            </div>
           </div>
 
-          {/* Notes Section */}
+          {/* Add Note Section */}
           <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold mb-4">Notes</h3>
-            
-            {/* Add Note Form */}
-            <form onSubmit={handleAddNote} className="space-y-4 mb-6">
-              <div className="space-y-2">
-                <Label htmlFor="newNote">Add New Note</Label>
-                <Textarea
-                  id="newNote"
-                  placeholder="Enter your note here..."
-                  value={newNote}
-                  onChange={(e) => setNewNote(e.target.value)}
-                  rows={3}
-                />
-              </div>
-              <Button type="submit" disabled={isPending || !newNote.trim()}>
-                {isPending ? "Adding..." : "Add Note"}
-              </Button>
-            </form>
+            <h3 className="text-lg font-semibold mb-4">Add Note (Optional)</h3>
+            <div className="space-y-2">
+              <Label htmlFor="newNote">New Note</Label>
+              <Textarea
+                id="newNote"
+                placeholder="Enter a note (optional)..."
+                value={newNote}
+                onChange={(e) => setNewNote(e.target.value)}
+                rows={3}
+              />
+            </div>
+          </div>
 
-            {/* Notes List */}
+          {/* Single Update Button */}
+          <div className="flex justify-end">
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Updating..." : "Update"}
+            </Button>
+          </div>
+
+          {/* Notes List */}
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold mb-4">Previous Notes</h3>
             <div className="space-y-3">
-              <h4 className="text-sm font-medium text-muted-foreground">Previous Notes</h4>
               {isLoadingNotes ? (
                 <p className="text-sm text-muted-foreground">Loading notes...</p>
               ) : notes.length === 0 ? (
@@ -280,7 +269,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
               )}
             </div>
           </div>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
