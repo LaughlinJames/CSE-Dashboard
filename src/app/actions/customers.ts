@@ -31,6 +31,8 @@ export async function createCustomer(data: CreateCustomerInput) {
     lastPatchVersion: validatedData.lastPatchVersion || null,
     topology: validatedData.topology,
     dumbledoreStage: validatedData.dumbledoreStage,
+    mscUrl: validatedData.mscUrl || null,
+    runbookUrl: validatedData.runbookUrl || null,
     userId,
   });
 
@@ -100,6 +102,8 @@ export async function updateCustomer(data: UpdateCustomerInput) {
       lastPatchVersion: validatedData.lastPatchVersion || null,
       topology: validatedData.topology,
       dumbledoreStage: validatedData.dumbledoreStage,
+      mscUrl: validatedData.mscUrl || null,
+      runbookUrl: validatedData.runbookUrl || null,
       updatedAt: new Date(),
     })
     .where(

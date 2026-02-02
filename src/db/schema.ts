@@ -8,6 +8,8 @@ export const customersTable = pgTable("customers", {
   lastPatchVersion: varchar("last_patch_version", { length: 100 }),
   topology: varchar({ length: 20 }).notNull().default("dev"), // dev, qa, stage, prod
   dumbledoreStage: integer("dumbledore_stage").notNull().default(1), // 1-9
+  mscUrl: text("msc_url"), // URL for MSC button
+  runbookUrl: text("runbook_url"), // URL for Runbook button
   archived: boolean().notNull().default(false), // Archive status
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

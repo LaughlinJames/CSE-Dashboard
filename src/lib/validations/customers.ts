@@ -7,6 +7,8 @@ export const createCustomerSchema = z.object({
   lastPatchVersion: z.string().max(100, "Version is too long").optional(),
   topology: z.enum(["dev", "qa", "stage", "prod"]).default("dev"),
   dumbledoreStage: z.number().int().min(1).max(9).default(1),
+  mscUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  runbookUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
 });
 
 // Schema for updating a customer
@@ -17,6 +19,8 @@ export const updateCustomerSchema = z.object({
   lastPatchVersion: z.string().max(100, "Version is too long").optional().nullable(),
   topology: z.enum(["dev", "qa", "stage", "prod"]),
   dumbledoreStage: z.number().int().min(1).max(9),
+  mscUrl: z.string().url("Must be a valid URL").optional().nullable().or(z.literal("")),
+  runbookUrl: z.string().url("Must be a valid URL").optional().nullable().or(z.literal("")),
 });
 
 // Schema for adding a note

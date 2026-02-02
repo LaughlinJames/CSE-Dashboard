@@ -15,6 +15,8 @@ type CustomerWithNote = {
   lastPatchVersion: string | null;
   topology: string;
   dumbledoreStage: number;
+  mscUrl: string | null;
+  runbookUrl: string | null;
   archived: boolean;
   createdAt: Date;
   updatedAt: Date;

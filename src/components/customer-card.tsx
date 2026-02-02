@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ArchiveButton } from "@/components/archive-button";
 import { CustomerDetailModal } from "@/components/customer-detail-modal";
+import { ExternalLink } from "lucide-react";
 
 type Customer = {
   id: number;
@@ -13,6 +15,8 @@ type Customer = {
   lastPatchVersion: string | null;
   topology: string;
   dumbledoreStage: number;
+  mscUrl: string | null;
+  runbookUrl: string | null;
   archived: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -83,9 +87,6 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
               <ArchiveButton customerId={customer.id} archived={customer.archived} />
             </div>
           </div>
-          <CardDescription>
-            Customer ID: {customer.id}
-          </CardDescription>
         </CardHeader>
         <CardContent className="flex-1 space-y-4">
           <div className="space-y-2">
@@ -127,6 +128,40 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
               <p className="text-xs text-muted-foreground italic">
                 No notes yet
               </p>
+            </div>
+          )}
+
+          {/* MSC and Runbook Buttons */}
+          {(customer.mscUrl || customer.runbookUrl) && (
+            <div className="pt-4 border-t flex gap-2">
+              {customer.mscUrl && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(customer.mscUrl!, "_blank", "noopener,noreferrer");
+                  }}
+                  className="flex-1"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  MSC
+                </Button>
+              )}
+              {customer.runbookUrl && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(customer.runbookUrl!, "_blank", "noopener,noreferrer");
+                  }}
+                  className="flex-1"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Runbook
+                </Button>
+              )}
             </div>
           )}
         </CardContent>

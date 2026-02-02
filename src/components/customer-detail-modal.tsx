@@ -18,6 +18,8 @@ type Customer = {
   lastPatchVersion: string | null;
   topology: string;
   dumbledoreStage: number;
+  mscUrl: string | null;
+  runbookUrl: string | null;
   archived: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -52,6 +54,8 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   const [lastPatchVersion, setLastPatchVersion] = useState("");
   const [topology, setTopology] = useState<"dev" | "qa" | "stage" | "prod">("dev");
   const [dumbledoreStage, setDumbledoreStage] = useState(1);
+  const [mscUrl, setMscUrl] = useState("");
+  const [runbookUrl, setRunbookUrl] = useState("");
 
   // Load customer data and notes when modal opens
   useEffect(() => {
@@ -61,6 +65,8 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
       setLastPatchVersion(customer.lastPatchVersion || "");
       setTopology(customer.topology as "dev" | "qa" | "stage" | "prod");
       setDumbledoreStage(customer.dumbledoreStage);
+      setMscUrl(customer.mscUrl || "");
+      setRunbookUrl(customer.runbookUrl || "");
       setNewNote("");
       setError(null);
       setSuccess(null);
@@ -97,6 +103,8 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
           lastPatchVersion: lastPatchVersion || null,
           topology,
           dumbledoreStage,
+          mscUrl: mscUrl || null,
+          runbookUrl: runbookUrl || null,
         });
 
         // Add note only if there is content
@@ -231,6 +239,28 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="mscUrl">MSC URL (Optional)</Label>
+                <Input
+                  id="mscUrl"
+                  type="url"
+                  placeholder="https://example.com/msc"
+                  value={mscUrl}
+                  onChange={(e) => setMscUrl(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="runbookUrl">Runbook URL (Optional)</Label>
+                <Input
+                  id="runbookUrl"
+                  type="url"
+                  placeholder="https://example.com/runbook"
+                  value={runbookUrl}
+                  onChange={(e) => setRunbookUrl(e.target.value)}
+                />
               </div>
             </div>
           </div>
