@@ -252,11 +252,17 @@ export async function getWeeklyReport(data: WeeklyReportInput) {
   weekStartDate.setUTCDate(weekStartDate.getUTCDate() - daysToSubtract);
   weekStartDate.setUTCHours(0, 0, 0, 0);
 
-  // Fetch all customers for this user
+  // Fetch all non-archived customers for this user, ordered alphabetically
   const customers = await db
     .select()
     .from(customersTable)
-    .where(eq(customersTable.userId, userId));
+    .where(
+      and(
+        eq(customersTable.userId, userId),
+        eq(customersTable.archived, false)
+      )
+    )
+    .orderBy(customersTable.name);
 
   // Fetch notes for the week using SQL-level date filtering
   const weekNotes = await db
