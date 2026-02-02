@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { customersTable, customerNotesTable } from "@/db/schema";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AddCustomerDialog } from "@/components/add-customer-dialog";
@@ -30,36 +30,32 @@ export default async function DashboardPage() {
     redirect("/sign-in");
   }
 
-  // Query customers with their latest note using a subquery
-  const customers = await db
-    .select({
-      id: customersTable.id,
-      name: customersTable.name,
-      lastPatchDate: customersTable.lastPatchDate,
-      topology: customersTable.topology,
-      dumbledoreStage: customersTable.dumbledoreStage,
-      archived: customersTable.archived,
-      createdAt: customersTable.createdAt,
-      updatedAt: customersTable.updatedAt,
-      userId: customersTable.userId,
-      latestNote: sql<string | null>`(
-        SELECT note 
-        FROM ${customerNotesTable} 
-        WHERE ${customerNotesTable.customerId} = ${customersTable.id} 
-        ORDER BY ${customerNotesTable.createdAt} DESC 
-        LIMIT 1
-      )`,
-      latestNoteDate: sql<Date | null>`(
-        SELECT created_at 
-        FROM ${customerNotesTable} 
-        WHERE ${customerNotesTable.customerId} = ${customersTable.id} 
-        ORDER BY ${customerNotesTable.createdAt} DESC 
-        LIMIT 1
-      )`,
-    })
+  // Fetch all customers for the user
+  const customersData = await db
+    .select()
     .from(customersTable)
     .where(eq(customersTable.userId, userId))
     .orderBy(desc(customersTable.updatedAt));
+
+  // Fetch all notes for these customers
+  const allNotes = await db
+    .select()
+    .from(customerNotesTable)
+    .where(eq(customerNotesTable.userId, userId))
+    .orderBy(desc(customerNotesTable.createdAt));
+
+  // Combine customers with their latest note
+  const customers: CustomerWithNote[] = customersData.map(customer => {
+    // Find the latest note for this customer
+    const latestNote = allNotes.find(note => note.customerId === customer.id);
+    
+    return {
+      ...customer,
+      lastPatchDate: customer.lastPatchDate,
+      latestNote: latestNote?.note ?? null,
+      latestNoteDate: latestNote?.createdAt ?? null,
+    };
+  });
 
   // Separate active and archived customers
   const activeCustomers = customers.filter(c => !c.archived);
