@@ -14,7 +14,7 @@ export default async function TodosPage() {
     redirect("/sign-in");
   }
 
-  // Fetch all todos for the user with customer info, sorted by priority (high, medium, low), then by creation date
+  // Fetch all todos for the user with customer info, sorted by due date (nulls last), then by priority (high, medium, low)
   const todos = await db
     .select({
       id: todosTable.id,
@@ -32,13 +32,14 @@ export default async function TodosPage() {
     .leftJoin(customersTable, eq(todosTable.customerId, customersTable.id))
     .where(eq(todosTable.userId, userId))
     .orderBy(
+      sql`CASE WHEN ${todosTable.dueDate} IS NULL THEN 1 ELSE 0 END`,
+      todosTable.dueDate,
       sql`CASE 
         WHEN ${todosTable.priority} = 'high' THEN 1 
         WHEN ${todosTable.priority} = 'medium' THEN 2 
         WHEN ${todosTable.priority} = 'low' THEN 3 
         ELSE 4 
-      END`,
-      desc(todosTable.createdAt)
+      END`
     );
 
   // Separate completed and incomplete todos

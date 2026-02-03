@@ -6,6 +6,7 @@ import { todosTable, customersTable } from "@/db/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { logTodoCreate, logTodoUpdate, logTodoDelete, logTodoComplete, logTodoUncomplete } from "@/db/audit";
 
 // Validation schemas
 const createTodoSchema = z.object({
@@ -43,14 +44,29 @@ export async function createTodo(data: CreateTodoInput) {
 
   const validated = createTodoSchema.parse(data);
 
-  await db.insert(todosTable).values({
+  // Format date to ensure it's stored correctly in local timezone
+  let formattedDueDate = null;
+  if (validated.dueDate) {
+    // Parse the date string and format it to YYYY-MM-DD to avoid timezone issues
+    const dateParts = validated.dueDate.split('-');
+    if (dateParts.length === 3) {
+      formattedDueDate = validated.dueDate; // Already in YYYY-MM-DD format
+    }
+  }
+
+  const result = await db.insert(todosTable).values({
     title: validated.title,
     description: validated.description,
     priority: validated.priority,
-    dueDate: validated.dueDate || null,
+    dueDate: formattedDueDate,
     customerId: validated.customerId || null,
     userId,
-  });
+  }).returning();
+
+  // Log the creation
+  if (result.length > 0) {
+    await logTodoCreate(result[0].id, result[0], userId);
+  }
 
   revalidatePath("/todos");
 
@@ -66,6 +82,23 @@ export async function updateTodo(data: UpdateTodoInput) {
 
   const validated = updateTodoSchema.parse(data);
 
+  // Get the old todo data before updating
+  const oldTodos = await db
+    .select()
+    .from(todosTable)
+    .where(
+      and(
+        eq(todosTable.id, validated.id),
+        eq(todosTable.userId, userId)
+      )
+    );
+
+  if (oldTodos.length === 0) {
+    throw new Error("Todo not found or unauthorized");
+  }
+
+  const oldTodo = oldTodos[0];
+
   const updateData: any = {
     updatedAt: new Date(),
   };
@@ -73,7 +106,17 @@ export async function updateTodo(data: UpdateTodoInput) {
   if (validated.title !== undefined) updateData.title = validated.title;
   if (validated.description !== undefined) updateData.description = validated.description;
   if (validated.priority !== undefined) updateData.priority = validated.priority;
-  if (validated.dueDate !== undefined) updateData.dueDate = validated.dueDate || null;
+  if (validated.dueDate !== undefined) {
+    // Format date to ensure it's stored correctly in local timezone
+    if (validated.dueDate) {
+      const dateParts = validated.dueDate.split('-');
+      if (dateParts.length === 3) {
+        updateData.dueDate = validated.dueDate; // Already in YYYY-MM-DD format
+      }
+    } else {
+      updateData.dueDate = null;
+    }
+  }
   if (validated.customerId !== undefined) updateData.customerId = validated.customerId || null;
   if (validated.completed !== undefined) updateData.completed = validated.completed;
 
@@ -91,6 +134,9 @@ export async function updateTodo(data: UpdateTodoInput) {
   if (result.length === 0) {
     throw new Error("Todo not found or unauthorized");
   }
+
+  // Log the update
+  await logTodoUpdate(validated.id, oldTodo, updateData, userId);
 
   revalidatePath("/todos");
 
@@ -120,6 +166,9 @@ export async function deleteTodo(data: DeleteTodoInput) {
     throw new Error("Todo not found or unauthorized");
   }
 
+  // Log the deletion
+  await logTodoDelete(validated.id, result[0], userId);
+
   revalidatePath("/todos");
 
   return { success: true };
@@ -148,12 +197,13 @@ export async function toggleTodoComplete(todoId: number) {
   }
 
   const todo = todos[0];
+  const newCompletedStatus = !todo.completed;
 
   // Toggle the completed status
   await db
     .update(todosTable)
     .set({
-      completed: !todo.completed,
+      completed: newCompletedStatus,
       updatedAt: new Date(),
     })
     .where(
@@ -162,6 +212,13 @@ export async function toggleTodoComplete(todoId: number) {
         eq(todosTable.userId, userId)
       )
     );
+
+  // Log the completion/uncompletion
+  if (newCompletedStatus) {
+    await logTodoComplete(todoId, userId);
+  } else {
+    await logTodoUncomplete(todoId, userId);
+  }
 
   revalidatePath("/todos");
 

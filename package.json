@@ -13,7 +13,8 @@
     "db:studio": "drizzle-kit studio",
     "db:test": "tsx --env-file=.env src/db/test.ts",
     "db:seed": "tsx --env-file=.env src/db/seed.ts",
-    "db:clear-notes": "tsx --env-file=.env src/db/clear-notes.ts"
+    "db:clear-notes": "tsx --env-file=.env src/db/clear-notes.ts",
+    "db:audit-logs": "tsx --env-file=.env src/db/query-todo-audit.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.37.1",

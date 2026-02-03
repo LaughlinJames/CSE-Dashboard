@@ -57,3 +57,17 @@ export const todosTable = pgTable("todos", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   userId: text("user_id").notNull(), // Clerk user ID who owns this todo
 });
+
+// Todo Audit Log table - track all changes to todo records
+export const todoAuditLogTable = pgTable("todo_audit_log", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  todoId: integer("todo_id")
+    .notNull()
+    .references(() => todosTable.id, { onDelete: "cascade" }),
+  action: varchar({ length: 50 }).notNull(), // create, update, complete, uncomplete, delete
+  fieldName: varchar("field_name", { length: 100 }), // Field that was changed (null for create/delete/complete/uncomplete actions)
+  oldValue: text("old_value"), // Previous value (JSON stringified for complex types)
+  newValue: text("new_value"), // New value (JSON stringified for complex types)
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  userId: text("user_id").notNull(), // Clerk user ID who made the change
+});

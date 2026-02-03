@@ -135,6 +135,37 @@ export function TodoItem({ todo }: TodoItemProps) {
 
   const priorityColor = priorityColors[todo.priority as keyof typeof priorityColors] || priorityColors.medium;
 
+  // Parse date string in local timezone (avoid UTC conversion)
+  const parseLocalDate = (dateStr: string) => {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  };
+
+  // Calculate due date styling
+  const getDueDateStyle = () => {
+    if (!todo.dueDate) return "text-muted-foreground";
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const dueDate = parseLocalDate(todo.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+    
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    // Today or past: red and bold
+    if (diffDays <= 0) {
+      return "text-red-600 dark:text-red-500 font-bold";
+    }
+    // Within next 3 days: yellow
+    if (diffDays <= 3) {
+      return "text-yellow-600 dark:text-yellow-500";
+    }
+    // Default
+    return "text-muted-foreground";
+  };
+
   return (
     <>
       <Card className={todo.completed ? "opacity-60" : ""}>
@@ -189,9 +220,9 @@ export function TodoItem({ todo }: TodoItemProps) {
                   </div>
                 )}
                 {todo.dueDate && (
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <div className={`flex items-center gap-1 text-xs ${getDueDateStyle()}`}>
                     <Calendar className="h-3 w-3" />
-                    {new Date(todo.dueDate).toLocaleDateString()}
+                    {parseLocalDate(todo.dueDate).toLocaleDateString()}
                   </div>
                 )}
               </div>

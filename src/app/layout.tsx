@@ -40,7 +40,7 @@ export default function RootLayout({
         <body className={`${poppins.variable} antialiased`}>
           <header className="flex items-center justify-between p-4 border-b">
             <div className="flex items-center gap-8">
-              <div className="font-semibold">CSE Dashboard</div>
+              <div className="font-semibold">CSE Notebook</div>
               <SignedIn>
                 <nav className="flex items-center gap-1">
                   <Link href="/dashboard">
