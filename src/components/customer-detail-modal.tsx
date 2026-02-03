@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { RichTextEditor } from "@/components/rich-text-editor";
+import { AddTodoFromNoteDialog } from "@/components/add-todo-from-note-dialog";
 import { updateCustomer, addNote, getCustomerNotes } from "@/app/actions/customers";
 import { useEffect } from "react";
 
@@ -357,6 +358,11 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                         <Badge variant="outline" className="text-xs">
                           {formatDate(note.createdAt)}
                         </Badge>
+                        <AddTodoFromNoteDialog 
+                          noteContent={note.note}
+                          customerId={customer.id}
+                          customerName={customer.name}
+                        />
                       </div>
                       <div 
                         className="text-sm text-foreground prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline"

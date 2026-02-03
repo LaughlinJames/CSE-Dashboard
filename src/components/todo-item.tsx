@@ -173,9 +173,10 @@ export function TodoItem({ todo }: TodoItemProps) {
                 </div>
               </div>
               {todo.description && (
-                <p className={`text-sm ${todo.completed ? "line-through text-muted-foreground" : "text-muted-foreground"}`}>
-                  {todo.description}
-                </p>
+                <div 
+                  className={`text-sm prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline ${todo.completed ? "line-through opacity-60" : ""}`}
+                  dangerouslySetInnerHTML={{ __html: todo.description }}
+                />
               )}
               <div className="flex items-center gap-2 flex-wrap">
                 <Badge variant="outline" className={priorityColor}>
