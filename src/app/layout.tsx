@@ -38,7 +38,7 @@ export default function RootLayout({
       <html lang="en" className="dark">
         <body className={`${poppins.variable} antialiased`}>
           <header className="flex items-center justify-between p-4 border-b">
-            <div className="font-semibold">Next.js Starter</div>
+            <div className="font-semibold">Customer Dashboard</div>
             <div className="flex items-center gap-4">
               <SignedOut>
                 <SignInButton mode="modal">

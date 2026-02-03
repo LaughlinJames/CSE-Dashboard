@@ -70,13 +70,7 @@ export default async function DashboardPage() {
   return (
     <div className="container mx-auto p-6">
       <div className="mb-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Customer Dashboard</h1>
-            <p className="text-muted-foreground">
-              Manage and track your customer success engineering activities
-            </p>
-          </div>
+        <div className="flex items-center justify-end">
           <div className="flex gap-2">
             <WeeklyReportButton />
             <AddCustomerDialog />
