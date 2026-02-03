@@ -52,6 +52,7 @@ export const todosTable = pgTable("todos", {
   completed: boolean().notNull().default(false),
   priority: varchar({ length: 20 }).notNull().default("medium"), // low, medium, high
   dueDate: date("due_date"),
+  customerId: integer("customer_id").references(() => customersTable.id, { onDelete: "set null" }), // Optional link to customer
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   userId: text("user_id").notNull(), // Clerk user ID who owns this todo

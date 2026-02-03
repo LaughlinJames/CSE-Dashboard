@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useRef } from "react";
+import { useState, useTransition, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,24 +21,47 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createTodo } from "@/app/actions/todos";
+import { createTodo, getActiveCustomers } from "@/app/actions/todos";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
+
+type Customer = {
+  id: number;
+  name: string;
+};
 
 export function AddTodoDialog() {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [loadingCustomers, setLoadingCustomers] = useState(true);
   const formRef = useRef<HTMLFormElement>(null);
+
+  // Fetch active customers when dialog opens
+  useEffect(() => {
+    if (open) {
+      setLoadingCustomers(true);
+      getActiveCustomers()
+        .then(setCustomers)
+        .catch((error) => {
+          console.error("Failed to fetch customers:", error);
+          toast.error("Failed to load customers");
+        })
+        .finally(() => setLoadingCustomers(false));
+    }
+  }, [open]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
+    const customerIdStr = formData.get("customerId") as string;
     const data = {
       title: formData.get("title") as string,
       description: formData.get("description") as string,
       priority: formData.get("priority") as "low" | "medium" | "high",
       dueDate: formData.get("dueDate") as string,
+      customerId: customerIdStr && customerIdStr !== "none" ? parseInt(customerIdStr, 10) : undefined,
     };
 
     startTransition(async () => {
@@ -93,6 +116,22 @@ export function AddTodoDialog() {
                 disabled={isPending}
                 rows={3}
               />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="customer">Customer (Optional)</Label>
+              <Select name="customerId" defaultValue="none" disabled={isPending || loadingCustomers}>
+                <SelectTrigger>
+                  <SelectValue placeholder={loadingCustomers ? "Loading customers..." : "Select customer (optional)"} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None</SelectItem>
+                  {customers.map((customer) => (
+                    <SelectItem key={customer.id} value={customer.id.toString()}>
+                      {customer.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="priority">Priority</Label>

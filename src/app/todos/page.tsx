@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
-import { todosTable } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { todosTable, customersTable } from "@/db/schema";
+import { eq, desc, sql } from "drizzle-orm";
 import { Card, CardContent } from "@/components/ui/card";
 import { AddTodoDialog } from "@/components/add-todo-dialog";
 import { TodoItem } from "@/components/todo-item";
@@ -14,12 +14,32 @@ export default async function TodosPage() {
     redirect("/sign-in");
   }
 
-  // Fetch all todos for the user
+  // Fetch all todos for the user with customer info, sorted by priority (high, medium, low), then by creation date
   const todos = await db
-    .select()
+    .select({
+      id: todosTable.id,
+      title: todosTable.title,
+      description: todosTable.description,
+      completed: todosTable.completed,
+      priority: todosTable.priority,
+      dueDate: todosTable.dueDate,
+      customerId: todosTable.customerId,
+      customerName: customersTable.name,
+      createdAt: todosTable.createdAt,
+      updatedAt: todosTable.updatedAt,
+    })
     .from(todosTable)
+    .leftJoin(customersTable, eq(todosTable.customerId, customersTable.id))
     .where(eq(todosTable.userId, userId))
-    .orderBy(desc(todosTable.createdAt));
+    .orderBy(
+      sql`CASE 
+        WHEN ${todosTable.priority} = 'high' THEN 1 
+        WHEN ${todosTable.priority} = 'medium' THEN 2 
+        WHEN ${todosTable.priority} = 'low' THEN 3 
+        ELSE 4 
+      END`,
+      desc(todosTable.createdAt)
+    );
 
   // Separate completed and incomplete todos
   const incompleteTodos = todos.filter(t => !t.completed);

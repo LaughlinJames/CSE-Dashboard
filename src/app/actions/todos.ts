@@ -2,7 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
-import { todosTable } from "@/db/schema";
+import { todosTable, customersTable } from "@/db/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -13,6 +13,7 @@ const createTodoSchema = z.object({
   description: z.string().optional(),
   priority: z.enum(["low", "medium", "high"]).default("medium"),
   dueDate: z.string().optional(),
+  customerId: z.number().positive().optional(),
 });
 
 const updateTodoSchema = z.object({
@@ -21,6 +22,7 @@ const updateTodoSchema = z.object({
   description: z.string().optional(),
   priority: z.enum(["low", "medium", "high"]).optional(),
   dueDate: z.string().optional(),
+  customerId: z.number().positive().optional(),
   completed: z.boolean().optional(),
 });
 
@@ -46,6 +48,7 @@ export async function createTodo(data: CreateTodoInput) {
     description: validated.description,
     priority: validated.priority,
     dueDate: validated.dueDate || null,
+    customerId: validated.customerId || null,
     userId,
   });
 
@@ -71,6 +74,7 @@ export async function updateTodo(data: UpdateTodoInput) {
   if (validated.description !== undefined) updateData.description = validated.description;
   if (validated.priority !== undefined) updateData.priority = validated.priority;
   if (validated.dueDate !== undefined) updateData.dueDate = validated.dueDate || null;
+  if (validated.customerId !== undefined) updateData.customerId = validated.customerId || null;
   if (validated.completed !== undefined) updateData.completed = validated.completed;
 
   const result = await db
@@ -162,4 +166,28 @@ export async function toggleTodoComplete(todoId: number) {
   revalidatePath("/todos");
 
   return { success: true };
+}
+
+export async function getActiveCustomers() {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const customers = await db
+    .select({
+      id: customersTable.id,
+      name: customersTable.name,
+    })
+    .from(customersTable)
+    .where(
+      and(
+        eq(customersTable.userId, userId),
+        eq(customersTable.archived, false)
+      )
+    )
+    .orderBy(customersTable.name);
+
+  return customers;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,9 +23,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toggleTodoComplete, updateTodo, deleteTodo } from "@/app/actions/todos";
+import { toggleTodoComplete, updateTodo, deleteTodo, getActiveCustomers } from "@/app/actions/todos";
 import { toast } from "sonner";
-import { Pencil, Trash2, Calendar } from "lucide-react";
+import { Pencil, Trash2, Calendar, Building2 } from "lucide-react";
+
+type Customer = {
+  id: number;
+  name: string;
+};
 
 type TodoItemProps = {
   todo: {
@@ -35,6 +40,8 @@ type TodoItemProps = {
     completed: boolean;
     priority: string;
     dueDate: string | null;
+    customerId: number | null;
+    customerName: string | null;
     createdAt: Date;
     updatedAt: Date;
   };
@@ -44,6 +51,22 @@ export function TodoItem({ todo }: TodoItemProps) {
   const [isPending, startTransition] = useTransition();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [loadingCustomers, setLoadingCustomers] = useState(true);
+
+  // Fetch active customers when edit dialog opens
+  useEffect(() => {
+    if (editOpen) {
+      setLoadingCustomers(true);
+      getActiveCustomers()
+        .then(setCustomers)
+        .catch((error) => {
+          console.error("Failed to fetch customers:", error);
+          toast.error("Failed to load customers");
+        })
+        .finally(() => setLoadingCustomers(false));
+    }
+  }, [editOpen]);
 
   const handleToggle = () => {
     startTransition(async () => {
@@ -63,12 +86,14 @@ export function TodoItem({ todo }: TodoItemProps) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
+    const customerIdStr = formData.get("customerId") as string;
     const data = {
       id: todo.id,
       title: formData.get("title") as string,
       description: formData.get("description") as string,
       priority: formData.get("priority") as "low" | "medium" | "high",
       dueDate: formData.get("dueDate") as string,
+      customerId: customerIdStr && customerIdStr !== "none" ? parseInt(customerIdStr, 10) : undefined,
     };
 
     startTransition(async () => {
@@ -156,6 +181,12 @@ export function TodoItem({ todo }: TodoItemProps) {
                 <Badge variant="outline" className={priorityColor}>
                   {todo.priority}
                 </Badge>
+                {todo.customerName && (
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Building2 className="h-3 w-3" />
+                    {todo.customerName}
+                  </div>
+                )}
                 {todo.dueDate && (
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Calendar className="h-3 w-3" />
@@ -198,6 +229,22 @@ export function TodoItem({ todo }: TodoItemProps) {
                   disabled={isPending}
                   rows={3}
                 />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="edit-customer">Customer (Optional)</Label>
+                <Select name="customerId" defaultValue={todo.customerId?.toString() || "none"} disabled={isPending || loadingCustomers}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={loadingCustomers ? "Loading customers..." : "Select customer (optional)"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">None</SelectItem>
+                    {customers.map((customer) => (
+                      <SelectItem key={customer.id} value={customer.id.toString()}>
+                        {customer.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="edit-priority">Priority</Label>
