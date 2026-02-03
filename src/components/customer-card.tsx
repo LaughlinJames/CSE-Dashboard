@@ -156,18 +156,26 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
             <div className="flex justify-between items-center text-sm">
               <span className="text-muted-foreground">LTS Progress:</span>
               <div className="flex gap-2">
-                <Badge 
-                  variant={getTopologyVariant(customer.topology)}
-                  className={getTopologyColorClass(customer.topology)}
-                >
-                  {customer.topology.toUpperCase()}
-                </Badge>
-                <Badge 
-                  variant="outline"
-                  className={getStageColorClass(customer.dumbledoreStage)}
-                >
-                  Stage {customer.dumbledoreStage}
-                </Badge>
+                {customer.topology.toLowerCase() === "prod" && customer.dumbledoreStage === 9 ? (
+                  <Badge className="bg-green-600 hover:bg-green-700 text-white">
+                    Complete
+                  </Badge>
+                ) : (
+                  <>
+                    <Badge 
+                      variant={getTopologyVariant(customer.topology)}
+                      className={getTopologyColorClass(customer.topology)}
+                    >
+                      {customer.topology.toUpperCase()}
+                    </Badge>
+                    <Badge 
+                      variant="outline"
+                      className={getStageColorClass(customer.dumbledoreStage)}
+                    >
+                      Stage {customer.dumbledoreStage}
+                    </Badge>
+                  </>
+                )}
               </div>
             </div>
             <div className="flex justify-between items-center text-sm">
