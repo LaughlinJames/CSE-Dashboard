@@ -40,6 +40,7 @@ export function AddCustomerDialog() {
       temperament: formData.get("temperament") as "happy" | "satisfied" | "neutral" | "concerned" | "frustrated",
       topology: formData.get("topology") as "dev" | "qa" | "stage" | "prod",
       dumbledoreStage: parseInt(formData.get("dumbledoreStage") as string),
+      patchFrequency: formData.get("patchFrequency") as "monthly" | "quarterly",
     };
 
     startTransition(async () => {
@@ -148,6 +149,19 @@ export function AddCustomerDialog() {
                     Stage {stage}
                   </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="patchFrequency">Patch Frequency *</Label>
+            <Select name="patchFrequency" defaultValue="monthly" disabled={isPending}>
+              <SelectTrigger id="patchFrequency">
+                <SelectValue placeholder="Select frequency" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="monthly">Monthly</SelectItem>
+                <SelectItem value="quarterly">Quarterly</SelectItem>
               </SelectContent>
             </Select>
           </div>

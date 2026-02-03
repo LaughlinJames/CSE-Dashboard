@@ -9,6 +9,7 @@ export const customersTable = pgTable("customers", {
   temperament: varchar({ length: 20 }).notNull().default("neutral"), // happy, satisfied, neutral, concerned, frustrated
   topology: varchar({ length: 20 }).notNull().default("dev"), // dev, qa, stage, prod
   dumbledoreStage: integer("dumbledore_stage").notNull().default(1), // 1-9
+  patchFrequency: varchar("patch_frequency", { length: 20 }).notNull().default("monthly"), // monthly or quarterly
   mscUrl: text("msc_url"), // URL for MSC button
   runbookUrl: text("runbook_url"), // URL for Runbook button
   snowUrl: text("snow_url"), // URL for SNOW button

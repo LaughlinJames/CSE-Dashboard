@@ -8,6 +8,13 @@
       "when": 1769810713285,
       "tag": "0000_lean_pretty_boy",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1738603900000,
+      "tag": "0005_add_patch_frequency",
+      "breakpoints": true
     }
   ]
 }

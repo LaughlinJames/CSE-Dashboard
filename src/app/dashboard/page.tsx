@@ -14,8 +14,10 @@ type CustomerWithNote = {
   name: string;
   lastPatchDate: string | null;
   lastPatchVersion: string | null;
+  temperament: string;
   topology: string;
   dumbledoreStage: number;
+  patchFrequency: string;
   mscUrl: string | null;
   runbookUrl: string | null;
   snowUrl: string | null;

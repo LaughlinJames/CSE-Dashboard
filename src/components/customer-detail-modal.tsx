@@ -19,6 +19,7 @@ type Customer = {
   temperament: string;
   topology: string;
   dumbledoreStage: number;
+  patchFrequency: string;
   mscUrl: string | null;
   runbookUrl: string | null;
   snowUrl: string | null;
@@ -57,6 +58,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   const [temperament, setTemperament] = useState<"happy" | "satisfied" | "neutral" | "concerned" | "frustrated">("neutral");
   const [topology, setTopology] = useState<"dev" | "qa" | "stage" | "prod">("dev");
   const [dumbledoreStage, setDumbledoreStage] = useState(1);
+  const [patchFrequency, setPatchFrequency] = useState<"monthly" | "quarterly">("monthly");
   const [mscUrl, setMscUrl] = useState("");
   const [runbookUrl, setRunbookUrl] = useState("");
   const [snowUrl, setSnowUrl] = useState("");
@@ -70,6 +72,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
       setTemperament(customer.temperament as "happy" | "satisfied" | "neutral" | "concerned" | "frustrated");
       setTopology(customer.topology as "dev" | "qa" | "stage" | "prod");
       setDumbledoreStage(customer.dumbledoreStage);
+      setPatchFrequency(customer.patchFrequency as "monthly" | "quarterly");
       setMscUrl(customer.mscUrl || "");
       setRunbookUrl(customer.runbookUrl || "");
       setSnowUrl(customer.snowUrl || "");
@@ -110,6 +113,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
           temperament,
           topology,
           dumbledoreStage,
+          patchFrequency,
           mscUrl: mscUrl || null,
           runbookUrl: runbookUrl || null,
           snowUrl: snowUrl || null,
@@ -264,6 +268,19 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="patchFrequency">Patch Frequency</Label>
+                <Select value={patchFrequency} onValueChange={(value: "monthly" | "quarterly") => setPatchFrequency(value)}>
+                  <SelectTrigger id="patchFrequency">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                    <SelectItem value="quarterly">Quarterly</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">

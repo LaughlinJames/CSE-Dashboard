@@ -16,6 +16,7 @@ type Customer = {
   temperament: string;
   topology: string;
   dumbledoreStage: number;
+  patchFrequency: string;
   mscUrl: string | null;
   runbookUrl: string | null;
   snowUrl: string | null;
@@ -120,6 +121,11 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
     return stage === 9 ? "bg-green-600 hover:bg-green-700 text-white border-green-600" : "";
   };
 
+  // Helper function to get custom color class for patch frequency badges
+  const getPatchFrequencyColorClass = (frequency: string): string => {
+    return frequency.toLowerCase() === "monthly" ? "bg-red-600 hover:bg-red-700 text-white" : "";
+  };
+
   return (
     <>
       <Card 
@@ -163,6 +169,15 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
                   Stage {customer.dumbledoreStage}
                 </Badge>
               </div>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">Patch Frequency:</span>
+              <Badge 
+                variant="secondary"
+                className={getPatchFrequencyColorClass(customer.patchFrequency)}
+              >
+                {customer.patchFrequency.charAt(0).toUpperCase() + customer.patchFrequency.slice(1)}
+              </Badge>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Last Patch:</span>

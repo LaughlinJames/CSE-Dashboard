@@ -27,9 +27,10 @@ async function seedDatabase() {
       .insert(customersTable)
       .values({
         name: "TechStart Solutions",
-        lastPatchDate: new Date("2024-01-15"),
+        lastPatchDate: "2024-01-15",
         topology: "prod",
         dumbledoreStage: 5,
+        patchFrequency: "monthly",
         userId: testUserId,
       })
       .returning();
@@ -67,9 +68,10 @@ async function seedDatabase() {
       .insert(customersTable)
       .values({
         name: "Global Enterprises Inc",
-        lastPatchDate: new Date("2024-01-20"),
+        lastPatchDate: "2024-01-20",
         topology: "stage",
         dumbledoreStage: 3,
+        patchFrequency: "quarterly",
         userId: testUserId,
       })
       .returning();
@@ -102,9 +104,10 @@ async function seedDatabase() {
       .insert(customersTable)
       .values({
         name: "DataFlow Systems",
-        lastPatchDate: new Date("2024-01-10"),
+        lastPatchDate: "2024-01-10",
         topology: "prod",
         dumbledoreStage: 7,
+        patchFrequency: "monthly",
         userId: testUserId,
       })
       .returning();
@@ -142,9 +145,10 @@ async function seedDatabase() {
       .insert(customersTable)
       .values({
         name: "CloudNet Partners",
-        lastPatchDate: new Date("2024-01-25"),
+        lastPatchDate: "2024-01-25",
         topology: "qa",
         dumbledoreStage: 2,
+        patchFrequency: "quarterly",
         userId: testUserId,
       })
       .returning();
