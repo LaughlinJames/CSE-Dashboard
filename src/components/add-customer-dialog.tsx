@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import { createCustomer } from "@/app/actions/customers";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +26,7 @@ export function AddCustomerDialog() {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,7 +48,7 @@ export function AddCustomerDialog() {
       try {
         await createCustomer(data);
         setOpen(false);
-        e.currentTarget.reset();
+        formRef.current?.reset();
       } catch (error) {
         if (error instanceof Error) {
           setError(error.message);
@@ -73,7 +74,7 @@ export function AddCustomerDialog() {
             Create a new customer record. Fill in the details below.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+        <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
             <Label htmlFor="name">Customer Name *</Label>
             <Input

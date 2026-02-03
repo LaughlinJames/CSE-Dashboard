@@ -43,3 +43,16 @@ export const customerAuditLogTable = pgTable("customer_audit_log", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   userId: text("user_id").notNull(), // Clerk user ID who made the change
 });
+
+// Todos table - track user to-do items
+export const todosTable = pgTable("todos", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  title: text("title").notNull(),
+  description: text("description"),
+  completed: boolean().notNull().default(false),
+  priority: varchar({ length: 20 }).notNull().default("medium"), // low, medium, high
+  dueDate: date("due_date"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  userId: text("user_id").notNull(), // Clerk user ID who owns this todo
+});
