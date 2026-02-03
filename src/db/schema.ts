@@ -29,3 +29,17 @@ export const customerNotesTable = pgTable("customer_notes", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   userId: text("user_id").notNull(), // Clerk user ID who created this note
 });
+
+// Customer Audit Log table - track all changes to customer records
+export const customerAuditLogTable = pgTable("customer_audit_log", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  customerId: integer("customer_id")
+    .notNull()
+    .references(() => customersTable.id, { onDelete: "cascade" }),
+  action: varchar({ length: 50 }).notNull(), // create, update, archive, unarchive
+  fieldName: varchar("field_name", { length: 100 }), // Field that was changed (null for create/archive actions)
+  oldValue: text("old_value"), // Previous value (JSON stringified for complex types)
+  newValue: text("new_value"), // New value (JSON stringified for complex types)
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  userId: text("user_id").notNull(), // Clerk user ID who made the change
+});
