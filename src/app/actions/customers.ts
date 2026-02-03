@@ -2,7 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
-import { customersTable, customerNotesTable, customerAuditLogTable } from "@/db/schema";
+import { customersTable, customerNotesTable, customerAuditLogTable, todosTable } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 import { 
   createCustomerSchema, 
@@ -12,7 +12,7 @@ import {
   type UpdateCustomerInput,
   type AddNoteInput
 } from "@/lib/validations/customers";
-import { eq, and, desc, gte, lte, between } from "drizzle-orm";
+import { eq, and, desc, gte, lte, between, isNotNull } from "drizzle-orm";
 import { z } from "zod";
 import { logCustomerCreate, logCustomerUpdate, logCustomerArchive } from "@/db/audit";
 
@@ -421,4 +421,41 @@ export async function getCustomerAuditHistory(data: GetAuditHistoryInput) {
     createdAt: entry.createdAt,
     userId: entry.userId,
   }));
+}
+
+export async function getTodosByCustomer(customerId: number) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  // Verify customer ownership
+  const customer = await db
+    .select()
+    .from(customersTable)
+    .where(
+      and(
+        eq(customersTable.id, customerId),
+        eq(customersTable.userId, userId)
+      )
+    );
+
+  if (customer.length === 0) {
+    throw new Error("Customer not found or unauthorized");
+  }
+
+  // Get todos for this customer
+  const todos = await db
+    .select()
+    .from(todosTable)
+    .where(
+      and(
+        eq(todosTable.customerId, customerId),
+        eq(todosTable.userId, userId),
+        isNotNull(todosTable.noteId)
+      )
+    );
+
+  return todos;
 }

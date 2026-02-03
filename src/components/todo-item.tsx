@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useEffect } from "react";
+import { useState, useTransition, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -45,14 +45,25 @@ type TodoItemProps = {
     createdAt: Date;
     updatedAt: Date;
   };
+  highlight?: boolean;
 };
 
-export function TodoItem({ todo }: TodoItemProps) {
+export function TodoItem({ todo, highlight = false }: TodoItemProps) {
   const [isPending, startTransition] = useTransition();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loadingCustomers, setLoadingCustomers] = useState(true);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Scroll into view when highlighted
+  useEffect(() => {
+    if (highlight && cardRef.current) {
+      setTimeout(() => {
+        cardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 100);
+    }
+  }, [highlight]);
 
   // Fetch active customers when edit dialog opens
   useEffect(() => {
@@ -168,7 +179,7 @@ export function TodoItem({ todo }: TodoItemProps) {
 
   return (
     <>
-      <Card className={todo.completed ? "opacity-60" : ""}>
+      <Card ref={cardRef} className={`${todo.completed ? "opacity-60" : ""} ${highlight ? "ring-2 ring-green-500 ring-offset-2 shadow-lg" : ""}`}>
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
             <Checkbox

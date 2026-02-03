@@ -7,12 +7,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AddTodoDialog } from "@/components/add-todo-dialog";
 import { TodoItem } from "@/components/todo-item";
 
-export default async function TodosPage() {
+export default async function TodosPage({
+  searchParams,
+}: {
+  searchParams: { highlight?: string };
+}) {
   const { userId } = await auth();
 
   if (!userId) {
     redirect("/sign-in");
   }
+
+  const highlightId = searchParams.highlight ? parseInt(searchParams.highlight) : null;
 
   // Fetch all todos for the user with customer info, sorted by due date (nulls last), then by priority (high, medium, low)
   const todos = await db
@@ -76,7 +82,7 @@ export default async function TodosPage() {
               </h2>
               <div className="space-y-3">
                 {incompleteTodos.map((todo) => (
-                  <TodoItem key={todo.id} todo={todo} />
+                  <TodoItem key={todo.id} todo={todo} highlight={highlightId === todo.id} />
                 ))}
               </div>
             </div>
@@ -95,7 +101,7 @@ export default async function TodosPage() {
               </h2>
               <div className="space-y-3">
                 {completedTodos.map((todo) => (
-                  <TodoItem key={todo.id} todo={todo} />
+                  <TodoItem key={todo.id} todo={todo} highlight={highlightId === todo.id} />
                 ))}
               </div>
             </div>

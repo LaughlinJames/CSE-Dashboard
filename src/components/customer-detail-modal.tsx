@@ -9,8 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { RichTextEditor } from "@/components/rich-text-editor";
 import { AddTodoFromNoteDialog } from "@/components/add-todo-from-note-dialog";
-import { updateCustomer, addNote, getCustomerNotes } from "@/app/actions/customers";
+import { updateCustomer, addNote, getCustomerNotes, getTodosByCustomer } from "@/app/actions/customers";
 import { useEffect } from "react";
+import { CheckSquare } from "lucide-react";
+import Link from "next/link";
 
 type Customer = {
   id: number;
@@ -51,6 +53,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   const [newNote, setNewNote] = useState("<p></p>");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [noteTodoMap, setNoteTodoMap] = useState<Map<number, number>>(new Map()); // noteId -> todoId
 
   // Form state for editing
   const [name, setName] = useState("");
@@ -81,11 +84,22 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
       setError(null);
       setSuccess(null);
 
-      // Fetch notes
+      // Fetch notes and todos
       setIsLoadingNotes(true);
-      getCustomerNotes(customer.id)
-        .then((fetchedNotes) => {
+      Promise.all([
+        getCustomerNotes(customer.id),
+        getTodosByCustomer(customer.id)
+      ])
+        .then(([fetchedNotes, todos]) => {
           setNotes(fetchedNotes);
+          // Create map of noteId to todoId
+          const todoMap = new Map<number, number>();
+          todos.forEach(todo => {
+            if (todo.noteId) {
+              todoMap.set(todo.noteId, todo.id);
+            }
+          });
+          setNoteTodoMap(todoMap);
         })
         .catch((err) => {
           setError(err instanceof Error ? err.message : "Failed to load notes");
@@ -128,9 +142,20 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
             note: newNote,
           });
           
-          // Refresh notes list
-          const updatedNotes = await getCustomerNotes(customer.id);
+          // Refresh notes and todos list
+          const [updatedNotes, todos] = await Promise.all([
+            getCustomerNotes(customer.id),
+            getTodosByCustomer(customer.id)
+          ]);
           setNotes(updatedNotes);
+          // Update todo map
+          const todoMap = new Map<number, number>();
+          todos.forEach(todo => {
+            if (todo.noteId) {
+              todoMap.set(todo.noteId, todo.id);
+            }
+          });
+          setNoteTodoMap(todoMap);
           setNewNote("<p></p>");
         }
 
@@ -349,27 +374,44 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                 <p className="text-sm text-muted-foreground italic">No notes yet</p>
               ) : (
                 <div className="space-y-3">
-                  {notes.map((note) => (
-                    <div
-                      key={note.id}
-                      className="bg-muted/50 p-4 rounded-lg space-y-2"
-                    >
-                      <div className="flex items-center justify-between">
-                        <Badge variant="outline" className="text-xs">
-                          {formatDate(note.createdAt)}
-                        </Badge>
-                        <AddTodoFromNoteDialog 
-                          noteContent={note.note}
-                          customerId={customer.id}
-                          customerName={customer.name}
+                  {notes.map((note) => {
+                    const todoId = noteTodoMap.get(note.id);
+                    return (
+                      <div
+                        key={note.id}
+                        className="bg-muted/50 p-4 rounded-lg space-y-2"
+                      >
+                        <div className="flex items-center justify-between">
+                          <Badge variant="outline" className="text-xs">
+                            {formatDate(note.createdAt)}
+                          </Badge>
+                          {todoId ? (
+                            <Link href={`/todos?highlight=${todoId}`}>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className="h-8 w-8 p-0"
+                                title="View related to-do"
+                              >
+                                <CheckSquare className="h-4 w-4 text-green-600" />
+                              </Button>
+                            </Link>
+                          ) : (
+                            <AddTodoFromNoteDialog 
+                              noteContent={note.note}
+                              customerId={customer.id}
+                              customerName={customer.name}
+                              noteId={note.id}
+                            />
+                          )}
+                        </div>
+                        <div 
+                          className="text-sm text-foreground prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline"
+                          dangerouslySetInnerHTML={{ __html: note.note }}
                         />
                       </div>
-                      <div 
-                        className="text-sm text-foreground prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline"
-                        dangerouslySetInnerHTML={{ __html: note.note }}
-                      />
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>

@@ -28,12 +28,14 @@ type AddTodoFromNoteDialogProps = {
   noteContent: string;
   customerId: number;
   customerName: string;
+  noteId: number;
 };
 
 export function AddTodoFromNoteDialog({ 
   noteContent, 
   customerId,
-  customerName 
+  customerName,
+  noteId
 }: AddTodoFromNoteDialogProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -49,6 +51,7 @@ export function AddTodoFromNoteDialog({
       priority: formData.get("priority") as "low" | "medium" | "high",
       dueDate: formData.get("dueDate") as string,
       customerId: customerId, // Customer is pre-set
+      noteId: noteId, // Store the note ID
     };
 
     startTransition(async () => {

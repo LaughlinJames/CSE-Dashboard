@@ -15,6 +15,7 @@ const createTodoSchema = z.object({
   priority: z.enum(["low", "medium", "high"]).default("medium"),
   dueDate: z.string().optional(),
   customerId: z.number().positive().optional(),
+  noteId: z.number().positive().optional(),
 });
 
 const updateTodoSchema = z.object({
@@ -60,6 +61,7 @@ export async function createTodo(data: CreateTodoInput) {
     priority: validated.priority,
     dueDate: formattedDueDate,
     customerId: validated.customerId || null,
+    noteId: validated.noteId || null,
     userId,
   }).returning();
 
