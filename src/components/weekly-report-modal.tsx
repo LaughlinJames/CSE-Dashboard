@@ -98,6 +98,25 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
     return doc.body.textContent || '';
   };
 
+  const cleanExecutiveSummary = (summary: string) => {
+    // Remove redundant heading lines like "**Executive Summary for [Customer] – Week of [Date]**"
+    // These are superfluous since we already have an "EXECUTIVE SUMMARY:" section header
+    const lines = summary.split('\n');
+    const cleanedLines = lines.filter(line => {
+      const trimmed = line.trim();
+      // Remove lines that start with "**Executive Summary" or similar patterns
+      if (trimmed.match(/^\*\*Executive Summary/i)) {
+        return false;
+      }
+      // Remove lines that are just the closing "**" after the heading
+      if (trimmed === '**' && lines[lines.indexOf(line) - 1]?.trim().match(/^\*\*Executive Summary/i)) {
+        return false;
+      }
+      return true;
+    });
+    return cleanedLines.join('\n').trim();
+  };
+
   const generateAsciiReport = () => {
     if (!reportData) return "";
 
@@ -132,7 +151,7 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
       if (item.executiveSummary) {
         report += "EXECUTIVE SUMMARY:\n";
         report += thinSeparator + "\n";
-        report += `${item.executiveSummary}\n\n`;
+        report += `${cleanExecutiveSummary(item.executiveSummary)}\n\n`;
       }
 
       // Notes section
@@ -222,10 +241,10 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
         {reportData && reportData.length > 0 && (
           <div className="mt-6 border-t pt-6">
             <div className="mb-4">
-              <h2 className="text-xl font-bold text-foreground">
+              <h2 className="text-xl font-bold text-gray-900">
                 Weekly Customer Report
               </h2>
-              <p className="text-sm text-foreground/70">
+              <p className="text-sm text-gray-600">
                 ASCII text format - ready to copy and paste into email
               </p>
             </div>
@@ -233,7 +252,7 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
             <div className="relative">
               <pre
                 ref={reportTextRef}
-                className="bg-zinc-900 text-zinc-100 dark:bg-zinc-950 dark:text-zinc-50 p-4 rounded-lg text-sm font-mono whitespace-pre-wrap break-words border border-zinc-700 overflow-hidden"
+                className="bg-gray-50 text-gray-900 p-4 rounded-lg text-sm font-mono whitespace-pre-wrap break-words border border-gray-300 overflow-hidden"
                 style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
               >
                 {generateAsciiReport()}
@@ -243,7 +262,7 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
         )}
 
         {reportData && reportData.length === 0 && (
-          <div className="mt-6 text-center text-foreground/70">
+          <div className="mt-6 text-center text-gray-600">
             <p>No customers found for the selected week.</p>
           </div>
         )}
