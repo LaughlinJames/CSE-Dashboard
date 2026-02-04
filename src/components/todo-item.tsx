@@ -138,6 +138,7 @@ export function TodoItem({ todo, highlight = false }: TodoItemProps) {
     });
   };
 
+  // Badge colors for priority
   const priorityColors = {
     low: "bg-blue-500/10 text-blue-500 border-blue-500/20",
     medium: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
@@ -145,6 +146,17 @@ export function TodoItem({ todo, highlight = false }: TodoItemProps) {
   };
 
   const priorityColor = priorityColors[todo.priority as keyof typeof priorityColors] || priorityColors.medium;
+
+  // Get card background color based on priority
+  const getCardBackgroundClass = () => {
+    if (todo.priority === "high") {
+      return "bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900/50";
+    }
+    if (todo.priority === "medium") {
+      return "bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-900/50";
+    }
+    return ""; // Low priority uses default card styling
+  };
 
   // Parse date string in local timezone (avoid UTC conversion)
   const parseLocalDate = (dateStr: string) => {
@@ -179,7 +191,7 @@ export function TodoItem({ todo, highlight = false }: TodoItemProps) {
 
   return (
     <>
-      <Card ref={cardRef} className={`${todo.completed ? "opacity-60" : ""} ${highlight ? "ring-2 ring-green-500 ring-offset-2 shadow-lg" : ""}`}>
+      <Card ref={cardRef} className={`${todo.completed ? "opacity-60" : ""} ${highlight ? "ring-2 ring-green-500 ring-offset-2 shadow-lg" : ""} ${getCardBackgroundClass()}`}>
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
             <Checkbox
@@ -214,12 +226,6 @@ export function TodoItem({ todo, highlight = false }: TodoItemProps) {
                   </Button>
                 </div>
               </div>
-              {todo.description && (
-                <div 
-                  className={`text-sm prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline ${todo.completed ? "line-through opacity-60" : ""}`}
-                  dangerouslySetInnerHTML={{ __html: todo.description }}
-                />
-              )}
               <div className="flex items-center gap-2 flex-wrap">
                 <Badge variant="outline" className={priorityColor}>
                   {todo.priority}
@@ -237,6 +243,12 @@ export function TodoItem({ todo, highlight = false }: TodoItemProps) {
                   </div>
                 )}
               </div>
+              {todo.description && (
+                <div 
+                  className={`text-sm prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline ${todo.completed ? "line-through opacity-60" : ""}`}
+                  dangerouslySetInnerHTML={{ __html: todo.description }}
+                />
+              )}
             </div>
           </div>
         </CardContent>

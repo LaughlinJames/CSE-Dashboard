@@ -2,15 +2,16 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { todosTable, customersTable } from "@/db/schema";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, and } from "drizzle-orm";
 import { Card, CardContent } from "@/components/ui/card";
 import { AddTodoDialog } from "@/components/add-todo-dialog";
 import { TodoItem } from "@/components/todo-item";
+import { CustomerFilter } from "@/components/customer-filter";
 
 export default async function TodosPage({
   searchParams,
 }: {
-  searchParams: { highlight?: string };
+  searchParams: Promise<{ highlight?: string; customerId?: string }>;
 }) {
   const { userId } = await auth();
 
@@ -18,9 +19,32 @@ export default async function TodosPage({
     redirect("/sign-in");
   }
 
-  const highlightId = searchParams.highlight ? parseInt(searchParams.highlight) : null;
+  const params = await searchParams;
+  const highlightId = params.highlight ? parseInt(params.highlight) : null;
+  const filterCustomerId = params.customerId ? parseInt(params.customerId) : null;
 
-  // Fetch all todos for the user with customer info, sorted by due date (nulls last), then by priority (high, medium, low)
+  // Fetch active customers for the filter
+  const activeCustomers = await db
+    .select({
+      id: customersTable.id,
+      name: customersTable.name,
+    })
+    .from(customersTable)
+    .where(
+      and(
+        eq(customersTable.userId, userId),
+        eq(customersTable.archived, false)
+      )
+    )
+    .orderBy(customersTable.name);
+
+  // Build the where conditions
+  const whereConditions = [eq(todosTable.userId, userId)];
+  if (filterCustomerId) {
+    whereConditions.push(eq(todosTable.customerId, filterCustomerId));
+  }
+
+  // Fetch todos for the user with customer info, sorted by due date (nulls last), then by priority (high, medium, low)
   const todos = await db
     .select({
       id: todosTable.id,
@@ -36,7 +60,7 @@ export default async function TodosPage({
     })
     .from(todosTable)
     .leftJoin(customersTable, eq(todosTable.customerId, customersTable.id))
-    .where(eq(todosTable.userId, userId))
+    .where(and(...whereConditions))
     .orderBy(
       sql`CASE WHEN ${todosTable.dueDate} IS NULL THEN 1 ELSE 0 END`,
       todosTable.dueDate,
@@ -52,16 +76,34 @@ export default async function TodosPage({
   const incompleteTodos = todos.filter(t => !t.completed);
   const completedTodos = todos.filter(t => t.completed);
 
+  // Get selected customer name for display
+  const selectedCustomer = filterCustomerId 
+    ? activeCustomers.find(c => c.id === filterCustomerId)
+    : null;
+
   return (
     <div className="container mx-auto p-6">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">To-Do List</h1>
           <p className="text-muted-foreground mt-1">
             Manage your tasks and stay organized
           </p>
         </div>
-        <AddTodoDialog />
+        <AddTodoDialog defaultCustomerId={filterCustomerId?.toString()} />
+      </div>
+
+      {/* Customer Filter */}
+      <div className="mb-6">
+        <CustomerFilter 
+          customers={activeCustomers} 
+          currentCustomerId={filterCustomerId?.toString()}
+        />
+        {selectedCustomer && (
+          <p className="text-sm text-muted-foreground mt-2">
+            Showing tasks for: <span className="font-medium">{selectedCustomer.name}</span>
+          </p>
+        )}
       </div>
 
       {todos.length === 0 ? (

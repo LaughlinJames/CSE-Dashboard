@@ -30,17 +30,24 @@ type Customer = {
   name: string;
 };
 
-export function AddTodoDialog() {
+type AddTodoDialogProps = {
+  defaultCustomerId?: string;
+};
+
+export function AddTodoDialog({ defaultCustomerId }: AddTodoDialogProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loadingCustomers, setLoadingCustomers] = useState(true);
   const formRef = useRef<HTMLFormElement>(null);
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string>(defaultCustomerId || "none");
 
   // Fetch active customers when dialog opens
   useEffect(() => {
     if (open) {
       setLoadingCustomers(true);
+      // Reset selected customer to default when dialog opens
+      setSelectedCustomerId(defaultCustomerId || "none");
       getActiveCustomers()
         .then(setCustomers)
         .catch((error) => {
@@ -49,7 +56,7 @@ export function AddTodoDialog() {
         })
         .finally(() => setLoadingCustomers(false));
     }
-  }, [open]);
+  }, [open, defaultCustomerId]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,6 +77,7 @@ export function AddTodoDialog() {
         toast.success("To-do created successfully!");
         setOpen(false);
         formRef.current?.reset();
+        setSelectedCustomerId(defaultCustomerId || "none");
       } catch (error) {
         if (error instanceof Error) {
           toast.error(error.message);
@@ -119,7 +127,12 @@ export function AddTodoDialog() {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="customer">Customer (Optional)</Label>
-              <Select name="customerId" defaultValue="none" disabled={isPending || loadingCustomers}>
+              <Select 
+                name="customerId" 
+                value={selectedCustomerId} 
+                onValueChange={setSelectedCustomerId}
+                disabled={isPending || loadingCustomers}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder={loadingCustomers ? "Loading customers..." : "Select customer (optional)"} />
                 </SelectTrigger>

@@ -9,7 +9,6 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "sonner";
 import "./globals.css";
@@ -21,8 +20,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "CSE Notebook",
-  description: "Customer Success Engineering Notebook",
+  title: "CSE Whiteboard",
+  description: "Customer Success Engineering Whiteboard",
 };
 
 export default function RootLayout({
@@ -31,16 +30,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      appearance={{
-        baseTheme: dark,
-      }}
-    >
-      <html lang="en" className="dark">
+    <ClerkProvider>
+      <html lang="en">
         <body className={`${poppins.variable} antialiased`}>
           <header className="flex items-center justify-between p-4 border-b">
             <div className="flex items-center gap-8">
-              <div className="font-semibold">CSE Notebook</div>
+              <div className="font-semibold">CSE Whiteboard</div>
               <SignedIn>
                 <nav className="flex items-center gap-1">
                   <Link href="/dashboard">
