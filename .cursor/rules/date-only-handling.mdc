@@ -1,0 +1,270 @@
+---
+globs: *.ts,*.tsx
+description: Handling date-only values without timezone conversion bugs
+---
+
+# Date-Only Value Handling
+
+**CRITICAL: Date-only values (YYYY-MM-DD format) must NEVER be converted using UTC-based methods.**
+
+Date-only values stored in `YYYY-MM-DD` format (like SQL DATE columns) represent calendar dates without time components. Converting these through JavaScript's UTC methods causes timezone shift bugs where dates can change by ±1 day.
+
+## 🔒 CRITICAL RULES
+
+### 1. Check Format Before Processing
+
+Always check if a date string is already in `YYYY-MM-DD` format before any conversion:
+
+```typescript
+// ✅ CORRECT - Check format first
+const DATE_ONLY_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+
+function formatDateForInput(dateValue: Date | string | null): string {
+  if (!dateValue) return "";
+  
+  // If already in YYYY-MM-DD format, return as-is
+  if (typeof dateValue === "string" && DATE_ONLY_REGEX.test(dateValue)) {
+    return dateValue;
+  }
+  
+  // Only convert if it's a Date object or non-YYYY-MM-DD string
+  const date = typeof dateValue === "string" ? new Date(dateValue) : dateValue;
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+```
+
+### 2. NEVER Use toISOString() for Date-Only Values
+
+**❌ WRONG - Causes timezone shift:**
+
+```typescript
+// ❌ This will shift dates in timezones behind UTC
+const date = new Date("2025-11-24");
+const formatted = date.toISOString().split("T")[0];
+// Returns "2025-11-23" for users in EST/PST!
+```
+
+**✅ CORRECT - Use local timezone methods:**
+
+```typescript
+// ✅ Preserves the calendar date
+const date = new Date("2025-11-24");
+const year = date.getFullYear();
+const month = String(date.getMonth() + 1).padStart(2, "0");
+const day = String(date.getDate()).padStart(2, "0");
+const formatted = `${year}-${month}-${day}`; // Always "2025-11-24"
+```
+
+### 3. Date Input Fields - Return YYYY-MM-DD Directly
+
+When handling date input fields, if the value is already in `YYYY-MM-DD` format, return it unchanged:
+
+```typescript
+// ✅ CORRECT
+function handleDateInput(value: string | Date): string {
+  // If it's already YYYY-MM-DD, use it directly
+  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return value;
+  }
+  
+  // Otherwise, format it
+  const date = typeof value === "string" ? new Date(value) : value;
+  return formatToYYYYMMDD(date);
+}
+
+// ❌ WRONG - Converts unnecessarily
+function handleDateInput(value: string | Date): string {
+  const date = new Date(value); // Triggers timezone conversion
+  return date.toISOString().split("T")[0]; // Shifts date
+}
+```
+
+### 4. Displaying Dates - Parse in Local Timezone
+
+When parsing `YYYY-MM-DD` strings for display, create Date objects in local timezone:
+
+```typescript
+// ✅ CORRECT - Parse in local timezone
+function parseYYYYMMDD(dateString: string): Date {
+  const [year, month, day] = dateString.split("-").map(Number);
+  return new Date(year, month - 1, day); // Local timezone
+}
+
+const displayDate = parseYYYYMMDD("2025-11-24");
+console.log(displayDate.toLocaleDateString()); // Correct date in any timezone
+
+// ❌ WRONG - Parses in UTC, causes shift
+const date = new Date("2025-11-24"); // Midnight UTC
+console.log(date.toLocaleDateString()); // Wrong date in EST/PST
+```
+
+## 📋 Complete Examples
+
+### Example 1: Form Input Handler
+
+```typescript
+interface FormData {
+  lastPatchDate: string; // YYYY-MM-DD from database
+}
+
+// ✅ CORRECT
+function handleSubmit(formData: FormData) {
+  const inputValue = formData.lastPatchDate;
+  
+  // Check if already in correct format
+  if (/^\d{4}-\d{2}-\d{2}$/.test(inputValue)) {
+    return inputValue; // Use directly
+  }
+  
+  // Convert only if needed
+  const date = new Date(inputValue);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+// ❌ WRONG - Always converts
+function handleSubmit(formData: FormData) {
+  const date = new Date(formData.lastPatchDate);
+  return date.toISOString().split("T")[0]; // Timezone bug!
+}
+```
+
+### Example 2: Date Display Component
+
+```typescript
+// ✅ CORRECT
+function DateDisplay({ date }: { date: string }) {
+  // If it's YYYY-MM-DD, parse in local timezone
+  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    const [year, month, day] = date.split("-").map(Number);
+    const localDate = new Date(year, month - 1, day);
+    return <span>{localDate.toLocaleDateString()}</span>;
+  }
+  
+  // Otherwise use as-is
+  return <span>{new Date(date).toLocaleDateString()}</span>;
+}
+
+// ❌ WRONG - Direct parsing causes timezone shift
+function DateDisplay({ date }: { date: string }) {
+  const displayDate = new Date(date); // Midnight UTC!
+  return <span>{displayDate.toLocaleDateString()}</span>; // Wrong date
+}
+```
+
+### Example 3: Server Action with Date-Only Field
+
+```typescript
+"use server";
+
+import { z } from "zod";
+
+// ✅ CORRECT - Validate YYYY-MM-DD format
+const schema = z.object({
+  lastPatchDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Must be YYYY-MM-DD"),
+});
+
+type Input = z.infer<typeof schema>;
+
+export async function updateCustomer(data: Input) {
+  const validated = schema.parse(data);
+  
+  // Store validated.lastPatchDate directly - it's already YYYY-MM-DD
+  await db.update(customersTable).set({
+    lastPatchDate: validated.lastPatchDate, // Store as-is
+  });
+}
+
+// ❌ WRONG - Converting causes timezone issues
+export async function updateCustomer(data: Input) {
+  const date = new Date(data.lastPatchDate);
+  const formatted = date.toISOString().split("T")[0]; // Bug!
+  
+  await db.update(customersTable).set({
+    lastPatchDate: formatted, // Wrong date for some timezones
+  });
+}
+```
+
+## 🐛 Understanding the Bug
+
+### The Problem
+
+When you create a `Date` object from a `YYYY-MM-DD` string, JavaScript parses it as **midnight UTC**:
+
+```typescript
+const date = new Date("2025-11-24");
+// Internally: 2025-11-24T00:00:00.000Z (midnight UTC)
+```
+
+If your user is in a timezone **behind UTC** (like EST at UTC-5):
+- The local time is `2025-11-23 19:00:00` (7 PM the previous day)
+- When you call `toISOString().split("T")[0]`, you get `"2025-11-23"` ❌
+
+### The Solution
+
+For date-only values, work in **local timezone** or preserve the original string:
+
+```typescript
+// ✅ Option 1: Check and preserve original
+if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+  return dateString; // No conversion needed
+}
+
+// ✅ Option 2: Use local timezone methods
+const date = new Date(dateString);
+const local = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+```
+
+## ❌ FORBIDDEN PATTERNS
+
+```typescript
+// ❌ NEVER use toISOString() for date-only values
+const formatted = date.toISOString().split("T")[0];
+
+// ❌ NEVER use toUTCString() for date-only values
+const formatted = date.toUTCString();
+
+// ❌ NEVER call getUTC* methods for date-only values
+const day = date.getUTCDate();
+const month = date.getUTCMonth();
+
+// ❌ NEVER convert YYYY-MM-DD strings without checking format first
+const date = new Date(dateString);
+return date.toISOString().split("T")[0];
+
+// ❌ NEVER use Date.parse() or Date.UTC() for date-only values
+const timestamp = Date.parse("2025-11-24");
+```
+
+## ✅ ALLOWED PATTERNS
+
+```typescript
+// ✅ Check format before processing
+if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+  return dateString;
+}
+
+// ✅ Use local timezone methods
+const year = date.getFullYear();
+const month = date.getMonth() + 1;
+const day = date.getDate();
+
+// ✅ Parse YYYY-MM-DD in local timezone
+const [y, m, d] = dateString.split("-").map(Number);
+const localDate = new Date(y, m - 1, d);
+
+// ✅ Validate YYYY-MM-DD format with Zod
+z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
+```
+
+## 📚 Summary
+
+**The Golden Rule:** If a date string is already in `YYYY-MM-DD` format, keep it that way. Never round-trip it through `new Date()` and `toISOString()`.
+
+This prevents dates from shifting by one day for users in timezones behind UTC (EST, PST, etc.).

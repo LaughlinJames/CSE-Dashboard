@@ -182,8 +182,17 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
 
   const formatDateInput = (date: string | null) => {
     if (!date) return "";
+    // For date-only inputs, avoid timezone conversion issues
+    // If date is already in YYYY-MM-DD format, return it directly
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      return date;
+    }
+    // Otherwise, format using local timezone
     const d = new Date(date);
-    return d.toISOString().split("T")[0];
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   return (

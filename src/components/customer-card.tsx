@@ -42,6 +42,18 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
   // Helper function to format dates
   const formatDate = (date: string | Date | null) => {
     if (!date) return "N/A";
+    
+    // For date-only strings in YYYY-MM-DD format, parse carefully to avoid timezone issues
+    if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      const [year, month, day] = date.split('-').map(Number);
+      const d = new Date(year, month - 1, day); // Create date in local timezone
+      return d.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+    
     const d = typeof date === "string" ? new Date(date) : date;
     return d.toLocaleDateString("en-US", {
       year: "numeric",
