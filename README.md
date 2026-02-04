@@ -11,6 +11,7 @@ A Next.js dashboard application for Customer Success Engineering, built with mod
 - **Neon** - Serverless Postgres
 - **shadcn/ui** - UI components
 - **Tailwind CSS** - Styling
+- **OpenAI** - AI-powered executive summaries
 
 ## Getting Started
 
@@ -38,10 +39,18 @@ This project uses Drizzle ORM with Neon Postgres for database management.
 
 ### Environment Variables
 
-Copy `.env.example` to `.env` and fill in your database credentials:
+Copy `.env.example` to `.env` and fill in your credentials:
 
 ```bash
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_xxxxx
+CLERK_SECRET_KEY=sk_test_xxxxx
+
+# Neon Database
 DATABASE_URL=postgresql://username:password@host/database?sslmode=require
+
+# OpenAI API (for executive summaries)
+OPENAI_API_KEY=sk-xxxxx
 ```
 
 ### Database Commands
@@ -171,6 +180,28 @@ Powered by Clerk, providing:
 - Sign up / Sign in
 - User profile management
 - Multi-tenant data isolation (users only see their own data)
+
+### AI-Powered Weekly Reports
+
+Generate comprehensive weekly customer reports with AI assistance:
+- **Executive Summaries**: OpenAI automatically analyzes customer notes and generates concise executive summaries
+- **Automated Report Generation**: Select a week ending date to generate a formatted report of all customer activities
+- **Copy-Paste Ready**: ASCII-formatted reports optimized for email distribution
+- **Comprehensive Data**: Includes customer status, patch information, temperament, and all notes from the week
+
+The weekly report feature uses **OpenAI's GPT models** to:
+1. Analyze all customer notes from the selected week
+2. Extract key activities, concerns, and progress updates
+3. Generate professional executive summaries highlighting the most important information
+4. Provide context-aware insights for customer status tracking
+
+To use this feature, you'll need an OpenAI API key. Add it to your `.env` file:
+
+```bash
+OPENAI_API_KEY=sk-xxxxx
+```
+
+Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys).
 
 ## Learn More
 
