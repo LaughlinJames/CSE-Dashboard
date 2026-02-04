@@ -128,6 +128,13 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
       report += `Temperament: ${item.customer.temperament.charAt(0).toUpperCase() + item.customer.temperament.slice(1)}\n`;
       report += "\n";
 
+      // Executive Summary (AI-generated)
+      if (item.executiveSummary) {
+        report += "EXECUTIVE SUMMARY:\n";
+        report += thinSeparator + "\n";
+        report += `${item.executiveSummary}\n\n`;
+      }
+
       // Notes section
       if (item.notes.length > 0) {
         report += `NOTES FOR THIS WEEK (${item.notes.length}):\n`;

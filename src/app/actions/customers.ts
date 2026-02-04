@@ -15,6 +15,7 @@ import {
 import { eq, and, desc, gte, lte, between, isNotNull } from "drizzle-orm";
 import { z } from "zod";
 import { logCustomerCreate, logCustomerUpdate, logCustomerArchive } from "@/db/audit";
+import OpenAI from "openai";
 
 export async function createCustomer(data: CreateCustomerInput) {
   const { userId } = await auth();
@@ -259,7 +260,102 @@ export type WeeklyReportData = {
     note: string;
     createdAt: Date;
   }>;
+  executiveSummary?: string;
 };
+
+/**
+ * Helper function to strip HTML from notes
+ */
+function stripHtml(html: string): string {
+  // Simple regex-based HTML stripping for server-side use
+  return html
+    .replace(/<[^>]*>/g, '') // Remove HTML tags
+    .replace(/&nbsp;/g, ' ') // Replace &nbsp; with space
+    .replace(/&amp;/g, '&') // Replace &amp; with &
+    .replace(/&lt;/g, '<') // Replace &lt; with <
+    .replace(/&gt;/g, '>') // Replace &gt; with >
+    .replace(/&quot;/g, '"') // Replace &quot; with "
+    .trim();
+}
+
+/**
+ * Generate an executive summary for a customer using OpenAI
+ */
+async function generateExecutiveSummary(
+  customerName: string,
+  customerInfo: {
+    topology: string;
+    dumbledoreStage: number;
+    temperament: string;
+    lastPatchVersion: string | null;
+  },
+  notes: Array<{ note: string; createdAt: Date }>
+): Promise<string> {
+  // If no notes, return a default message
+  if (notes.length === 0) {
+    return "No activity recorded for this customer during the week.";
+  }
+
+  // Initialize OpenAI client
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+
+  // Prepare notes text
+  const notesText = notes
+    .map((note, idx) => {
+      const plainText = stripHtml(note.note);
+      const date = note.createdAt.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+      return `[${date}] ${plainText}`;
+    })
+    .join("\n\n");
+
+  // Create the prompt
+  const prompt = `You are a Customer Success Engineer (CSE) creating a weekly executive summary for management. 
+
+Customer: ${customerName}
+Environment: ${customerInfo.topology.toUpperCase()}
+LTS Migration Stage: Stage ${customerInfo.dumbledoreStage}
+Current Version: ${customerInfo.lastPatchVersion || "Unknown"}
+Customer Temperament: ${customerInfo.temperament}
+
+Weekly Notes:
+${notesText}
+
+Please create a concise 2-3 sentence executive summary that:
+1. Highlights the most important activities and outcomes
+2. Identifies any risks or blockers
+3. Notes progress on LTS migration if mentioned
+4. Uses professional, business-appropriate language
+
+Keep it brief and actionable for executive review.`;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are a professional Customer Success Engineer writing executive summaries for weekly customer reports. Be concise, clear, and focus on business value.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: 0.7,
+      max_tokens: 200,
+    });
+
+    return completion.choices[0]?.message?.content || "Unable to generate summary.";
+  } catch (error) {
+    console.error("OpenAI API error:", error);
+    return "Executive summary unavailable.";
+  }
+}
 
 export async function getWeeklyReport(data: WeeklyReportInput) {
   const { userId } = await auth();
@@ -309,29 +405,47 @@ export async function getWeeklyReport(data: WeeklyReportInput) {
       )
     );
 
-  // Build report data
-  const reportData: WeeklyReportData[] = customers.map(customer => {
-    const customerNotes = weekNotes
-      .filter(note => note.customerId === customer.id)
-      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  // Build report data with AI-generated summaries
+  const reportData: WeeklyReportData[] = await Promise.all(
+    customers.map(async (customer) => {
+      const customerNotes = weekNotes
+        .filter(note => note.customerId === customer.id)
+        .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
-    return {
-      customer: {
-        id: customer.id,
-        name: customer.name,
-        lastPatchDate: customer.lastPatchDate,
-        lastPatchVersion: customer.lastPatchVersion,
-        temperament: customer.temperament,
-        topology: customer.topology,
-        dumbledoreStage: customer.dumbledoreStage,
-      },
-      notes: customerNotes.map(note => ({
-        id: note.id,
-        note: note.note,
-        createdAt: note.createdAt,
-      })),
-    };
-  });
+      // Generate executive summary using OpenAI
+      const executiveSummary = await generateExecutiveSummary(
+        customer.name,
+        {
+          topology: customer.topology,
+          dumbledoreStage: customer.dumbledoreStage,
+          temperament: customer.temperament,
+          lastPatchVersion: customer.lastPatchVersion,
+        },
+        customerNotes.map(note => ({
+          note: note.note,
+          createdAt: note.createdAt,
+        }))
+      );
+
+      return {
+        customer: {
+          id: customer.id,
+          name: customer.name,
+          lastPatchDate: customer.lastPatchDate,
+          lastPatchVersion: customer.lastPatchVersion,
+          temperament: customer.temperament,
+          topology: customer.topology,
+          dumbledoreStage: customer.dumbledoreStage,
+        },
+        notes: customerNotes.map(note => ({
+          id: note.id,
+          note: note.note,
+          createdAt: note.createdAt,
+        })),
+        executiveSummary,
+      };
+    })
+  );
 
   return reportData;
 }
