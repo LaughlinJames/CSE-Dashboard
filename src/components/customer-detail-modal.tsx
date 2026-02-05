@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { RichTextEditor } from "@/components/rich-text-editor";
 import { AddTodoFromNoteDialog } from "@/components/add-todo-from-note-dialog";
+import { AddCoverCSEDialog } from "@/components/add-cover-cse-dialog";
 import { updateCustomer, addNote, getCustomerNotes, getTodosByCustomer } from "@/app/actions/customers";
 import { useEffect } from "react";
 import { CheckSquare } from "lucide-react";
@@ -54,6 +55,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [noteTodoMap, setNoteTodoMap] = useState<Map<number, number>>(new Map()); // noteId -> todoId
+  const [selectedCoverCSE, setSelectedCoverCSE] = useState<{ id: string; name: string } | null>(null);
 
   // Form state for editing
   const [name, setName] = useState("");
@@ -192,27 +194,26 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+      return `${year}-${month}-${day}`;
+  };
+
+  const handleSelectCoverCSE = (userId: string, userName: string) => {
+    setSelectedCoverCSE({ id: userId, name: userName });
+    setSuccess(`Cover CSE "${userName}" has been selected. This feature will be fully integrated in a future update.`);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Customer Details</DialogTitle>
-          <DialogDescription>
-            View and edit customer information and add notes
-          </DialogDescription>
-        </DialogHeader>
-
+        <DialogTitle className="sr-only">Edit Customer</DialogTitle>
         {error && (
-          <div className="bg-destructive/15 text-destructive px-4 py-3 rounded-md text-sm">
+          <div className="bg-destructive/15 text-destructive px-4 py-3 rounded-md text-sm mb-4">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="bg-green-500/15 text-green-700 dark:text-green-400 px-4 py-3 rounded-md text-sm">
+          <div className="bg-green-500/15 text-green-700 dark:text-green-400 px-4 py-3 rounded-md text-sm mb-4">
             {success}
           </div>
         )}
@@ -220,7 +221,12 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
         <form onSubmit={handleUpdate} className="space-y-6">
           {/* Customer Details Section */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Customer Information</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Customer Information</h3>
+              <div className="mr-8">
+                <AddCoverCSEDialog onSelectUser={handleSelectCoverCSE} />
+              </div>
+            </div>
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Customer Name</Label>

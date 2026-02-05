@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { customersTable, customerNotesTable, customerAuditLogTable, todosTable } from "@/db/schema";
 import { revalidatePath } from "next/cache";
@@ -572,4 +572,28 @@ export async function getTodosByCustomer(customerId: number) {
     );
 
   return todos;
+}
+
+export async function getAllUsers() {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    const client = await clerkClient();
+    const users = await client.users.getUserList();
+
+    return users.data.map(user => ({
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      emailAddress: user.emailAddresses[0]?.emailAddress,
+      imageUrl: user.imageUrl,
+    }));
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw new Error("Failed to fetch users");
+  }
 }
