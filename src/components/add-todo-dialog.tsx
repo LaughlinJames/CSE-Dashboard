@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -21,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { RichTextEditor } from "@/components/rich-text-editor";
 import { createTodo, getActiveCustomers } from "@/app/actions/todos";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
@@ -41,6 +41,7 @@ export function AddTodoDialog({ defaultCustomerId }: AddTodoDialogProps) {
   const [loadingCustomers, setLoadingCustomers] = useState(true);
   const formRef = useRef<HTMLFormElement>(null);
   const [selectedCustomerId, setSelectedCustomerId] = useState<string>(defaultCustomerId || "none");
+  const [description, setDescription] = useState("");
 
   // Fetch active customers when dialog opens
   useEffect(() => {
@@ -65,7 +66,7 @@ export function AddTodoDialog({ defaultCustomerId }: AddTodoDialogProps) {
     const customerIdStr = formData.get("customerId") as string;
     const data = {
       title: formData.get("title") as string,
-      description: formData.get("description") as string,
+      description: description,
       priority: formData.get("priority") as "low" | "medium" | "high",
       dueDate: formData.get("dueDate") as string,
       customerId: customerIdStr && customerIdStr !== "none" ? parseInt(customerIdStr, 10) : undefined,
@@ -77,6 +78,7 @@ export function AddTodoDialog({ defaultCustomerId }: AddTodoDialogProps) {
         toast.success("To-do created successfully!");
         setOpen(false);
         formRef.current?.reset();
+        setDescription("");
         setSelectedCustomerId(defaultCustomerId || "none");
       } catch (error) {
         if (error instanceof Error) {
@@ -117,12 +119,10 @@ export function AddTodoDialog({ defaultCustomerId }: AddTodoDialogProps) {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                name="description"
+              <RichTextEditor
+                value={description}
+                onChange={setDescription}
                 placeholder="Enter description (optional)"
-                disabled={isPending}
-                rows={3}
               />
             </div>
             <div className="grid gap-2">

@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -23,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { RichTextEditor } from "@/components/rich-text-editor";
 import { toggleTodoComplete, updateTodo, deleteTodo, getActiveCustomers } from "@/app/actions/todos";
 import { toast } from "sonner";
 import { Pencil, Trash2, Calendar, Building2 } from "lucide-react";
@@ -55,6 +55,7 @@ export function TodoItem({ todo, highlight = false }: TodoItemProps) {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loadingCustomers, setLoadingCustomers] = useState(true);
   const cardRef = useRef<HTMLDivElement>(null);
+  const [editDescription, setEditDescription] = useState("");
 
   // Scroll into view when highlighted
   useEffect(() => {
@@ -69,6 +70,7 @@ export function TodoItem({ todo, highlight = false }: TodoItemProps) {
   useEffect(() => {
     if (editOpen) {
       setLoadingCustomers(true);
+      setEditDescription(todo.description || "");
       getActiveCustomers()
         .then(setCustomers)
         .catch((error) => {
@@ -77,7 +79,7 @@ export function TodoItem({ todo, highlight = false }: TodoItemProps) {
         })
         .finally(() => setLoadingCustomers(false));
     }
-  }, [editOpen]);
+  }, [editOpen, todo.description]);
 
   const handleToggle = () => {
     startTransition(async () => {
@@ -101,7 +103,7 @@ export function TodoItem({ todo, highlight = false }: TodoItemProps) {
     const data = {
       id: todo.id,
       title: formData.get("title") as string,
-      description: formData.get("description") as string,
+      description: editDescription,
       priority: formData.get("priority") as "low" | "medium" | "high",
       dueDate: formData.get("dueDate") as string,
       customerId: customerIdStr && customerIdStr !== "none" ? parseInt(customerIdStr, 10) : undefined,
@@ -277,12 +279,10 @@ export function TodoItem({ todo, highlight = false }: TodoItemProps) {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="edit-description">Description</Label>
-                <Textarea
-                  id="edit-description"
-                  name="description"
-                  defaultValue={todo.description || ""}
-                  disabled={isPending}
-                  rows={3}
+                <RichTextEditor
+                  value={editDescription}
+                  onChange={setEditDescription}
+                  placeholder="Enter description (optional)"
                 />
               </div>
               <div className="grid gap-2">
