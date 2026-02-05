@@ -243,7 +243,7 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
 
           {/* MSC, Runbook, and SNOW Buttons */}
           {(customer.mscUrl || customer.runbookUrl || customer.snowUrl) && (
-            <div className="pt-4 border-t flex gap-2">
+            <div className="pt-4 border-t flex lg:flex-col xl:flex-row gap-2">
               {customer.mscUrl && (
                 <Button
                   variant="outline"
