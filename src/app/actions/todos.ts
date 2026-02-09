@@ -154,22 +154,35 @@ export async function deleteTodo(data: DeleteTodoInput) {
 
   const validated = deleteTodoSchema.parse(data);
 
-  const result = await db
+  // First, get the todo data for audit logging
+  const todos = await db
+    .select()
+    .from(todosTable)
+    .where(
+      and(
+        eq(todosTable.id, validated.id),
+        eq(todosTable.userId, userId)
+      )
+    );
+
+  if (todos.length === 0) {
+    throw new Error("Todo not found or unauthorized");
+  }
+
+  const todoToDelete = todos[0];
+
+  // Log the deletion BEFORE actually deleting (while foreign key still valid)
+  await logTodoDelete(validated.id, todoToDelete, userId);
+
+  // Now delete the todo
+  await db
     .delete(todosTable)
     .where(
       and(
         eq(todosTable.id, validated.id),
         eq(todosTable.userId, userId)
       )
-    )
-    .returning();
-
-  if (result.length === 0) {
-    throw new Error("Todo not found or unauthorized");
-  }
-
-  // Log the deletion
-  await logTodoDelete(validated.id, result[0], userId);
+    );
 
   revalidatePath("/todos");
 

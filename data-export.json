@@ -1,0 +1,1213 @@
+{
+  "customers": [
+    {
+      "id": 6,
+      "name": "Solstice",
+      "lastPatchDate": "2026-01-23",
+      "lastPatchVersion": "ams-rh8x-aws-202601",
+      "temperament": "neutral",
+      "topology": "prod",
+      "dumbledoreStage": 9,
+      "patchFrequency": "monthly",
+      "mscUrl": "https://mscentral.ams.adobe.net/content/mscentral/accounts/account/clouds.html/content/msc/accounts/85051-Solstice-Advanced-Materials",
+      "runbookUrl": "https://adobe.sharepoint.com/sites/ams_SolsticeAdvancedMaterials?market=en-US",
+      "snowUrl": "https://adobems.service-now.com/now/nav/ui/search/0f8b85d0c7922010099a308dc7c2606a/params/search-term/solstice/global-search-data-config-id/c861cea2c7022010099a308dc7c26041/back-button-label/Incidents%20Needing%20RCA/search-context/now%2Fnav%2Fui",
+      "archived": false,
+      "createdAt": "2026-02-02T17:05:38.575Z",
+      "updatedAt": "2026-02-06T21:13:47.247Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 2,
+      "name": "JPMC Consumer Community",
+      "lastPatchDate": "2026-02-04",
+      "lastPatchVersion": "ams-rh8x-aws-202601",
+      "temperament": "happy",
+      "topology": "dev",
+      "dumbledoreStage": 5,
+      "patchFrequency": "monthly",
+      "mscUrl": "https://mscentral.ams.adobe.net/content/mscentral/accounts/account/clouds.html/content/msc/accounts/40073-JP-Morgan-Chase---Consumer-Community",
+      "runbookUrl": "https://adobe.sharepoint.com/sites/ams_jpmc-ccb-docmgmt/SitePages/CQMS_Runbook.aspx",
+      "snowUrl": "https://adobems.service-now.com/now/nav/ui/classic/params/target/core_company.do%3Fsys_id%3Dbfcfebfb4f6e4b44ec35188af110c76b%26sysparm_view%3D",
+      "archived": false,
+      "createdAt": "2026-01-30T22:52:25.842Z",
+      "updatedAt": "2026-02-04T18:17:30.965Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 3,
+      "name": "Haworth",
+      "lastPatchDate": "2026-02-05",
+      "lastPatchVersion": "ams-rh8x-aws-202601",
+      "temperament": "satisfied",
+      "topology": "stage",
+      "dumbledoreStage": 5,
+      "patchFrequency": "quarterly",
+      "mscUrl": "https://mscentral.ams.adobe.net/content/mscentral/accounts/account/clouds.html/content/msc/accounts/32816-Haworth",
+      "runbookUrl": "https://adobe.sharepoint.com/sites/ams_haworth/SitePages/CQMS_Runbook.aspx",
+      "snowUrl": "https://adobems.service-now.com/now/nav/ui/classic/params/target/core_company.do%3Fsys_id%3D4e86a1b94ffaee00c909495d0210c708%26sysparm_record_target%3Dcore_company%26sysparm_record_row%3D2%26sysparm_record_rows%3D4%26sysparm_record_list%3Du_statusINNo%2BIntention%2Bto%2BGo%2BLive%252CPre-Production%252CProduction%252CProduction%2BNo%2BSLA%255Eu_customer_success_engineerDYNAMICadf2a8f41bb225108ba856cf034bcbbe%255Eu_customer_success_engineer%253Df67c982b1b6c24104bf13112cd4bcb6e%255EORDERBYname",
+      "archived": false,
+      "createdAt": "2026-01-30T22:52:26.352Z",
+      "updatedAt": "2026-02-06T21:09:34.381Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 7,
+      "name": "UHG1 \"Everglades\"",
+      "lastPatchDate": "2026-01-27",
+      "lastPatchVersion": "ams-rh8x-azure-202601",
+      "temperament": "satisfied",
+      "topology": "qa",
+      "dumbledoreStage": 5,
+      "patchFrequency": "monthly",
+      "mscUrl": "https://mscentral.ams.adobe.net/content/mscentral/accounts/account/clouds.html/content/msc/accounts/44315-UHG-Provider-Front-Door",
+      "runbookUrl": "https://adobe.sharepoint.com/sites/ams_uhgprovider/SitePages/CQMS_Runbook.aspx",
+      "snowUrl": "https://adobems.service-now.com/core_company.do?sys_id=3a80c5291b2ecd104bf13112cd4bcba3&sysparm_view=",
+      "archived": false,
+      "createdAt": "2026-02-02T20:53:18.546Z",
+      "updatedAt": "2026-02-06T17:47:08.301Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 5,
+      "name": "Fidelity Clearing Canada",
+      "lastPatchDate": "2025-11-24",
+      "lastPatchVersion": "ams-rh8x-aws-202511",
+      "temperament": "neutral",
+      "topology": "prod",
+      "dumbledoreStage": 9,
+      "patchFrequency": "quarterly",
+      "mscUrl": "https://mscentral.ams.adobe.net/content/mscentral/accounts/account/clouds.html/content/msc/accounts/78791-Fidelity-Clearing-Canada",
+      "runbookUrl": "https://adobe.sharepoint.com/sites/ams_fidelityclearingca",
+      "snowUrl": "https://adobems.service-now.com/now/nav/ui/classic/params/target/core_company.do%3Fsys_id%3D711daa6b975e7d909d12fdbe2153afbb%26sysparm_view%3D",
+      "archived": false,
+      "createdAt": "2026-01-30T22:52:26.828Z",
+      "updatedAt": "2026-02-05T20:59:49.473Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 4,
+      "name": "First Financial Bank",
+      "lastPatchDate": "2026-01-28",
+      "lastPatchVersion": "ams-rh8x-aws-202601",
+      "temperament": "happy",
+      "topology": "stage",
+      "dumbledoreStage": 5,
+      "patchFrequency": "quarterly",
+      "mscUrl": "https://mscentral.ams.adobe.net/content/mscentral/accounts/account/clouds.html/content/msc/accounts/72930-First-Financial-Bank",
+      "runbookUrl": "https://adobe.sharepoint.com/sites/ams_firstfinancial/SitePages/CQMS_Runbook.aspx",
+      "snowUrl": "https://adobems.service-now.com/now/nav/ui/classic/params/target/core_company.do%3Fsys_id%3D0999bee70f7aa500c38f49bce1050eb3%26sysparm_view%3D",
+      "archived": false,
+      "createdAt": "2026-01-30T22:52:26.586Z",
+      "updatedAt": "2026-02-06T15:28:26.361Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    }
+  ],
+  "customerNotes": [
+    {
+      "id": 18,
+      "customerId": 3,
+      "note": "<p>Customer is still having issues with CloudManager. They are able to deploy successfully only in emergency mode.</p>",
+      "createdAt": "2026-02-02T22:38:54.474Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 17,
+      "customerId": 3,
+      "note": "<p>There were some P1s over the weekend for the author (<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/incident.do?sys_id=98566ca92ff2f6d0ac2b838fcea4e314&amp;sysparm_record_list=opened_atONToday%40javascript%3ags.beginningOfToday()%40javascript%3ags.endOfToday()%5eORopened_at%3cjavascript%3ags.beginningOfToday()%5eu_state_gomez%3d5%5eu_handled_by%3dServiceNow%5eu_artifact%3dfalse%5ecompany.u_customer_success_engineerDYNAMICadf2a8f41bb225108ba856cf034bcbbe%5eparentISNOTEMPTY%5eORDERBYsys_created_on&amp;sysparm_record_row=1&amp;sysparm_record_rows=4&amp;sysparm_record_target=incident&amp;sysparm_view=gomez&amp;sysparm_view_forced=true\">INC3124630</a>) and three UJEEs (<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/incident.do?sys_id=820924650f363ad0ab08b2e300d1b20a&amp;sysparm_record_list=opened_atONToday%40javascript%3ags.beginningOfToday()%40javascript%3ags.endOfToday()%5eORopened_at%3cjavascript%3ags.beginningOfToday()%5eu_state_gomez%3d5%5eu_handled_by%3dServiceNow%5eu_artifact%3dfalse%5ecompany.u_customer_success_engineerDYNAMICadf2a8f41bb225108ba856cf034bcbbe%5eparentISNOTEMPTY%5eORDERBYsys_created_on&amp;sysparm_record_row=4&amp;sysparm_record_rows=4&amp;sysparm_record_target=incident&amp;sysparm_view=gomez&amp;sysparm_view_forced=true\">INC3124642</a>)(<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/incident.do?sys_id=10e8a0e5cf76fa50cc05f0061d851c39&amp;sysparm_record_list=opened_atONToday%40javascript%3ags.beginningOfToday()%40javascript%3ags.endOfToday()%5eORopened_at%3cjavascript%3ags.beginningOfToday()%5eu_state_gomez%3d5%5eu_handled_by%3dServiceNow%5eu_artifact%3dfalse%5ecompany.u_customer_success_engineerDYNAMICadf2a8f41bb225108ba856cf034bcbbe%5eparentISNOTEMPTY%5eORDERBYsys_created_on&amp;sysparm_record_row=3&amp;sysparm_record_rows=4&amp;sysparm_record_target=incident&amp;sysparm_view=gomez&amp;sysparm_view_forced=true\">INC3124641</a>)(<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/incident.do?sys_id=4f47a0e9cf3e7e106ebff3171d851cc7&amp;sysparm_record_list=opened_atONToday%40javascript%3ags.beginningOfToday()%40javascript%3ags.endOfToday()%5eORopened_at%3cjavascript%3ags.beginningOfToday()%5eu_state_gomez%3d5%5eu_handled_by%3dServiceNow%5eu_artifact%3dfalse%5ecompany.u_customer_success_engineerDYNAMICadf2a8f41bb225108ba856cf034bcbbe%5eparentISNOTEMPTY%5eORDERBYsys_created_on&amp;sysparm_record_row=2&amp;sysparm_record_rows=4&amp;sysparm_record_target=incident&amp;sysparm_view=gomez&amp;sysparm_view_forced=true\">INC3124637</a>). It looks like they are all related I will have to do an RCA for this incident</p>",
+      "createdAt": "2026-02-02T22:37:06.329Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 19,
+      "customerId": 3,
+      "note": "<p>Customer has a pending large deployment. They have scheduled and cancelled this deployment four times. This big deployment is taking all of their focus and they won't entertain working on CloudManager or LTS until it's done. Currently the deployment has not been rescheduled</p>",
+      "createdAt": "2026-02-02T22:40:45.876Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 21,
+      "customerId": 6,
+      "note": "<p>Craig is out this week. Chris Andrist is covering Honeywell for him. Peter asked me to reach out to Harsh to circle back on his dynamics ticket (<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobe-ent.crm.dynamics.com/main.aspx?appid=f2e74f34-7119-ea11-a811-000d3a5936c5&amp;forceUCI=1&amp;newWindow=true&amp;pagetype=entityrecord&amp;etn=incident&amp;id=b84d4760-53f1-f011-8407-6045bd04f08b\"><strong>E-002025534</strong></a>).  I have not heard back from him yet.  Elise invited me to the Tuesday (12:30 pm ct) meeting so I'll be sure to get an update at that time.</p>",
+      "createdAt": "2026-02-02T22:54:19.573Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 23,
+      "customerId": 4,
+      "note": "<p>Brumoon Ahamat is working with FFB to implement CloudManager. <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/D08P4CDK6KF/p1769713378889279\">As of last thursday (Jan 26) he estimates</a> they will be ready to deploy to stage in another 2-3 weeks.  I'll check back with him on progress weekly. </p>",
+      "createdAt": "2026-02-02T23:00:45.689Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 20,
+      "customerId": 5,
+      "note": "<p>I pinged <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/D088J5DP43E/p1770072209051159\">Scott Ryckman </a>for a status on the FCC/ACS engagement</p>",
+      "createdAt": "2026-02-02T22:44:09.143Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 22,
+      "customerId": 7,
+      "note": "<p>LTS upgrade to QA is at stage 5. I have invited the customer to deploy their code to the LTS servers and they are working internally to get that done.</p>",
+      "createdAt": "2026-02-02T22:57:50.961Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 24,
+      "customerId": 7,
+      "note": "<p>They are still working on adding the provided LTS patches. They have a deployment on the 11th so her focus is there for the time being. She'll get back to this after the deployment.</p>",
+      "createdAt": "2026-02-03T16:03:04.122Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 25,
+      "customerId": 7,
+      "note": "<p>They are changing the way they issue certs and have a requirement to automate the cert updates. I'll have to bring this up to the UHG team and get their thoughts.</p>",
+      "createdAt": "2026-02-03T16:05:14.766Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 26,
+      "customerId": 7,
+      "note": "<p>Akhila will email Derek and Kirk and put me and Josh on cc. This is something that is happening UHG-wide so it's going to affect all UHG customers.</p>",
+      "createdAt": "2026-02-03T16:08:41.416Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 27,
+      "customerId": 5,
+      "note": "<p>Got a <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/C0ACPKQBH7C/p1770129440128109\">response from Aravind and Scott</a>. Aravind should have the SOW ready by EOD today</p>",
+      "createdAt": "2026-02-03T16:21:15.315Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 28,
+      "customerId": 2,
+      "note": "<p>Customer got patched two weeks ago to ams-rh8x-aws-202512. The CDE said that he preferred that patch to ams-rh8x-aws-202601 because it was older and more established.  I talked to the CDE and told him we need to patch monthly. Since this customer won't be patched to ams-rh8x-aws-202602 until March 4 (<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3Ddd934a502fb2b214f1819c7fcea4e33a%26sysparm_record_list%3DstateNOT%2BIN4%255eshort_descriptionDOES%2BNOT%2BCONTAINLooking%255ecompany%253dbfcfebfb4f6e4b44ec35188af110c76b%255eORDERBYDESCsys_created_on%26sysparm_record_row%3D1%26sysparm_record_rows%3D4%26sysparm_record_target%3Dproblem%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0842560</a>)  I have reached out to the customer to see if we can patch them to 202601 tomorrow (2/4) or if we need to wait until the next patch window (2/18). I'll create a ticket for one of those dates based on the response from the customer. </p>",
+      "createdAt": "2026-02-03T18:17:14.996Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 29,
+      "customerId": 6,
+      "note": "<p>Call with Harsh today. He had two issues to talk about. He's unsatisfied with Peter's response in <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobe-ent.crm.dynamics.com/main.aspx?appid=f2e74f34-7119-ea11-a811-000d3a5936c5&amp;forceUCI=1&amp;newWindow=true&amp;pagetype=entityrecord&amp;etn=incident&amp;id=b84d4760-53f1-f011-8407-6045bd04f08b\">E-002025534</a> as he says that this has been set up before with Mercer so he knows it can be done.  I offered to set up a call with Peter to discuss further but he declined saying that there's no use if Peter will just give the same answer.<br><br>He also opened a ticket about their dev publisher <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobe-ent.crm.dynamics.com/main.aspx?appid=f2e74f34-7119-ea11-a811-000d3a5936c5&amp;forceUCI=1&amp;newWindow=true&amp;pagetype=entityrecord&amp;etn=incident&amp;id=0a5e864a-1501-f111-8406-7ced8d3cc933\">E-002061812</a> that I'm working with Chris Andrist on. He's restoring from backup</p>",
+      "createdAt": "2026-02-03T19:11:21.397Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 30,
+      "customerId": 6,
+      "note": "<p><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/D01KH8S38HJ/p1770143801385139\">Worked with Chris</a> to get the dev login issue resolved</p>",
+      "createdAt": "2026-02-03T19:38:57.653Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 31,
+      "customerId": 5,
+      "note": "<p><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/C0ACPKQBH7C/p1770129440128109\">I got a response from Aravind</a>. He has completed the SOW and will reach out to the customer to set up a meeting to review the proposed plan. I've asked him to invite me. I'll follow up tomorrow if he hasn't already responded. </p>",
+      "createdAt": "2026-02-03T22:37:19.571Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 32,
+      "customerId": 5,
+      "note": "<p>Aravind sent out an email to Bruce and Cindy at Fidelity suggesting a few times for the call. Currently waiting on a response from them.</p>",
+      "createdAt": "2026-02-04T16:57:19.142Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 33,
+      "customerId": 2,
+      "note": "<p>Created ticket for CDE to patch to 202601 during this morning's window. (<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3D21c30e1e0f32b214ab08b2e300d1b2ae%26sysparm_record_list%3Dcompany%253dbfcfebfb4f6e4b44ec35188af110c76b%255eORDERBYDESCsys_created_on%26sysparm_record_row%3D1%26sysparm_record_rows%3D956%26sysparm_record_target%3Dproblem%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0842904</a>) This was completed and the customer is now patched to the current baseline</p>",
+      "createdAt": "2026-02-04T18:16:44.210Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 34,
+      "customerId": 3,
+      "note": "<p>Chase asked today if they have the ability to create a service account via basic auth to upload assets directly to production.  After conferring with Mr Fluffyjaws I told him that could not be done due to security violations.</p>",
+      "createdAt": "2026-02-04T19:37:24.165Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 35,
+      "customerId": 3,
+      "note": "<p>Customer is still working though some content issues with the large deployment.  They'll meet next week to get those resolved and come back with a plan for this deployment.</p>",
+      "createdAt": "2026-02-04T20:03:20.812Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 36,
+      "customerId": 5,
+      "note": "<p>Call is scheduled for 2/5 at 12pm</p>",
+      "createdAt": "2026-02-04T20:23:04.469Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 37,
+      "customerId": 7,
+      "note": "<p>Akhila didn't send the email about the automated cert update initiative so I sent it today. I put Kirk, Derek and Josh on cc for visibility.  I'll also bring it up on the UHG tech team call happening in 15 minutes.</p>",
+      "createdAt": "2026-02-04T20:45:56.320Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 38,
+      "customerId": 3,
+      "note": "<p>Short manual deployment today. Nothing out of the ordinary and everything went smoothly until Chase tried to clear the CloudFlare cache.  Seems they had an internal access issue with CloudFlare. He took that issue offline and said he'd reach out if there was anything more he needed from me.</p>",
+      "createdAt": "2026-02-04T20:47:45.269Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 39,
+      "customerId": 7,
+      "note": "<p>I brought this up to Adi and the internal UHG team. Seems like this is an issue bigger than UHG because the industry standard is changing. <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/C02QELRH924/p1770239226347849\">Ed shared a link</a> to the announcement about this change. We will need to address this AMS-wide. </p>",
+      "createdAt": "2026-02-04T21:12:05.917Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 40,
+      "customerId": 7,
+      "note": "<p>Adi and Josh have a call with Kirk and Derek from UHG tomorrow. He's going to bring this up with them and see what their take is on it.</p>",
+      "createdAt": "2026-02-04T21:32:51.806Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 41,
+      "customerId": 5,
+      "note": "<p>Meeting on 2/5 was with Bruce and not the call Aravind set up.  That call is happening on 2/11 at 9am ET</p>",
+      "createdAt": "2026-02-05T18:01:55.186Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 42,
+      "customerId": 5,
+      "note": "<p>Bruce has a question about whether our ACS folks have the ability to support Appian. I told him I'd ask Aravind and co to make sure they are prepared to answer to that.</p>",
+      "createdAt": "2026-02-05T18:03:27.889Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 43,
+      "customerId": 6,
+      "note": "<p>There was a request from the Solstice team for \"service keys\". I didn't understand the request, so <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/D01KH8S38HJ/p1770307102343089\">I pulled in Chris Andrist for help</a><br><br>The answer was \"The customer needs to initiate the Direct Connect and give use the details and we will connect it. The reason why is that there is a monthly cost just to have the direct connect line. The customer needs to pay that fee. We will only pay for transit.\"</p>",
+      "createdAt": "2026-02-05T18:59:56.189Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 44,
+      "customerId": 4,
+      "note": "<p>Logan Baynes from the FFB security team joined the call. They are tightening controls and want to restrict access to their stage environment. They want to make people go through thier WAF. <br><br>I told Logan that I would do some internal research and try to get back with him on some sort of next steps. </p>",
+      "createdAt": "2026-02-05T19:06:04.606Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 45,
+      "customerId": 4,
+      "note": "<p>Two manual CABs to do on today's call. Ethan had rewrite rules and vanity urls to update. We also had a standard deployment.<br><br>Customer is still working on Cloud Manager. I have a to-do open to follow up with Brumoon about the status next week.</p>",
+      "createdAt": "2026-02-05T19:35:02.889Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 46,
+      "customerId": 5,
+      "note": "<p>Aravind confirmed that they have addressed Appian in their presentation for next week.</p>",
+      "createdAt": "2026-02-05T20:59:49.543Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 47,
+      "customerId": 3,
+      "note": "<p>I patched Haworth to 202601 yesterday. Today I created CDE ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3D4f7d74df0fba7e14ab08b2e300d1b219%26sysparm_stack%3D%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0843120</a> to have the servers rebooted early monday morning 2/9 to complete the patching</p>",
+      "createdAt": "2026-02-06T16:56:35.460Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 48,
+      "customerId": 6,
+      "note": "<p>I opened CDE ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3D6dd20d970f3e7e14ab08b2e300d1b267%26sysparm_stack%3D%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0843123</a> for Stefan to add S3 SSDs to the stage and prod author </p>",
+      "createdAt": "2026-02-06T17:15:05.180Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 49,
+      "customerId": 7,
+      "note": "<p>Tickets opened for AMSSEC2_84a: Preview Tier Dispatcher Configuration Enhancement (<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/change_request.do?sys_id=d59b89472fbeb6d4f1819c7fcea4e3af&amp;sysparm_view=undefined&amp;sysparm_record_target=change_request&amp;sysparm_record_row=1&amp;sysparm_record_rows=1&amp;sysparm_record_list=stateNOT+IN3%2C4%2C999%2C-1%5Eu_filter1%3Dsecurity%5Eu_filter3NOT+INamssec1_monthly_patching%2Camssec2_quarterly_patching%5Ecompany.u_customer_success_engineerDYNAMICadf2a8f41bb225108ba856cf034bcbbe%5EparentISNOTEMPTY%5EORDERBYDESCstart_date&amp;sysparm_view=undefined\">CHG3081440</a>). <br><br>Adi Kumar will be creating a CDE ticket to do mine, Ed's and Cindy's all at once</p>",
+      "createdAt": "2026-02-06T17:46:42.900Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 50,
+      "customerId": 6,
+      "note": "<p>Customer call on Friday re: service keys for direct connect.  The Solstice team has been asking urgently for us to provide service keys for their direct connect. I ran this through Chris A/Caleb/David B and the answer came back \"The customer needs to initiate the Direct Connect and give use the details and we will connect it. The reason why is that there is a monthly cost just to have the direct connect line. The customer needs to pay that fee. We will only pay for transit\" <br><br>Customer doesn't like this answer and has scheduled this call. David Basham and I are joining.</p>",
+      "createdAt": "2026-02-06T17:59:57.926Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 51,
+      "customerId": 6,
+      "note": "<p>David Heer joined the call. He's a manager in the network engineering for Solstice. I think he is the right person to work on with this but he's talking far over my head. It's good that we have David Basham on this call because it seems like they speak the same language.</p>",
+      "createdAt": "2026-02-06T18:16:51.351Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 52,
+      "customerId": 6,
+      "note": "<p>David Heer's email address is <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"mailto:david.heer@solstice.com\">david.heer@solstice.com</a></p>",
+      "createdAt": "2026-02-06T18:29:07.374Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 54,
+      "customerId": 6,
+      "note": "<p>David Basham shared with Elise and myself the he has found that DC for honeywell was set up wrong. We have been paying the port cost because of the way this was set up.  This explains why the customer was asking for service keys.<br><br>Elham was looped in and the answer was that we need Peter Davis in on this conversation since he was the one who initially set up DC for honeywell in the first place.<br><br>Peter will be back in the office on Monday, so we have to wait until then to decide on next steps.  Elise told the customer via email and on a call. The customer is very unhappy at this point but unfortunately there is nothing we can do for them today.</p>",
+      "createdAt": "2026-02-06T21:13:47.360Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    }
+  ],
+  "customerAuditLog": [
+    {
+      "id": 6,
+      "customerId": 2,
+      "action": "update",
+      "fieldName": "patchFrequency",
+      "oldValue": "monthly",
+      "newValue": "quarterly",
+      "createdAt": "2026-02-03T16:40:21.541Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 7,
+      "customerId": 2,
+      "action": "update",
+      "fieldName": "patchFrequency",
+      "oldValue": "quarterly",
+      "newValue": "monthly",
+      "createdAt": "2026-02-03T16:40:47.061Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 8,
+      "customerId": 2,
+      "action": "update",
+      "fieldName": "lastPatchDate",
+      "oldValue": "2024-01-29",
+      "newValue": "2026-02-04",
+      "createdAt": "2026-02-04T18:17:31.483Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 9,
+      "customerId": 2,
+      "action": "update",
+      "fieldName": "lastPatchVersion",
+      "oldValue": "ams-rh8x-aws-202512",
+      "newValue": "ams-rh8x-aws-202601",
+      "createdAt": "2026-02-04T18:17:31.483Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 14,
+      "customerId": 3,
+      "action": "update",
+      "fieldName": "lastPatchDate",
+      "oldValue": "2025-11-20",
+      "newValue": "2026-02-05",
+      "createdAt": "2026-02-06T16:57:00.196Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 15,
+      "customerId": 3,
+      "action": "update",
+      "fieldName": "lastPatchVersion",
+      "oldValue": "ams-rh8x-aws-202511",
+      "newValue": "ams-rh8x-aws-202601",
+      "createdAt": "2026-02-06T16:57:00.196Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    }
+  ],
+  "todos": [
+    {
+      "id": 8,
+      "title": "Follow up with Brumoon",
+      "description": "<p>Brumoon Ahamat is working with FFB to implement CloudManager. <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/D08P4CDK6KF/p1769713378889279\">As of last thursday (Jan 26) he estimates</a> they will be ready to deploy to stage in another 2-3 weeks.  I'll check back with him on progress weekly. </p>",
+      "completed": false,
+      "priority": "medium",
+      "dueDate": "2026-02-09",
+      "customerId": 4,
+      "noteId": 23,
+      "createdAt": "2026-02-03T17:46:02.667Z",
+      "updatedAt": "2026-02-03T17:46:02.667Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 6,
+      "title": "Follow up with Aravind",
+      "description": "<p>Got a <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/C0ACPKQBH7C/p1770129440128109\">response from Aravind and Scott</a>. Aravind should have the SOW ready by EOD today</p>",
+      "completed": true,
+      "priority": "medium",
+      "dueDate": "2026-02-04",
+      "customerId": 5,
+      "noteId": 27,
+      "createdAt": "2026-02-03T17:22:03.191Z",
+      "updatedAt": "2026-02-03T22:35:52.835Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 9,
+      "title": "Create patching ticket for 202601",
+      "description": "<p>Customer got patched two weeks ago to ams-rh8x-aws-202512. The CDE said that he preferred that patch to ams-rh8x-aws-202601 because it was older and more established.  I talked to the CDE and told him we need to patch monthly. Since this customer won't be patched to ams-rh8x-aws-202602 until March 4 (<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3Ddd934a502fb2b214f1819c7fcea4e33a%26sysparm_record_list%3DstateNOT%2BIN4%255eshort_descriptionDOES%2BNOT%2BCONTAINLooking%255ecompany%253dbfcfebfb4f6e4b44ec35188af110c76b%255eORDERBYDESCsys_created_on%26sysparm_record_row%3D1%26sysparm_record_rows%3D4%26sysparm_record_target%3Dproblem%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0842560</a>)  I have reached out to the customer to see if we can patch them to 202601 tomorrow (2/4) or if we need to wait until the next patch window (2/18). I'll create a ticket for one of those dates based on the response from the customer. </p>\n\nCreated ticket (PRB0842904) to have CDE do patching on 2/4 (tomorrow)",
+      "completed": true,
+      "priority": "high",
+      "dueDate": "2026-02-03",
+      "customerId": 2,
+      "noteId": 28,
+      "createdAt": "2026-02-03T18:18:04.958Z",
+      "updatedAt": "2026-02-05T20:19:58.706Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 7,
+      "title": "RCA Needed",
+      "description": "<p>There were some P1s over the weekend for the author (<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/incident.do?sys_id=98566ca92ff2f6d0ac2b838fcea4e314&amp;sysparm_record_list=opened_atONToday%40javascript%3ags.beginningOfToday()%40javascript%3ags.endOfToday()%5eORopened_at%3cjavascript%3ags.beginningOfToday()%5eu_state_gomez%3d5%5eu_handled_by%3dServiceNow%5eu_artifact%3dfalse%5ecompany.u_customer_success_engineerDYNAMICadf2a8f41bb225108ba856cf034bcbbe%5eparentISNOTEMPTY%5eORDERBYsys_created_on&amp;sysparm_record_row=1&amp;sysparm_record_rows=4&amp;sysparm_record_target=incident&amp;sysparm_view=gomez&amp;sysparm_view_forced=true\">INC3124630</a>) and three UJEEs (<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/incident.do?sys_id=820924650f363ad0ab08b2e300d1b20a&amp;sysparm_record_list=opened_atONToday%40javascript%3ags.beginningOfToday()%40javascript%3ags.endOfToday()%5eORopened_at%3cjavascript%3ags.beginningOfToday()%5eu_state_gomez%3d5%5eu_handled_by%3dServiceNow%5eu_artifact%3dfalse%5ecompany.u_customer_success_engineerDYNAMICadf2a8f41bb225108ba856cf034bcbbe%5eparentISNOTEMPTY%5eORDERBYsys_created_on&amp;sysparm_record_row=4&amp;sysparm_record_rows=4&amp;sysparm_record_target=incident&amp;sysparm_view=gomez&amp;sysparm_view_forced=true\">INC3124642</a>)(<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/incident.do?sys_id=10e8a0e5cf76fa50cc05f0061d851c39&amp;sysparm_record_list=opened_atONToday%40javascript%3ags.beginningOfToday()%40javascript%3ags.endOfToday()%5eORopened_at%3cjavascript%3ags.beginningOfToday()%5eu_state_gomez%3d5%5eu_handled_by%3dServiceNow%5eu_artifact%3dfalse%5ecompany.u_customer_success_engineerDYNAMICadf2a8f41bb225108ba856cf034bcbbe%5eparentISNOTEMPTY%5eORDERBYsys_created_on&amp;sysparm_record_row=3&amp;sysparm_record_rows=4&amp;sysparm_record_target=incident&amp;sysparm_view=gomez&amp;sysparm_view_forced=true\">INC3124641</a>)(<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/incident.do?sys_id=4f47a0e9cf3e7e106ebff3171d851cc7&amp;sysparm_record_list=opened_atONToday%40javascript%3ags.beginningOfToday()%40javascript%3ags.endOfToday()%5eORopened_at%3cjavascript%3ags.beginningOfToday()%5eu_state_gomez%3d5%5eu_handled_by%3dServiceNow%5eu_artifact%3dfalse%5ecompany.u_customer_success_engineerDYNAMICadf2a8f41bb225108ba856cf034bcbbe%5eparentISNOTEMPTY%5eORDERBYsys_created_on&amp;sysparm_record_row=2&amp;sysparm_record_rows=4&amp;sysparm_record_target=incident&amp;sysparm_view=gomez&amp;sysparm_view_forced=true\">INC3124637</a>). It looks like they are all related I will have to do an RCA for this incident</p>",
+      "completed": true,
+      "priority": "high",
+      "dueDate": "2026-02-03",
+      "customerId": 3,
+      "noteId": 17,
+      "createdAt": "2026-02-03T17:25:08.433Z",
+      "updatedAt": "2026-02-03T22:35:26.349Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 11,
+      "title": "Get Ethan the file he requested",
+      "description": "Ethan sent an email yesterday. Get him this file asap",
+      "completed": true,
+      "priority": "high",
+      "dueDate": "2026-02-04",
+      "customerId": 4,
+      "noteId": null,
+      "createdAt": "2026-02-04T14:38:51.794Z",
+      "updatedAt": "2026-02-04T15:08:08.273Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 14,
+      "title": "Schedule OS Patching for Solstice",
+      "description": "They were last patched on 1/23 and will need to be patched to 202602 when it comes out.",
+      "completed": false,
+      "priority": "high",
+      "dueDate": "2026-02-13",
+      "customerId": 6,
+      "noteId": null,
+      "createdAt": "2026-02-04T18:56:03.845Z",
+      "updatedAt": "2026-02-04T18:56:03.845Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 12,
+      "title": "Coordinate Patching for Haworth",
+      "description": "<p>Talk with Haworth team about when we can do OS patching. It must be done by the end of this month.</p><p>Customer agreed to let me do it this afternoon. Time scheduled on the calendar for 3-5 pm. <br><br>All systems patched to 202601. </p>",
+      "completed": true,
+      "priority": "high",
+      "dueDate": "2026-02-05",
+      "customerId": 3,
+      "noteId": null,
+      "createdAt": "2026-02-04T18:50:38.892Z",
+      "updatedAt": "2026-02-05T22:53:14.092Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 10,
+      "title": "Follow up to see if meeting has been set",
+      "description": "<p><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/C0ACPKQBH7C/p1770129440128109\">I got a response from Aravind</a>. He has completed the SOW and will reach out to the customer to set up a meeting to review the proposed plan. I've asked him to invite me. I'll follow up tomorrow if he hasn't already responded. </p>",
+      "completed": true,
+      "priority": "medium",
+      "dueDate": "2026-02-05",
+      "customerId": 5,
+      "noteId": 31,
+      "createdAt": "2026-02-03T23:06:51.347Z",
+      "updatedAt": "2026-02-04T20:23:16.460Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 13,
+      "title": "Patch Fidelity Clearing Canada",
+      "description": "<p>They haven't been patched since late November. Patching is due before the end of the month.<br><br>Patching on calendar for Monday 2/9 10-1pm CT</p>",
+      "completed": false,
+      "priority": "high",
+      "dueDate": "2026-02-10",
+      "customerId": 5,
+      "noteId": null,
+      "createdAt": "2026-02-04T18:51:41.941Z",
+      "updatedAt": "2026-02-06T17:17:54.657Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 15,
+      "title": "Training: Preventing Discrimination and Harassment at Adobe",
+      "description": "<p>From email on 2/4/26</p><p>Hello James,</p><p>Please prioritize the learning requirement(s) l<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://nam04.safelinks.protection.outlook.com/?url=https%3A%2F%2Flearningmanager.adobe.com%2Fapp%2Flearner%3FaccountId%3D29997%23%2Fcertification%2F86978&amp;data=05%7C02%7Cjlaughli%40adobe.com%7Cab396cc54afc47470cb808de64330216%7Cfa7b1b5a7b34438794aed2c178decee1%7C0%7C0%7C639058367400532130%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&amp;sdata=BeYnX%2B97RjbusodgDqk1JzJA9znPLWPdpVfheQvIRMs%3D&amp;reserved=0\">isted below. </a>Adobe’s mandated learning provides important information about how we are expected to conduct ourselves as members of the Adobe community.</p>",
+      "completed": false,
+      "priority": "high",
+      "dueDate": "2026-03-27",
+      "customerId": null,
+      "noteId": null,
+      "createdAt": "2026-02-05T15:19:18.908Z",
+      "updatedAt": "2026-02-09T14:41:33.151Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 18,
+      "title": "Find out what is needed to support FFB Security team initiative",
+      "description": "<p>Logan Baynes from the FFB security team joined the call. They are tightening controls and want to restrict access to their stage environment. They want to make people go through thier WAF. <br><br>I told Logan that I would do some internal research and try to get back with him on some sort of next steps. </p>",
+      "completed": false,
+      "priority": "medium",
+      "dueDate": "2026-02-10",
+      "customerId": 4,
+      "noteId": 44,
+      "createdAt": "2026-02-05T19:06:37.019Z",
+      "updatedAt": "2026-02-05T19:06:37.019Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 24,
+      "title": "provision users for Solstice",
+      "description": "<p>Ishrat emailed asking for access. After a couple of back and forth emails it was cleared that he was asking for ssh access to their dev servers. <br><br>He provided the ssh keys, but not the userids. I'm waiting on that and also confirmation as to which environment he's asking for.</p>",
+      "completed": false,
+      "priority": "medium",
+      "dueDate": "2026-02-09",
+      "customerId": 6,
+      "noteId": null,
+      "createdAt": "2026-02-06T21:34:41.814Z",
+      "updatedAt": "2026-02-06T21:34:41.814Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 17,
+      "title": "Ask Aravind about Appian support",
+      "description": "<p>Bruce has a question about whether our ACS folks have the ability to support Appian. I told him I'd ask Aravind and co to make sure they are prepared to answer to that.<br><br><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/C0ACPKQBH7C/p1770322998453509\">Followed up today</a> </p>",
+      "completed": true,
+      "priority": "medium",
+      "dueDate": "2026-02-06",
+      "customerId": 5,
+      "noteId": 42,
+      "createdAt": "2026-02-05T18:03:58.547Z",
+      "updatedAt": "2026-02-05T20:23:56.079Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 16,
+      "title": "Follow up on JPMC dispatcher flush issue",
+      "description": "<p><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/D079MTD897Z/p1770308528672239\">Chat from Yomi Ativi</a><br><br>Incident ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/incident.do%3Fsys_id%3D6956c3762f3e3e146811ab7fcea4e3e4%26sysparm_stack%3D%26sysparm_view%3D\">INC3131992</a></p><p>AMS_Monitoring ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3D03bda772cfbaba102483f1b61d851c1c%26sysparm_record_list%3DstateNOT%2BIN4%255eshort_descriptionDOES%2BNOT%2BCONTAINLooking%255ecompany%253dbfcfebfb4f6e4b44ec35188af110c76b%255eORDERBYDESCsys_created_on%26sysparm_record_row%3D1%26sysparm_record_rows%3D5%26sysparm_record_target%3Dproblem%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0843058</a></p>",
+      "completed": false,
+      "priority": "medium",
+      "dueDate": "2026-02-06",
+      "customerId": 2,
+      "noteId": null,
+      "createdAt": "2026-02-05T16:27:58.105Z",
+      "updatedAt": "2026-02-06T16:14:10.675Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 20,
+      "title": "Open CDE ticket to have Haworth servers rebooted after patching",
+      "description": "<p>I have patched the servers to 202601. They just need to be rebooted. Ask a CDE to do this during off hours.</p>",
+      "completed": true,
+      "priority": "medium",
+      "dueDate": "2026-02-06",
+      "customerId": 3,
+      "noteId": null,
+      "createdAt": "2026-02-05T22:54:24.147Z",
+      "updatedAt": "2026-02-06T16:55:02.345Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 21,
+      "title": "Follow up on reboot ticket to make sure it's closed and done",
+      "description": "<p>I patched Haworth to 202601 yesterday. Today I created CDE ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3D4f7d74df0fba7e14ab08b2e300d1b219%26sysparm_stack%3D%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0843120</a> to have the servers rebooted early monday morning 2/9 to complete the patching</p>",
+      "completed": false,
+      "priority": "medium",
+      "dueDate": "2026-02-09",
+      "customerId": 3,
+      "noteId": 47,
+      "createdAt": "2026-02-06T16:57:42.275Z",
+      "updatedAt": "2026-02-06T16:57:42.275Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 19,
+      "title": "Open CDE ticket to add S3 SSDs to sites authors",
+      "description": "<p>This only needs to be done on the authors. Open a CDE ticket to have Stefan do it. Provide him with this link to the wiki as instructions. <br><br><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://wiki.corp.adobe.com/display/MSTeam/Cache+Drive+for+S3+and+Java_Temp\">https://wiki.corp.adobe.com/display/MSTeam/Cache+Drive+for+S3+and+Java_Temp</a><br><br>Create ticket on friday 2/6 to have the work done next week Tuesday or Wednesday<br><br>I opened CDE ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3D6dd20d970f3e7e14ab08b2e300d1b267%26sysparm_stack%3D%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0843123</a> for Stefan </p>",
+      "completed": true,
+      "priority": "medium",
+      "dueDate": "2026-02-06",
+      "customerId": 6,
+      "noteId": null,
+      "createdAt": "2026-02-05T22:08:03.524Z",
+      "updatedAt": "2026-02-06T17:14:05.031Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 22,
+      "title": "Follow up on ticket PRB0843123",
+      "description": "<p>I opened CDE ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3D6dd20d970f3e7e14ab08b2e300d1b267%26sysparm_stack%3D%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0843123</a> for Stefan to add S3 SSDs to the stage and prod author </p>",
+      "completed": false,
+      "priority": "medium",
+      "dueDate": "2026-02-10",
+      "customerId": 6,
+      "noteId": 48,
+      "createdAt": "2026-02-06T17:15:42.802Z",
+      "updatedAt": "2026-02-06T17:15:42.802Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 23,
+      "title": "Follow up with Adi on this CDE ticket",
+      "description": "<p>Tickets opened for AMSSEC2_84a: Preview Tier Dispatcher Configuration Enhancement (<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/change_request.do?sys_id=d59b89472fbeb6d4f1819c7fcea4e3af&amp;sysparm_view=undefined&amp;sysparm_record_target=change_request&amp;sysparm_record_row=1&amp;sysparm_record_rows=1&amp;sysparm_record_list=stateNOT+IN3%2C4%2C999%2C-1%5Eu_filter1%3Dsecurity%5Eu_filter3NOT+INamssec1_monthly_patching%2Camssec2_quarterly_patching%5Ecompany.u_customer_success_engineerDYNAMICadf2a8f41bb225108ba856cf034bcbbe%5EparentISNOTEMPTY%5EORDERBYDESCstart_date&amp;sysparm_view=undefined\">CHG3081440</a>). <br><br>Adi Kumar will be creating a CDE ticket to do mine, Ed's and Cindy's all at once</p>",
+      "completed": false,
+      "priority": "medium",
+      "dueDate": "2026-02-13",
+      "customerId": 7,
+      "noteId": 49,
+      "createdAt": "2026-02-06T17:47:07.892Z",
+      "updatedAt": "2026-02-06T17:47:07.892Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 25,
+      "title": "TRAINING - Understanding Jetty’s Critical Role in AEM",
+      "description": "<p>Hello James Laughlin, This is a reminder that you have not yet&nbsp;completed&nbsp;<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://nam04.safelinks.protection.outlook.com/?url=https%3A%2F%2Flearningmanager.adobe.com%2Fapp%2Flearner%3FaccountId%3D29997%26userId%3D4551378%23%2Fcourse%2F14837982%2Foverview%3Flp_id%3D%26cert_id%3D%26ci_id%3D15559146%26fromNotif%3Dtrue&amp;data=05%7C02%7Cjlaughli%40adobe.com%7Ccd26195102e545a53f2008de65f55904%7Cfa7b1b5a7b34438794aed2c178decee1%7C0%7C0%7C639060301596887971%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&amp;sdata=33RnuGJ%2Fip9f4bO8Ja6iOJl2WFMQM%2FW%2FsrvdqMSH5rg%3D&amp;reserved=0\">Understanding Jetty’s Critical Role in AEM</a>&nbsp;training. The deadline for completion is&nbsp;Friday 13 March 2026.</p>",
+      "completed": false,
+      "priority": "high",
+      "dueDate": "2026-03-06",
+      "customerId": null,
+      "noteId": null,
+      "createdAt": "2026-02-09T14:40:57.597Z",
+      "updatedAt": "2026-02-09T14:41:39.086Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    }
+  ],
+  "todoAuditLog": [
+    {
+      "id": 1,
+      "todoId": 7,
+      "action": "update",
+      "fieldName": "dueDate",
+      "oldValue": "2026-02-04",
+      "newValue": "2026-02-03",
+      "createdAt": "2026-02-03T17:38:35.413Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 2,
+      "todoId": 7,
+      "action": "update",
+      "fieldName": "dueDate",
+      "oldValue": "2026-02-03",
+      "newValue": "2026-02-04",
+      "createdAt": "2026-02-03T17:44:05.681Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 3,
+      "todoId": 8,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":8,\"title\":\"Follow up with Brumoon\",\"description\":\"<p>Brumoon Ahamat is working with FFB to implement CloudManager. <a target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\" class=\\\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\\\" href=\\\"https://adobedx.slack.com/archives/D08P4CDK6KF/p1769713378889279\\\">As of last thursday (Jan 26) he estimates</a> they will be ready to deploy to stage in another 2-3 weeks.  I'll check back with him on progress weekly. </p>\",\"completed\":false,\"priority\":\"medium\",\"dueDate\":\"2026-02-09\",\"customerId\":4,\"createdAt\":\"2026-02-03T17:46:02.667Z\",\"updatedAt\":\"2026-02-03T17:46:02.667Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-03T17:46:02.963Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 4,
+      "todoId": 7,
+      "action": "update",
+      "fieldName": "priority",
+      "oldValue": "high",
+      "newValue": "medium",
+      "createdAt": "2026-02-03T17:51:06.793Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 5,
+      "todoId": 7,
+      "action": "update",
+      "fieldName": "priority",
+      "oldValue": "medium",
+      "newValue": "high",
+      "createdAt": "2026-02-03T17:51:15.178Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 6,
+      "todoId": 7,
+      "action": "update",
+      "fieldName": "dueDate",
+      "oldValue": "2026-02-04",
+      "newValue": "2026-02-05",
+      "createdAt": "2026-02-03T17:51:25.453Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 7,
+      "todoId": 7,
+      "action": "update",
+      "fieldName": "dueDate",
+      "oldValue": "2026-02-05",
+      "newValue": "2026-02-04",
+      "createdAt": "2026-02-03T17:54:09.811Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 8,
+      "todoId": 7,
+      "action": "update",
+      "fieldName": "dueDate",
+      "oldValue": "2026-02-04",
+      "newValue": "2026-02-03",
+      "createdAt": "2026-02-03T17:54:21.632Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 9,
+      "todoId": 9,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":9,\"title\":\"Create patching ticket for 202601\",\"description\":\"<p>Customer got patched two weeks ago to ams-rh8x-aws-202512. The CDE said that he preferred that patch to ams-rh8x-aws-202601 because it was older and more established.  I talked to the CDE and told him we need to patch monthly. Since this customer won't be patched to ams-rh8x-aws-202602 until March 4 (<a target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\" class=\\\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\\\" href=\\\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3Ddd934a502fb2b214f1819c7fcea4e33a%26sysparm_record_list%3DstateNOT%2BIN4%255eshort_descriptionDOES%2BNOT%2BCONTAINLooking%255ecompany%253dbfcfebfb4f6e4b44ec35188af110c76b%255eORDERBYDESCsys_created_on%26sysparm_record_row%3D1%26sysparm_record_rows%3D4%26sysparm_record_target%3Dproblem%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\\\">PRB0842560</a>)  I have reached out to the customer to see if we can patch them to 202601 tomorrow (2/4) or if we need to wait until the next patch window (2/18). I'll create a ticket for one of those dates based on the response from the customer. </p>\",\"completed\":false,\"priority\":\"high\",\"dueDate\":\"2026-02-03\",\"customerId\":2,\"noteId\":28,\"createdAt\":\"2026-02-03T18:18:04.958Z\",\"updatedAt\":\"2026-02-03T18:18:04.958Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-03T18:18:05.250Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 10,
+      "todoId": 9,
+      "action": "update",
+      "fieldName": "description",
+      "oldValue": "<p>Customer got patched two weeks ago to ams-rh8x-aws-202512. The CDE said that he preferred that patch to ams-rh8x-aws-202601 because it was older and more established.  I talked to the CDE and told him we need to patch monthly. Since this customer won't be patched to ams-rh8x-aws-202602 until March 4 (<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3Ddd934a502fb2b214f1819c7fcea4e33a%26sysparm_record_list%3DstateNOT%2BIN4%255eshort_descriptionDOES%2BNOT%2BCONTAINLooking%255ecompany%253dbfcfebfb4f6e4b44ec35188af110c76b%255eORDERBYDESCsys_created_on%26sysparm_record_row%3D1%26sysparm_record_rows%3D4%26sysparm_record_target%3Dproblem%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0842560</a>)  I have reached out to the customer to see if we can patch them to 202601 tomorrow (2/4) or if we need to wait until the next patch window (2/18). I'll create a ticket for one of those dates based on the response from the customer. </p>",
+      "newValue": "<p>Customer got patched two weeks ago to ams-rh8x-aws-202512. The CDE said that he preferred that patch to ams-rh8x-aws-202601 because it was older and more established.  I talked to the CDE and told him we need to patch monthly. Since this customer won't be patched to ams-rh8x-aws-202602 until March 4 (<a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3Ddd934a502fb2b214f1819c7fcea4e33a%26sysparm_record_list%3DstateNOT%2BIN4%255eshort_descriptionDOES%2BNOT%2BCONTAINLooking%255ecompany%253dbfcfebfb4f6e4b44ec35188af110c76b%255eORDERBYDESCsys_created_on%26sysparm_record_row%3D1%26sysparm_record_rows%3D4%26sysparm_record_target%3Dproblem%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0842560</a>)  I have reached out to the customer to see if we can patch them to 202601 tomorrow (2/4) or if we need to wait until the next patch window (2/18). I'll create a ticket for one of those dates based on the response from the customer. </p>\n\nCreated ticket (PRB0842904) to have CDE do patching on 2/4 (tomorrow)",
+      "createdAt": "2026-02-03T19:17:57.337Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 11,
+      "todoId": 9,
+      "action": "complete",
+      "fieldName": "completed",
+      "oldValue": "false",
+      "newValue": "true",
+      "createdAt": "2026-02-03T19:37:52.589Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 12,
+      "todoId": 7,
+      "action": "complete",
+      "fieldName": "completed",
+      "oldValue": "false",
+      "newValue": "true",
+      "createdAt": "2026-02-03T22:35:26.828Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 13,
+      "todoId": 6,
+      "action": "complete",
+      "fieldName": "completed",
+      "oldValue": "false",
+      "newValue": "true",
+      "createdAt": "2026-02-03T22:35:53.284Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 14,
+      "todoId": 10,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":10,\"title\":\"Follow up to see if meeting has been set\",\"description\":\"<p><a target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\" class=\\\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\\\" href=\\\"https://adobedx.slack.com/archives/C0ACPKQBH7C/p1770129440128109\\\">I got a response from Aravind</a>. He has completed the SOW and will reach out to the customer to set up a meeting to review the proposed plan. I've asked him to invite me. I'll follow up tomorrow if he hasn't already responded. </p>\",\"completed\":false,\"priority\":\"medium\",\"dueDate\":\"2026-02-04\",\"customerId\":5,\"noteId\":31,\"createdAt\":\"2026-02-03T23:06:51.347Z\",\"updatedAt\":\"2026-02-03T23:06:51.347Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-03T23:06:51.660Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 15,
+      "todoId": 10,
+      "action": "update",
+      "fieldName": "dueDate",
+      "oldValue": "2026-02-04",
+      "newValue": "2026-02-05",
+      "createdAt": "2026-02-04T14:07:38.775Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 16,
+      "todoId": 11,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":11,\"title\":\"Get Ethan the file he requested\",\"description\":\"Ethan sent an email yesterday. Get him this file asap\",\"completed\":false,\"priority\":\"high\",\"dueDate\":\"2026-02-04\",\"customerId\":4,\"noteId\":null,\"createdAt\":\"2026-02-04T14:38:51.794Z\",\"updatedAt\":\"2026-02-04T14:38:51.794Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-04T14:38:52.173Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 17,
+      "todoId": 11,
+      "action": "complete",
+      "fieldName": "completed",
+      "oldValue": "false",
+      "newValue": "true",
+      "createdAt": "2026-02-04T15:08:08.825Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 18,
+      "todoId": 12,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":12,\"title\":\"Coordinate Patching for Haworth\",\"description\":\"Talk with Haworth team about when we can do OS patching. It must be done by the end of this month.\",\"completed\":false,\"priority\":\"medium\",\"dueDate\":\"2026-02-06\",\"customerId\":3,\"noteId\":null,\"createdAt\":\"2026-02-04T18:50:38.892Z\",\"updatedAt\":\"2026-02-04T18:50:38.892Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-04T18:50:39.214Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 19,
+      "todoId": 13,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":13,\"title\":\"Patch Fidelity Clearing Canada\",\"description\":\"They haven't been patched since late November. Patching is due before the end of the month.\",\"completed\":false,\"priority\":\"high\",\"dueDate\":\"2026-02-10\",\"customerId\":5,\"noteId\":null,\"createdAt\":\"2026-02-04T18:51:41.941Z\",\"updatedAt\":\"2026-02-04T18:51:41.941Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-04T18:51:42.231Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 20,
+      "todoId": 14,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":14,\"title\":\"Schedule OS Patching for Solstice\",\"description\":\"They were last patched on 1/23 and will need to be patched to 202602 when it comes out.\",\"completed\":false,\"priority\":\"high\",\"dueDate\":\"2026-02-13\",\"customerId\":6,\"noteId\":null,\"createdAt\":\"2026-02-04T18:56:03.845Z\",\"updatedAt\":\"2026-02-04T18:56:03.845Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-04T18:56:04.147Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 21,
+      "todoId": 12,
+      "action": "update",
+      "fieldName": "priority",
+      "oldValue": "medium",
+      "newValue": "high",
+      "createdAt": "2026-02-04T18:56:21.525Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 22,
+      "todoId": 10,
+      "action": "complete",
+      "fieldName": "completed",
+      "oldValue": "false",
+      "newValue": "true",
+      "createdAt": "2026-02-04T20:23:16.922Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 23,
+      "todoId": 15,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":15,\"title\":\"Training: Preventing Discrimination and Harassment at Adobe\",\"description\":\"<p>From email on 2/4/26</p><p>Hello James,</p><p>Please prioritize the learning requirement(s) l<a target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\" class=\\\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\\\" href=\\\"https://nam04.safelinks.protection.outlook.com/?url=https%3A%2F%2Flearningmanager.adobe.com%2Fapp%2Flearner%3FaccountId%3D29997%23%2Fcertification%2F86978&amp;data=05%7C02%7Cjlaughli%40adobe.com%7Cab396cc54afc47470cb808de64330216%7Cfa7b1b5a7b34438794aed2c178decee1%7C0%7C0%7C639058367400532130%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&amp;sdata=BeYnX%2B97RjbusodgDqk1JzJA9znPLWPdpVfheQvIRMs%3D&amp;reserved=0\\\">isted below. </a>Adobe’s mandated learning provides important information about how we are expected to conduct ourselves as members of the Adobe community.</p>\",\"completed\":false,\"priority\":\"high\",\"dueDate\":\"2026-04-03\",\"customerId\":null,\"noteId\":null,\"createdAt\":\"2026-02-05T15:19:18.908Z\",\"updatedAt\":\"2026-02-05T15:19:18.908Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-05T15:19:19.267Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 24,
+      "todoId": 12,
+      "action": "update",
+      "fieldName": "description",
+      "oldValue": "Talk with Haworth team about when we can do OS patching. It must be done by the end of this month.",
+      "newValue": "<p>Talk with Haworth team about when we can do OS patching. It must be done by the end of this month.</p><p>Customer agreed to let me do it this afternoon. Time scheduled on the calendar for 3-5 pm. <br><br>Reboot the author after 4PM only</p>",
+      "createdAt": "2026-02-05T15:29:44.104Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 25,
+      "todoId": 12,
+      "action": "update",
+      "fieldName": "dueDate",
+      "oldValue": "2026-02-06",
+      "newValue": "2026-02-05",
+      "createdAt": "2026-02-05T15:29:44.104Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 26,
+      "todoId": 16,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":16,\"title\":\"Follow up on JPMC dispatcher flush issue\",\"description\":\"<p><a target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\" class=\\\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\\\" href=\\\"https://adobedx.slack.com/archives/D079MTD897Z/p1770308528672239\\\">Chat from Yom Ativi</a><br><br>Ticket opened with AMS_Monitoring <a target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\" class=\\\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\\\" href=\\\"https://adobems.service-now.com/now/nav/ui/classic/params/target/incident.do%3Fsys_id%3D6956c3762f3e3e146811ab7fcea4e3e4%26sysparm_stack%3D%26sysparm_view%3D\\\">INC3131992</a></p>\",\"completed\":false,\"priority\":\"medium\",\"dueDate\":\"2026-02-06\",\"customerId\":2,\"noteId\":null,\"createdAt\":\"2026-02-05T16:27:58.105Z\",\"updatedAt\":\"2026-02-05T16:27:58.105Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-05T16:27:58.482Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 27,
+      "todoId": 16,
+      "action": "update",
+      "fieldName": "description",
+      "oldValue": "<p><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/D079MTD897Z/p1770308528672239\">Chat from Yom Ativi</a><br><br>Ticket opened with AMS_Monitoring <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/incident.do%3Fsys_id%3D6956c3762f3e3e146811ab7fcea4e3e4%26sysparm_stack%3D%26sysparm_view%3D\">INC3131992</a></p>",
+      "newValue": "<p><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/D079MTD897Z/p1770308528672239\">Chat from Yom Ativi</a><br><br>Incident ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/incident.do%3Fsys_id%3D6956c3762f3e3e146811ab7fcea4e3e4%26sysparm_stack%3D%26sysparm_view%3D\">INC3131992</a></p><p>AMS_Monitoring ticket </p>",
+      "createdAt": "2026-02-05T16:39:19.428Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 28,
+      "todoId": 16,
+      "action": "update",
+      "fieldName": "description",
+      "oldValue": "<p><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/D079MTD897Z/p1770308528672239\">Chat from Yom Ativi</a><br><br>Incident ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/incident.do%3Fsys_id%3D6956c3762f3e3e146811ab7fcea4e3e4%26sysparm_stack%3D%26sysparm_view%3D\">INC3131992</a></p><p>AMS_Monitoring ticket </p>",
+      "newValue": "<p><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/D079MTD897Z/p1770308528672239\">Chat from Yom Ativi</a><br><br>Incident ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/incident.do%3Fsys_id%3D6956c3762f3e3e146811ab7fcea4e3e4%26sysparm_stack%3D%26sysparm_view%3D\">INC3131992</a></p><p>AMS_Monitoring ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3D03bda772cfbaba102483f1b61d851c1c%26sysparm_record_list%3DstateNOT%2BIN4%255eshort_descriptionDOES%2BNOT%2BCONTAINLooking%255ecompany%253dbfcfebfb4f6e4b44ec35188af110c76b%255eORDERBYDESCsys_created_on%26sysparm_record_row%3D1%26sysparm_record_rows%3D5%26sysparm_record_target%3Dproblem%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0843058</a></p>",
+      "createdAt": "2026-02-05T16:40:37.086Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 29,
+      "todoId": 17,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":17,\"title\":\"Ask Aravind about Appian support\",\"description\":\"<p>Bruce has a question about whether our ACS folks have the ability to support Appian. I told him I'd ask Aravind and co to make sure they are prepared to answer to that.</p>\",\"completed\":false,\"priority\":\"medium\",\"dueDate\":\"2026-02-06\",\"customerId\":5,\"noteId\":42,\"createdAt\":\"2026-02-05T18:03:58.547Z\",\"updatedAt\":\"2026-02-05T18:03:58.547Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-05T18:03:58.917Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 30,
+      "todoId": 18,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":18,\"title\":\"Find out what is needed to support FFB Security team initiative\",\"description\":\"<p>Logan Baynes from the FFB security team joined the call. They are tightening controls and want to restrict access to their stage environment. They want to make people go through thier WAF. <br><br>I told Logan that I would do some internal research and try to get back with him on some sort of next steps. </p>\",\"completed\":false,\"priority\":\"medium\",\"dueDate\":\"2026-02-10\",\"customerId\":4,\"noteId\":44,\"createdAt\":\"2026-02-05T19:06:37.019Z\",\"updatedAt\":\"2026-02-05T19:06:37.019Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-05T19:06:37.430Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 31,
+      "todoId": 9,
+      "action": "uncomplete",
+      "fieldName": "completed",
+      "oldValue": "true",
+      "newValue": "false",
+      "createdAt": "2026-02-05T20:19:52.069Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 32,
+      "todoId": 9,
+      "action": "complete",
+      "fieldName": "completed",
+      "oldValue": "false",
+      "newValue": "true",
+      "createdAt": "2026-02-05T20:19:59.203Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 33,
+      "todoId": 17,
+      "action": "update",
+      "fieldName": "description",
+      "oldValue": "<p>Bruce has a question about whether our ACS folks have the ability to support Appian. I told him I'd ask Aravind and co to make sure they are prepared to answer to that.</p>",
+      "newValue": "<p>Bruce has a question about whether our ACS folks have the ability to support Appian. I told him I'd ask Aravind and co to make sure they are prepared to answer to that.<br><br><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/C0ACPKQBH7C/p1770322998453509\">Followed up today</a> </p>",
+      "createdAt": "2026-02-05T20:23:53.240Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 34,
+      "todoId": 17,
+      "action": "complete",
+      "fieldName": "completed",
+      "oldValue": "false",
+      "newValue": "true",
+      "createdAt": "2026-02-05T20:23:56.396Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 35,
+      "todoId": 19,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":19,\"title\":\"Open CDE ticket to add S3 SSDs to sites authors\",\"description\":\"<p>This only needs to be done on the authors. Open a CDE ticket to have Stefan do it. Provide him with this link to the wiki as instructions. <br><br><a target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\" class=\\\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\\\" href=\\\"https://wiki.corp.adobe.com/display/MSTeam/Cache+Drive+for+S3+and+Java_Temp\\\">https://wiki.corp.adobe.com/display/MSTeam/Cache+Drive+for+S3+and+Java_Temp</a></p>\",\"completed\":false,\"priority\":\"medium\",\"dueDate\":\"2026-02-06\",\"customerId\":6,\"noteId\":null,\"createdAt\":\"2026-02-05T22:08:03.524Z\",\"updatedAt\":\"2026-02-05T22:08:03.524Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-05T22:08:03.839Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 36,
+      "todoId": 19,
+      "action": "update",
+      "fieldName": "description",
+      "oldValue": "<p>This only needs to be done on the authors. Open a CDE ticket to have Stefan do it. Provide him with this link to the wiki as instructions. <br><br><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://wiki.corp.adobe.com/display/MSTeam/Cache+Drive+for+S3+and+Java_Temp\">https://wiki.corp.adobe.com/display/MSTeam/Cache+Drive+for+S3+and+Java_Temp</a></p>",
+      "newValue": "<p>This only needs to be done on the authors. Open a CDE ticket to have Stefan do it. Provide him with this link to the wiki as instructions. <br><br><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://wiki.corp.adobe.com/display/MSTeam/Cache+Drive+for+S3+and+Java_Temp\">https://wiki.corp.adobe.com/display/MSTeam/Cache+Drive+for+S3+and+Java_Temp</a><br><br>Create ticket on friday 2/6 to have the work done next week Tuesday or Wednesday</p>",
+      "createdAt": "2026-02-05T22:09:04.401Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 37,
+      "todoId": 12,
+      "action": "update",
+      "fieldName": "description",
+      "oldValue": "<p>Talk with Haworth team about when we can do OS patching. It must be done by the end of this month.</p><p>Customer agreed to let me do it this afternoon. Time scheduled on the calendar for 3-5 pm. <br><br>Reboot the author after 4PM only</p>",
+      "newValue": "<p>Talk with Haworth team about when we can do OS patching. It must be done by the end of this month.</p><p>Customer agreed to let me do it this afternoon. Time scheduled on the calendar for 3-5 pm. <br><br>All systems patched to 202601. </p>",
+      "createdAt": "2026-02-05T22:24:47.036Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 38,
+      "todoId": 12,
+      "action": "complete",
+      "fieldName": "completed",
+      "oldValue": "false",
+      "newValue": "true",
+      "createdAt": "2026-02-05T22:53:14.339Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 39,
+      "todoId": 20,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":20,\"title\":\"Open CDE ticket to have Haworth servers rebooted after patching\",\"description\":\"<p>I have patched the servers to 202601. They just need to be rebooted. Ask a CDE to do this during off hours.</p>\",\"completed\":false,\"priority\":\"medium\",\"dueDate\":\"2026-02-06\",\"customerId\":3,\"noteId\":null,\"createdAt\":\"2026-02-05T22:54:24.147Z\",\"updatedAt\":\"2026-02-05T22:54:24.147Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-05T22:54:24.453Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 40,
+      "todoId": 16,
+      "action": "update",
+      "fieldName": "description",
+      "oldValue": "<p><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/D079MTD897Z/p1770308528672239\">Chat from Yom Ativi</a><br><br>Incident ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/incident.do%3Fsys_id%3D6956c3762f3e3e146811ab7fcea4e3e4%26sysparm_stack%3D%26sysparm_view%3D\">INC3131992</a></p><p>AMS_Monitoring ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3D03bda772cfbaba102483f1b61d851c1c%26sysparm_record_list%3DstateNOT%2BIN4%255eshort_descriptionDOES%2BNOT%2BCONTAINLooking%255ecompany%253dbfcfebfb4f6e4b44ec35188af110c76b%255eORDERBYDESCsys_created_on%26sysparm_record_row%3D1%26sysparm_record_rows%3D5%26sysparm_record_target%3Dproblem%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0843058</a></p>",
+      "newValue": "<p><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobedx.slack.com/archives/D079MTD897Z/p1770308528672239\">Chat from Yomi Ativi</a><br><br>Incident ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/incident.do%3Fsys_id%3D6956c3762f3e3e146811ab7fcea4e3e4%26sysparm_stack%3D%26sysparm_view%3D\">INC3131992</a></p><p>AMS_Monitoring ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3D03bda772cfbaba102483f1b61d851c1c%26sysparm_record_list%3DstateNOT%2BIN4%255eshort_descriptionDOES%2BNOT%2BCONTAINLooking%255ecompany%253dbfcfebfb4f6e4b44ec35188af110c76b%255eORDERBYDESCsys_created_on%26sysparm_record_row%3D1%26sysparm_record_rows%3D5%26sysparm_record_target%3Dproblem%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0843058</a></p>",
+      "createdAt": "2026-02-06T16:14:11.111Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 41,
+      "todoId": 20,
+      "action": "complete",
+      "fieldName": "completed",
+      "oldValue": "false",
+      "newValue": "true",
+      "createdAt": "2026-02-06T16:55:02.869Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 42,
+      "todoId": 21,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":21,\"title\":\"Follow up on reboot ticket to make sure it's closed and done\",\"description\":\"<p>I patched Haworth to 202601 yesterday. Today I created CDE ticket <a target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\" class=\\\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\\\" href=\\\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3D4f7d74df0fba7e14ab08b2e300d1b219%26sysparm_stack%3D%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\\\">PRB0843120</a> to have the servers rebooted early monday morning 2/9 to complete the patching</p>\",\"completed\":false,\"priority\":\"medium\",\"dueDate\":\"2026-02-09\",\"customerId\":3,\"noteId\":47,\"createdAt\":\"2026-02-06T16:57:42.275Z\",\"updatedAt\":\"2026-02-06T16:57:42.275Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-06T16:57:42.569Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 43,
+      "todoId": 19,
+      "action": "update",
+      "fieldName": "description",
+      "oldValue": "<p>This only needs to be done on the authors. Open a CDE ticket to have Stefan do it. Provide him with this link to the wiki as instructions. <br><br><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://wiki.corp.adobe.com/display/MSTeam/Cache+Drive+for+S3+and+Java_Temp\">https://wiki.corp.adobe.com/display/MSTeam/Cache+Drive+for+S3+and+Java_Temp</a><br><br>Create ticket on friday 2/6 to have the work done next week Tuesday or Wednesday</p>",
+      "newValue": "<p>This only needs to be done on the authors. Open a CDE ticket to have Stefan do it. Provide him with this link to the wiki as instructions. <br><br><a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://wiki.corp.adobe.com/display/MSTeam/Cache+Drive+for+S3+and+Java_Temp\">https://wiki.corp.adobe.com/display/MSTeam/Cache+Drive+for+S3+and+Java_Temp</a><br><br>Create ticket on friday 2/6 to have the work done next week Tuesday or Wednesday<br><br>I opened CDE ticket <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\" href=\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3D6dd20d970f3e7e14ab08b2e300d1b267%26sysparm_stack%3D%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\">PRB0843123</a> for Stefan </p>",
+      "createdAt": "2026-02-06T17:13:59.669Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 44,
+      "todoId": 19,
+      "action": "complete",
+      "fieldName": "completed",
+      "oldValue": "false",
+      "newValue": "true",
+      "createdAt": "2026-02-06T17:14:05.568Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 45,
+      "todoId": 22,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":22,\"title\":\"Follow up on ticket PRB0843123\",\"description\":\"<p>I opened CDE ticket <a target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\" class=\\\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\\\" href=\\\"https://adobems.service-now.com/now/nav/ui/classic/params/target/problem.do%3Fsys_id%3D6dd20d970f3e7e14ab08b2e300d1b267%26sysparm_stack%3D%26sysparm_view%3Dcde_request%26sysparm_view_forced%3Dtrue\\\">PRB0843123</a> for Stefan to add S3 SSDs to the stage and prod author </p>\",\"completed\":false,\"priority\":\"medium\",\"dueDate\":\"2026-02-10\",\"customerId\":6,\"noteId\":48,\"createdAt\":\"2026-02-06T17:15:42.802Z\",\"updatedAt\":\"2026-02-06T17:15:42.802Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-06T17:15:43.100Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 46,
+      "todoId": 13,
+      "action": "update",
+      "fieldName": "description",
+      "oldValue": "They haven't been patched since late November. Patching is due before the end of the month.",
+      "newValue": "<p>They haven't been patched since late November. Patching is due before the end of the month.<br><br>Patching on calendar for Monday 2/9 10-1pm CT</p>",
+      "createdAt": "2026-02-06T17:17:55.156Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 47,
+      "todoId": 23,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":23,\"title\":\"Follow up with Adi on this CDE ticket\",\"description\":\"<p>Tickets opened for AMSSEC2_84a: Preview Tier Dispatcher Configuration Enhancement (<a target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\" class=\\\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\\\" href=\\\"https://adobems.service-now.com/change_request.do?sys_id=d59b89472fbeb6d4f1819c7fcea4e3af&amp;sysparm_view=undefined&amp;sysparm_record_target=change_request&amp;sysparm_record_row=1&amp;sysparm_record_rows=1&amp;sysparm_record_list=stateNOT+IN3%2C4%2C999%2C-1%5Eu_filter1%3Dsecurity%5Eu_filter3NOT+INamssec1_monthly_patching%2Camssec2_quarterly_patching%5Ecompany.u_customer_success_engineerDYNAMICadf2a8f41bb225108ba856cf034bcbbe%5EparentISNOTEMPTY%5EORDERBYDESCstart_date&amp;sysparm_view=undefined\\\">CHG3081440</a>). <br><br>Adi Kumar will be creating a CDE ticket to do mine, Ed's and Cindy's all at once</p>\",\"completed\":false,\"priority\":\"medium\",\"dueDate\":\"2026-02-13\",\"customerId\":7,\"noteId\":49,\"createdAt\":\"2026-02-06T17:47:07.892Z\",\"updatedAt\":\"2026-02-06T17:47:07.892Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-06T17:47:08.188Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 48,
+      "todoId": 24,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":24,\"title\":\"provision users for Solstice\",\"description\":\"<p>Ishrat emailed asking for access. After a couple of back and forth emails it was cleared that he was asking for ssh access to their dev servers. <br><br>He provided the ssh keys, but not the userids. I'm waiting on that and also confirmation as to which environment he's asking for.</p>\",\"completed\":false,\"priority\":\"medium\",\"dueDate\":\"2026-02-09\",\"customerId\":6,\"noteId\":null,\"createdAt\":\"2026-02-06T21:34:41.814Z\",\"updatedAt\":\"2026-02-06T21:34:41.814Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-06T21:34:42.325Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 49,
+      "todoId": 25,
+      "action": "create",
+      "fieldName": null,
+      "oldValue": null,
+      "newValue": "{\"id\":25,\"title\":\"TRAINING - Understanding Jetty’s Critical Role in AEM\",\"description\":\"<p>Hello James Laughlin, This is a reminder that you have not yet&nbsp;completed&nbsp;<a target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\" class=\\\"text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer\\\" href=\\\"https://nam04.safelinks.protection.outlook.com/?url=https%3A%2F%2Flearningmanager.adobe.com%2Fapp%2Flearner%3FaccountId%3D29997%26userId%3D4551378%23%2Fcourse%2F14837982%2Foverview%3Flp_id%3D%26cert_id%3D%26ci_id%3D15559146%26fromNotif%3Dtrue&amp;data=05%7C02%7Cjlaughli%40adobe.com%7Ccd26195102e545a53f2008de65f55904%7Cfa7b1b5a7b34438794aed2c178decee1%7C0%7C0%7C639060301596887971%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&amp;sdata=33RnuGJ%2Fip9f4bO8Ja6iOJl2WFMQM%2FW%2FsrvdqMSH5rg%3D&amp;reserved=0\\\">Understanding Jetty’s Critical Role in AEM</a>&nbsp;training. The deadline for completion is&nbsp;Friday 13 March 2026.</p>\",\"completed\":false,\"priority\":\"medium\",\"dueDate\":\"2026-03-13\",\"customerId\":null,\"noteId\":null,\"createdAt\":\"2026-02-09T14:40:57.597Z\",\"updatedAt\":\"2026-02-09T14:40:57.597Z\",\"userId\":\"user_39AKY3GwS433muQRjzZSdlxzGEF\"}",
+      "createdAt": "2026-02-09T14:40:57.811Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 50,
+      "todoId": 25,
+      "action": "update",
+      "fieldName": "dueDate",
+      "oldValue": "2026-03-13",
+      "newValue": "2026-03-06",
+      "createdAt": "2026-02-09T14:41:15.438Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 51,
+      "todoId": 15,
+      "action": "update",
+      "fieldName": "dueDate",
+      "oldValue": "2026-04-03",
+      "newValue": "2026-03-27",
+      "createdAt": "2026-02-09T14:41:33.399Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    },
+    {
+      "id": 52,
+      "todoId": 25,
+      "action": "update",
+      "fieldName": "priority",
+      "oldValue": "medium",
+      "newValue": "high",
+      "createdAt": "2026-02-09T14:41:39.345Z",
+      "userId": "user_39AKY3GwS433muQRjzZSdlxzGEF"
+    }
+  ]
+}
