@@ -74,7 +74,14 @@ export default async function TodosPage({
 
   // Separate completed and incomplete todos
   const incompleteTodos = todos.filter(t => !t.completed);
-  const completedTodos = todos.filter(t => t.completed);
+  const completedTodos = todos
+    .filter(t => t.completed)
+    .sort((a, b) => {
+      // Sort by updatedAt in descending order (newest first)
+      const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+      const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+      return dateB - dateA;
+    });
 
   // Get selected customer name for display
   const selectedCustomer = filterCustomerId 
