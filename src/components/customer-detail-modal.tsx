@@ -24,6 +24,9 @@ type Customer = {
   topology: string;
   dumbledoreStage: number;
   patchFrequency: string;
+  workLoad: string;
+  cloudManager: string;
+  products: string;
   mscUrl: string | null;
   runbookUrl: string | null;
   snowUrl: string | null;
@@ -65,6 +68,9 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   const [topology, setTopology] = useState<"dev" | "qa" | "stage" | "prod">("dev");
   const [dumbledoreStage, setDumbledoreStage] = useState(1);
   const [patchFrequency, setPatchFrequency] = useState<"monthly" | "quarterly">("monthly");
+  const [workLoad, setWorkLoad] = useState<"low" | "medium" | "high">("medium");
+  const [cloudManager, setCloudManager] = useState<"no" | "implementing" | "yes">("no");
+  const [products, setProducts] = useState<"sites" | "assets" | "sites and assets">("sites");
   const [mscUrl, setMscUrl] = useState("");
   const [runbookUrl, setRunbookUrl] = useState("");
   const [snowUrl, setSnowUrl] = useState("");
@@ -79,6 +85,9 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
       setTopology(customer.topology as "dev" | "qa" | "stage" | "prod");
       setDumbledoreStage(customer.dumbledoreStage);
       setPatchFrequency(customer.patchFrequency as "monthly" | "quarterly");
+      setWorkLoad(customer.workLoad as "low" | "medium" | "high");
+      setCloudManager(customer.cloudManager as "no" | "implementing" | "yes");
+      setProducts(customer.products as "sites" | "assets" | "sites and assets");
       setMscUrl(customer.mscUrl || "");
       setRunbookUrl(customer.runbookUrl || "");
       setSnowUrl(customer.snowUrl || "");
@@ -131,6 +140,9 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
           topology,
           dumbledoreStage,
           patchFrequency,
+          workLoad,
+          cloudManager,
+          products,
           mscUrl: mscUrl || null,
           runbookUrl: runbookUrl || null,
           snowUrl: snowUrl || null,
@@ -238,25 +250,27 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="lastPatchDate">Last Patch Date</Label>
-                <Input
-                  id="lastPatchDate"
-                  type="date"
-                  value={formatDateInput(lastPatchDate)}
-                  onChange={(e) => setLastPatchDate(e.target.value)}
-                />
-              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="lastPatchDate">Last Patch Date</Label>
+                  <Input
+                    id="lastPatchDate"
+                    type="date"
+                    value={formatDateInput(lastPatchDate)}
+                    onChange={(e) => setLastPatchDate(e.target.value)}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="lastPatchVersion">Last Patch Version</Label>
-                <Input
-                  id="lastPatchVersion"
-                  type="text"
-                  placeholder="e.g., v1.2.3"
-                  value={lastPatchVersion}
-                  onChange={(e) => setLastPatchVersion(e.target.value)}
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="lastPatchVersion">Last Patch Version</Label>
+                  <Input
+                    id="lastPatchVersion"
+                    type="text"
+                    placeholder="e.g., v1.2.3"
+                    value={lastPatchVersion}
+                    onChange={(e) => setLastPatchVersion(e.target.value)}
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -311,39 +325,87 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="patchFrequency">Patch Frequency</Label>
-                <Select value={patchFrequency} onValueChange={(value: "monthly" | "quarterly") => setPatchFrequency(value)}>
-                  <SelectTrigger id="patchFrequency">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="monthly">Monthly</SelectItem>
-                    <SelectItem value="quarterly">Quarterly</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="patchFrequency">Patch Frequency</Label>
+                  <Select value={patchFrequency} onValueChange={(value: "monthly" | "quarterly") => setPatchFrequency(value)}>
+                    <SelectTrigger id="patchFrequency">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="monthly">Monthly</SelectItem>
+                      <SelectItem value="quarterly">Quarterly</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="workLoad">Work Load</Label>
+                  <Select value={workLoad} onValueChange={(value: "low" | "medium" | "high") => setWorkLoad(value)}>
+                    <SelectTrigger id="workLoad">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="mscUrl">MSC URL (Optional)</Label>
-                <Input
-                  id="mscUrl"
-                  type="url"
-                  placeholder="https://example.com/msc"
-                  value={mscUrl}
-                  onChange={(e) => setMscUrl(e.target.value)}
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="cloudManager">Cloud Manager</Label>
+                  <Select value={cloudManager} onValueChange={(value: "no" | "implementing" | "yes") => setCloudManager(value)}>
+                    <SelectTrigger id="cloudManager">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="no">No</SelectItem>
+                      <SelectItem value="implementing">Implementing</SelectItem>
+                      <SelectItem value="yes">Yes</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="products">Products</Label>
+                  <Select value={products} onValueChange={(value: "sites" | "assets" | "sites and assets") => setProducts(value)}>
+                    <SelectTrigger id="products">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sites">Sites</SelectItem>
+                      <SelectItem value="assets">Assets</SelectItem>
+                      <SelectItem value="sites and assets">Sites and Assets</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="runbookUrl">Runbook URL (Optional)</Label>
-                <Input
-                  id="runbookUrl"
-                  type="url"
-                  placeholder="https://example.com/runbook"
-                  value={runbookUrl}
-                  onChange={(e) => setRunbookUrl(e.target.value)}
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="mscUrl">MSC URL (Optional)</Label>
+                  <Input
+                    id="mscUrl"
+                    type="url"
+                    placeholder="https://example.com/msc"
+                    value={mscUrl}
+                    onChange={(e) => setMscUrl(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="runbookUrl">Runbook URL (Optional)</Label>
+                  <Input
+                    id="runbookUrl"
+                    type="url"
+                    placeholder="https://example.com/runbook"
+                    value={runbookUrl}
+                    onChange={(e) => setRunbookUrl(e.target.value)}
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">

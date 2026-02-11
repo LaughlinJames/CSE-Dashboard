@@ -10,6 +10,9 @@ export const customersTable = pgTable("customers", {
   topology: varchar({ length: 20 }).notNull().default("dev"), // dev, qa, stage, prod
   dumbledoreStage: integer("dumbledore_stage").notNull().default(1), // 1-9
   patchFrequency: varchar("patch_frequency", { length: 20 }).notNull().default("monthly"), // monthly or quarterly
+  workLoad: varchar("work_load", { length: 20 }).notNull().default("medium"), // low, medium, high
+  cloudManager: varchar("cloud_manager", { length: 20 }).notNull().default("no"), // no, implementing, yes
+  products: varchar({ length: 20 }).notNull().default("sites"), // sites, assets, sites and assets
   mscUrl: text("msc_url"), // URL for MSC button
   runbookUrl: text("runbook_url"), // URL for Runbook button
   snowUrl: text("snow_url"), // URL for SNOW button

@@ -17,6 +17,9 @@ type Customer = {
   topology: string;
   dumbledoreStage: number;
   patchFrequency: string;
+  workLoad: string;
+  cloudManager: string;
+  products: string;
   mscUrl: string | null;
   runbookUrl: string | null;
   snowUrl: string | null;
@@ -138,6 +141,34 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
     return frequency.toLowerCase() === "monthly" ? "bg-red-600 hover:bg-red-700 text-white" : "";
   };
 
+  // Helper function to get custom color class for work load badges
+  const getWorkLoadColorClass = (workLoad: string): string => {
+    switch (workLoad.toLowerCase()) {
+      case "high":
+        return "bg-red-600 hover:bg-red-700 text-white";
+      case "medium":
+        return "bg-yellow-600 hover:bg-yellow-700 text-white";
+      case "low":
+        return "bg-green-600 hover:bg-green-700 text-white";
+      default:
+        return "";
+    }
+  };
+
+  // Helper function to get custom color class for cloud manager badges
+  const getCloudManagerColorClass = (cloudManager: string): string => {
+    switch (cloudManager.toLowerCase()) {
+      case "yes":
+        return "bg-green-600 hover:bg-green-700 text-white";
+      case "implementing":
+        return "bg-yellow-600 hover:bg-yellow-700 text-white";
+      case "no":
+        return "bg-red-600 hover:bg-red-700 text-white";
+      default:
+        return "";
+    }
+  };
+
   return (
     <>
       <Card 
@@ -197,6 +228,30 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
                 className={getPatchFrequencyColorClass(customer.patchFrequency)}
               >
                 {customer.patchFrequency.charAt(0).toUpperCase() + customer.patchFrequency.slice(1)}
+              </Badge>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">Work Load:</span>
+              <Badge 
+                variant="secondary"
+                className={getWorkLoadColorClass(customer.workLoad)}
+              >
+                {customer.workLoad.charAt(0).toUpperCase() + customer.workLoad.slice(1)}
+              </Badge>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">Cloud Manager:</span>
+              <Badge 
+                variant="secondary"
+                className={getCloudManagerColorClass(customer.cloudManager)}
+              >
+                {customer.cloudManager.charAt(0).toUpperCase() + customer.cloudManager.slice(1)}
+              </Badge>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">Products:</span>
+              <Badge variant="outline">
+                {customer.products.charAt(0).toUpperCase() + customer.products.slice(1)}
               </Badge>
             </div>
             <div className="flex justify-between text-sm">

@@ -42,6 +42,9 @@ export function AddCustomerDialog() {
       topology: formData.get("topology") as "dev" | "qa" | "stage" | "prod",
       dumbledoreStage: parseInt(formData.get("dumbledoreStage") as string),
       patchFrequency: formData.get("patchFrequency") as "monthly" | "quarterly",
+      workLoad: formData.get("workLoad") as "low" | "medium" | "high",
+      cloudManager: formData.get("cloudManager") as "no" | "implementing" | "yes",
+      products: formData.get("products") as "sites" | "assets" | "sites and assets",
     };
 
     startTransition(async () => {
@@ -67,7 +70,7 @@ export function AddCustomerDialog() {
           Add Customer
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Add New Customer</DialogTitle>
           <DialogDescription>
@@ -86,25 +89,27 @@ export function AddCustomerDialog() {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="lastPatchDate">Last Patch Date</Label>
-            <Input
-              id="lastPatchDate"
-              name="lastPatchDate"
-              type="date"
-              disabled={isPending}
-            />
-          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="lastPatchDate">Last Patch Date</Label>
+              <Input
+                id="lastPatchDate"
+                name="lastPatchDate"
+                type="date"
+                disabled={isPending}
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="lastPatchVersion">Last Patch Version</Label>
-            <Input
-              id="lastPatchVersion"
-              name="lastPatchVersion"
-              type="text"
-              placeholder="e.g., v1.2.3"
-              disabled={isPending}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="lastPatchVersion">Last Patch Version</Label>
+              <Input
+                id="lastPatchVersion"
+                name="lastPatchVersion"
+                type="text"
+                placeholder="e.g., v1.2.3"
+                disabled={isPending}
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -123,48 +128,96 @@ export function AddCustomerDialog() {
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="topology">Topology *</Label>
-            <Select name="topology" defaultValue="dev" disabled={isPending}>
-              <SelectTrigger id="topology">
-                <SelectValue placeholder="Select topology" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="dev">Dev</SelectItem>
-                <SelectItem value="qa">QA</SelectItem>
-                <SelectItem value="stage">Stage</SelectItem>
-                <SelectItem value="prod">Prod</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="topology">Topology *</Label>
+              <Select name="topology" defaultValue="dev" disabled={isPending}>
+                <SelectTrigger id="topology">
+                  <SelectValue placeholder="Select topology" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="dev">Dev</SelectItem>
+                  <SelectItem value="qa">QA</SelectItem>
+                  <SelectItem value="stage">Stage</SelectItem>
+                  <SelectItem value="prod">Prod</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="dumbledoreStage">Dumbledore Stage *</Label>
+              <Select name="dumbledoreStage" defaultValue="1" disabled={isPending}>
+                <SelectTrigger id="dumbledoreStage">
+                  <SelectValue placeholder="Select stage" />
+                </SelectTrigger>
+                <SelectContent>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((stage) => (
+                    <SelectItem key={stage} value={stage.toString()}>
+                      Stage {stage}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="dumbledoreStage">Dumbledore Stage *</Label>
-            <Select name="dumbledoreStage" defaultValue="1" disabled={isPending}>
-              <SelectTrigger id="dumbledoreStage">
-                <SelectValue placeholder="Select stage" />
-              </SelectTrigger>
-              <SelectContent>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((stage) => (
-                  <SelectItem key={stage} value={stage.toString()}>
-                    Stage {stage}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="patchFrequency">Patch Frequency *</Label>
+              <Select name="patchFrequency" defaultValue="monthly" disabled={isPending}>
+                <SelectTrigger id="patchFrequency">
+                  <SelectValue placeholder="Select frequency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="monthly">Monthly</SelectItem>
+                  <SelectItem value="quarterly">Quarterly</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="workLoad">Work Load *</Label>
+              <Select name="workLoad" defaultValue="medium" disabled={isPending}>
+                <SelectTrigger id="workLoad">
+                  <SelectValue placeholder="Select work load" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="patchFrequency">Patch Frequency *</Label>
-            <Select name="patchFrequency" defaultValue="monthly" disabled={isPending}>
-              <SelectTrigger id="patchFrequency">
-                <SelectValue placeholder="Select frequency" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="monthly">Monthly</SelectItem>
-                <SelectItem value="quarterly">Quarterly</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="cloudManager">Cloud Manager *</Label>
+              <Select name="cloudManager" defaultValue="no" disabled={isPending}>
+                <SelectTrigger id="cloudManager">
+                  <SelectValue placeholder="Select cloud manager status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="no">No</SelectItem>
+                  <SelectItem value="implementing">Implementing</SelectItem>
+                  <SelectItem value="yes">Yes</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="products">Products *</Label>
+              <Select name="products" defaultValue="sites" disabled={isPending}>
+                <SelectTrigger id="products">
+                  <SelectValue placeholder="Select products" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="sites">Sites</SelectItem>
+                  <SelectItem value="assets">Assets</SelectItem>
+                  <SelectItem value="sites and assets">Sites and Assets</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {error && (

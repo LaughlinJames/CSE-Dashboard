@@ -18,6 +18,8 @@ type CustomerWithNote = {
   topology: string;
   dumbledoreStage: number;
   patchFrequency: string;
+  workLoad: string;
+  cloudManager: string;
   mscUrl: string | null;
   runbookUrl: string | null;
   snowUrl: string | null;
