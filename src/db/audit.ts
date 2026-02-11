@@ -1,6 +1,6 @@
 import { db } from "@/db";
-import { customerAuditLogTable, todoAuditLogTable } from "@/db/schema";
-import { SelectCustomer, SelectTodo } from "@/db/types";
+import { customerAuditLogTable, customerNoteAuditLogTable, todoAuditLogTable } from "@/db/schema";
+import { SelectCustomer, SelectTodo, SelectCustomerNote } from "@/db/types";
 
 /**
  * Log a customer creation action
@@ -84,6 +84,82 @@ export async function logCustomerUpdate(
   if (auditEntries.length > 0) {
     await db.insert(customerAuditLogTable).values(auditEntries);
   }
+}
+
+/**
+ * Log a customer note creation action
+ */
+export async function logCustomerNoteCreate(
+  noteId: number,
+  noteData: Partial<SelectCustomerNote>,
+  userId: string
+) {
+  await db.insert(customerNoteAuditLogTable).values({
+    noteId,
+    action: "create",
+    fieldName: null,
+    oldValue: null,
+    newValue: JSON.stringify(noteData),
+    userId,
+  });
+}
+
+/**
+ * Log individual field updates for a customer note
+ */
+export async function logCustomerNoteUpdate(
+  noteId: number,
+  oldNote: SelectCustomerNote,
+  newNote: Partial<SelectCustomerNote>,
+  userId: string
+) {
+  const auditEntries = [];
+
+  // Check each field for changes and log them
+  const fieldsToTrack: Array<keyof SelectCustomerNote> = [
+    "note",
+    "customerId",
+  ];
+
+  for (const field of fieldsToTrack) {
+    if (field in newNote && newNote[field] !== oldNote[field]) {
+      const oldValue = oldNote[field];
+      const newValue = newNote[field];
+
+      // Convert values to strings for storage
+      auditEntries.push({
+        noteId,
+        action: "update" as const,
+        fieldName: field,
+        oldValue: oldValue === null ? null : String(oldValue),
+        newValue: newValue === null || newValue === undefined ? null : String(newValue),
+        userId,
+      });
+    }
+  }
+
+  // Insert all audit entries in a single transaction if there are changes
+  if (auditEntries.length > 0) {
+    await db.insert(customerNoteAuditLogTable).values(auditEntries);
+  }
+}
+
+/**
+ * Log a customer note deletion action
+ */
+export async function logCustomerNoteDelete(
+  noteId: number,
+  noteData: SelectCustomerNote,
+  userId: string
+) {
+  await db.insert(customerNoteAuditLogTable).values({
+    noteId,
+    action: "delete",
+    fieldName: null,
+    oldValue: JSON.stringify(noteData),
+    newValue: null,
+    userId,
+  });
 }
 
 /**

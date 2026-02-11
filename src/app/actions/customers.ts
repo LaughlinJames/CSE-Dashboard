@@ -2,19 +2,21 @@
 
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/db";
-import { customersTable, customerNotesTable, customerAuditLogTable, todosTable } from "@/db/schema";
+import { customersTable, customerNotesTable, customerAuditLogTable, customerNoteAuditLogTable, todosTable } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 import { 
   createCustomerSchema, 
   updateCustomerSchema,
   addNoteSchema,
+  updateNoteSchema,
   type CreateCustomerInput,
   type UpdateCustomerInput,
-  type AddNoteInput
+  type AddNoteInput,
+  type UpdateNoteInput
 } from "@/lib/validations/customers";
 import { eq, and, desc, gte, lte, between, isNotNull } from "drizzle-orm";
 import { z } from "zod";
-import { logCustomerCreate, logCustomerUpdate, logCustomerArchive } from "@/db/audit";
+import { logCustomerCreate, logCustomerUpdate, logCustomerArchive, logCustomerNoteCreate, logCustomerNoteUpdate } from "@/db/audit";
 import OpenAI from "openai";
 
 export async function createCustomer(data: CreateCustomerInput) {
@@ -193,11 +195,18 @@ export async function addNote(data: AddNoteInput) {
   }
 
   // Add the note
-  await db.insert(customerNotesTable).values({
+  const noteData = {
     customerId: validatedData.customerId,
     note: validatedData.note,
     userId,
-  });
+  };
+
+  const result = await db.insert(customerNotesTable).values(noteData).returning();
+
+  // Log the note creation
+  if (result.length > 0) {
+    await logCustomerNoteCreate(result[0].id, noteData, userId);
+  }
 
   // Update the customer's updatedAt timestamp
   await db
@@ -206,6 +215,67 @@ export async function addNote(data: AddNoteInput) {
       updatedAt: new Date(),
     })
     .where(eq(customersTable.id, validatedData.customerId));
+
+  revalidatePath("/dashboard");
+
+  return { success: true };
+}
+
+export async function updateNote(data: UpdateNoteInput) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  // Validate input data
+  const validatedData = updateNoteSchema.parse(data);
+
+  // Verify the note belongs to this user
+  const existingNote = await db
+    .select()
+    .from(customerNotesTable)
+    .where(
+      and(
+        eq(customerNotesTable.id, validatedData.noteId),
+        eq(customerNotesTable.userId, userId)
+      )
+    );
+
+  if (existingNote.length === 0) {
+    throw new Error("Note not found or unauthorized");
+  }
+
+  // Update the note
+  const updateData = {
+    note: validatedData.note,
+  };
+
+  const result = await db
+    .update(customerNotesTable)
+    .set(updateData)
+    .where(
+      and(
+        eq(customerNotesTable.id, validatedData.noteId),
+        eq(customerNotesTable.userId, userId)
+      )
+    )
+    .returning();
+
+  if (result.length === 0) {
+    throw new Error("Failed to update note");
+  }
+
+  // Log the note update
+  await logCustomerNoteUpdate(validatedData.noteId, existingNote[0], updateData, userId);
+
+  // Update the customer's updatedAt timestamp
+  await db
+    .update(customersTable)
+    .set({
+      updatedAt: new Date(),
+    })
+    .where(eq(customersTable.id, existingNote[0].customerId));
 
   revalidatePath("/dashboard");
 

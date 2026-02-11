@@ -1,0 +1,342 @@
+# Database Audit Logging
+
+**ALL data modifications MUST be logged to the appropriate audit log table.**
+
+## 🔒 CRITICAL RULE
+
+**Every CREATE, UPDATE, DELETE, or ARCHIVE operation on any data table MUST generate a corresponding audit log entry.**
+
+This is required for:
+- **Compliance** - Track all data changes for regulatory requirements
+- **Debugging** - Understand what changed, when, and by whom
+- **Security** - Detect unauthorized or suspicious modifications
+- **History** - Provide users with a complete audit trail
+
+---
+
+## 📋 AUDIT LOG REQUIREMENTS
+
+### 1. When to Create Audit Logs
+
+Audit logs are REQUIRED for all:
+
+- ✅ **INSERT operations** - Log "create" action with new data
+- ✅ **UPDATE operations** - Log "update" action with old/new values for each changed field
+- ✅ **DELETE operations** - Log "delete" action with deleted data
+- ✅ **ARCHIVE/UNARCHIVE operations** - Log the state change
+- ✅ **STATUS changes** - Log completion, activation, or other status transitions
+
+### 2. Audit Log Table Structure
+
+Every data table that contains user-modifiable data MUST have a corresponding audit log table:
+
+```typescript
+// Example: For customersTable, there must be customerAuditLogTable
+export const customerAuditLogTable = pgTable("customer_audit_log", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  customerId: integer("customer_id")
+    .notNull()
+    .references(() => customersTable.id, { onDelete: "cascade" }),
+  action: varchar({ length: 50 }).notNull(), // create, update, delete, archive, etc.
+  fieldName: varchar("field_name", { length: 100 }), // Field that changed (null for create/delete)
+  oldValue: text("old_value"), // Previous value (null for create)
+  newValue: text("new_value"), // New value (null for delete)
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  userId: text("user_id").notNull(), // Who made the change
+});
+```
+
+### 3. Audit Helper Functions Pattern
+
+All audit logging MUST use helper functions defined in [src/db/audit.ts](mdc:src/db/audit.ts):
+
+**✅ CORRECT - Use audit helper functions:**
+
+```typescript
+"use server";
+
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/db";
+import { customersTable } from "@/db/schema";
+import { logCustomerCreate, logCustomerUpdate } from "@/db/audit";
+import { revalidatePath } from "next/cache";
+
+export async function createCustomer(data: CreateCustomerInput) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const validatedData = createCustomerSchema.parse(data);
+
+  // Insert the customer
+  const result = await db.insert(customersTable).values({
+    ...validatedData,
+    userId,
+  }).returning();
+
+  // ✅ REQUIRED - Log the creation
+  if (result.length > 0) {
+    await logCustomerCreate(result[0].id, validatedData, userId);
+  }
+
+  revalidatePath("/dashboard");
+
+  return { success: true };
+}
+
+export async function updateCustomer(data: UpdateCustomerInput) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const validatedData = updateCustomerSchema.parse(data);
+
+  // ✅ REQUIRED - Fetch old data BEFORE updating
+  const oldCustomer = await db
+    .select()
+    .from(customersTable)
+    .where(
+      and(
+        eq(customersTable.id, validatedData.id),
+        eq(customersTable.userId, userId)
+      )
+    );
+
+  if (oldCustomer.length === 0) {
+    throw new Error("Customer not found or unauthorized");
+  }
+
+  // Perform the update
+  const updateData = {
+    name: validatedData.name,
+    temperament: validatedData.temperament,
+    updatedAt: new Date(),
+  };
+
+  const result = await db
+    .update(customersTable)
+    .set(updateData)
+    .where(
+      and(
+        eq(customersTable.id, validatedData.id),
+        eq(customersTable.userId, userId)
+      )
+    )
+    .returning();
+
+  if (result.length === 0) {
+    throw new Error("Customer not found or unauthorized");
+  }
+
+  // ✅ REQUIRED - Log the changes
+  await logCustomerUpdate(validatedData.id, oldCustomer[0], updateData, userId);
+
+  revalidatePath("/dashboard");
+
+  return { success: true };
+}
+```
+
+**❌ WRONG - Missing audit logs:**
+
+```typescript
+// ❌ FORBIDDEN - No audit logging
+export async function updateCustomer(data: UpdateCustomerInput) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const validatedData = updateCustomerSchema.parse(data);
+
+  // ❌ WRONG - Update without logging
+  await db
+    .update(customersTable)
+    .set({ name: validatedData.name })
+    .where(eq(customersTable.id, validatedData.id));
+
+  revalidatePath("/dashboard");
+
+  return { success: true };
+}
+```
+
+### 4. Audit Function Patterns
+
+#### CREATE Action
+
+```typescript
+// In src/db/audit.ts
+export async function logCustomerCreate(
+  customerId: number,
+  customerData: Partial<SelectCustomer>,
+  userId: string
+) {
+  await db.insert(customerAuditLogTable).values({
+    customerId,
+    action: "create",
+    fieldName: null,
+    oldValue: null,
+    newValue: JSON.stringify(customerData), // Full object as JSON
+    userId,
+  });
+}
+```
+
+#### UPDATE Action
+
+```typescript
+// In src/db/audit.ts
+export async function logCustomerUpdate(
+  customerId: number,
+  oldCustomer: SelectCustomer,
+  newCustomer: Partial<SelectCustomer>,
+  userId: string
+) {
+  const auditEntries = [];
+
+  // Define fields to track
+  const fieldsToTrack: Array<keyof SelectCustomer> = [
+    "name",
+    "temperament",
+    "topology",
+    // ... other fields
+  ];
+
+  // Compare old vs new for each field
+  for (const field of fieldsToTrack) {
+    if (field in newCustomer && newCustomer[field] !== oldCustomer[field]) {
+      auditEntries.push({
+        customerId,
+        action: "update" as const,
+        fieldName: field,
+        oldValue: oldCustomer[field] === null ? null : String(oldCustomer[field]),
+        newValue: newCustomer[field] === null ? null : String(newCustomer[field]),
+        userId,
+      });
+    }
+  }
+
+  // Insert all audit entries
+  if (auditEntries.length > 0) {
+    await db.insert(customerAuditLogTable).values(auditEntries);
+  }
+}
+```
+
+#### DELETE Action
+
+```typescript
+// In src/db/audit.ts
+export async function logCustomerDelete(
+  customerId: number,
+  customerData: SelectCustomer,
+  userId: string
+) {
+  await db.insert(customerAuditLogTable).values({
+    customerId,
+    action: "delete",
+    fieldName: null,
+    oldValue: JSON.stringify(customerData), // Full object as JSON
+    newValue: null,
+    userId,
+  });
+}
+```
+
+#### ARCHIVE/STATUS Action
+
+```typescript
+// In src/db/audit.ts
+export async function logCustomerArchive(
+  customerId: number,
+  archived: boolean,
+  userId: string
+) {
+  await db.insert(customerAuditLogTable).values({
+    customerId,
+    action: archived ? "archive" : "unarchive",
+    fieldName: "archived",
+    oldValue: String(!archived),
+    newValue: String(archived),
+    userId,
+  });
+}
+```
+
+---
+
+## 🚨 FORBIDDEN PATTERNS
+
+```typescript
+// ❌ NEVER update data without logging
+await db.update(customersTable).set({ name: "New Name" }).where(eq(customersTable.id, 1));
+
+// ❌ NEVER delete data without logging
+await db.delete(customersTable).where(eq(customersTable.id, 1));
+
+// ❌ NEVER insert data without logging
+await db.insert(customersTable).values({ name: "New Customer", userId });
+
+// ❌ NEVER update without fetching old data first
+const result = await db.update(customersTable).set(newData).where(...).returning();
+// Missing: const oldData = await db.select()... BEFORE the update
+
+// ❌ NEVER skip audit logging "to save time"
+// ALL changes must be logged, no exceptions
+
+// ❌ NEVER log audit entries manually in server actions
+// Use audit helper functions from @/db/audit
+```
+
+---
+
+## ✅ AUDIT LOGGING CHECKLIST
+
+Before merging any server action that modifies data, verify:
+
+- [ ] Audit log table exists for the data table being modified
+- [ ] Audit helper functions are defined in [src/db/audit.ts](mdc:src/db/audit.ts)
+- [ ] CREATE operations call the appropriate `log*Create()` function after insert
+- [ ] UPDATE operations:
+  - [ ] Fetch old data BEFORE updating
+  - [ ] Call the appropriate `log*Update()` function after update
+  - [ ] Pass both old and new data to the audit function
+- [ ] DELETE operations call the appropriate `log*Delete()` function before delete
+- [ ] ARCHIVE/STATUS operations call the appropriate audit function
+- [ ] All audit functions receive the authenticated `userId`
+- [ ] Audit functions are called AFTER successful database operations
+- [ ] Error handling does not bypass audit logging
+
+---
+
+## 📚 Reference Files
+
+- Database schema: [src/db/schema.ts](mdc:src/db/schema.ts)
+- Audit helper functions: [src/db/audit.ts](mdc:src/db/audit.ts)
+- Example server actions: [src/app/actions/customers.ts](mdc:src/app/actions/customers.ts)
+
+---
+
+## ⚠️ MISSING AUDIT LOGS
+
+If you identify server actions that are missing audit logs:
+
+1. **STOP** - Do not approve or merge the code
+2. **ADD** the appropriate audit log table to [src/db/schema.ts](mdc:src/db/schema.ts) if missing
+3. **CREATE** the audit helper functions in [src/db/audit.ts](mdc:src/db/audit.ts)
+4. **UPDATE** the server action to call the audit functions
+5. **TEST** that audit logs are being created correctly
+
+---
+
+## 🎯 SUMMARY
+
+**Every data change MUST be audited. No exceptions.**
+
+If you see a database operation (INSERT, UPDATE, DELETE) without a corresponding audit log entry, it is a **critical bug** that must be fixed immediately.

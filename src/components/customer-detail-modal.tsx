@@ -10,9 +10,9 @@ import { Badge } from "@/components/ui/badge";
 import { RichTextEditor } from "@/components/rich-text-editor";
 import { AddTodoFromNoteDialog } from "@/components/add-todo-from-note-dialog";
 import { AddCoverCSEDialog } from "@/components/add-cover-cse-dialog";
-import { updateCustomer, addNote, getCustomerNotes, getTodosByCustomer } from "@/app/actions/customers";
+import { updateCustomer, addNote, updateNote, getCustomerNotes, getTodosByCustomer } from "@/app/actions/customers";
 import { useEffect } from "react";
-import { CheckSquare } from "lucide-react";
+import { CheckSquare, Pencil, X } from "lucide-react";
 import Link from "next/link";
 
 type Customer = {
@@ -59,6 +59,8 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   const [success, setSuccess] = useState<string | null>(null);
   const [noteTodoMap, setNoteTodoMap] = useState<Map<number, number>>(new Map()); // noteId -> todoId
   const [selectedCoverCSE, setSelectedCoverCSE] = useState<{ id: string; name: string } | null>(null);
+  const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
+  const [editedNoteContent, setEditedNoteContent] = useState<string>("");
 
   // Form state for editing
   const [name, setName] = useState("");
@@ -212,6 +214,49 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   const handleSelectCoverCSE = (userId: string, userName: string) => {
     setSelectedCoverCSE({ id: userId, name: userName });
     setSuccess(`Cover CSE "${userName}" has been selected. This feature will be fully integrated in a future update.`);
+  };
+
+  const handleEditNote = (note: Note) => {
+    setEditingNoteId(note.id);
+    setEditedNoteContent(note.note);
+    setError(null);
+    setSuccess(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingNoteId(null);
+    setEditedNoteContent("");
+    setError(null);
+  };
+
+  const handleSaveNote = async (noteId: number) => {
+    setError(null);
+    setSuccess(null);
+
+    // Check if content is empty
+    const noteText = editedNoteContent.replace(/<[^>]*>/g, '').trim();
+    if (!noteText) {
+      setError("Note cannot be empty");
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        await updateNote({
+          noteId,
+          note: editedNoteContent,
+        });
+
+        // Refresh notes list
+        const updatedNotes = await getCustomerNotes(customer.id);
+        setNotes(updatedNotes);
+        setEditingNoteId(null);
+        setEditedNoteContent("");
+        setSuccess("Note updated successfully!");
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to update note");
+      }
+    });
   };
 
   return (
@@ -453,6 +498,8 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                 <div className="space-y-3">
                   {notes.map((note) => {
                     const todoId = noteTodoMap.get(note.id);
+                    const isEditing = editingNoteId === note.id;
+                    
                     return (
                       <div
                         key={note.id}
@@ -462,30 +509,75 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                           <Badge variant="outline" className="text-xs">
                             {formatDate(note.createdAt)}
                           </Badge>
-                          {todoId ? (
-                            <Link href={`/todos?highlight=${todoId}`}>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                title="View related to-do"
-                              >
-                                <CheckSquare className="h-4 w-4 text-green-600" />
-                              </Button>
-                            </Link>
-                          ) : (
-                            <AddTodoFromNoteDialog 
-                              noteContent={note.note}
-                              customerId={customer.id}
-                              customerName={customer.name}
-                              noteId={note.id}
-                            />
-                          )}
+                          <div className="flex items-center gap-2">
+                            {!isEditing && (
+                              <>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0"
+                                  onClick={() => handleEditNote(note)}
+                                  title="Edit note"
+                                  disabled={isPending}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                                {todoId ? (
+                                  <Link href={`/todos?highlight=${todoId}`}>
+                                    <Button 
+                                      variant="ghost" 
+                                      size="sm"
+                                      className="h-8 w-8 p-0"
+                                      title="View related to-do"
+                                    >
+                                      <CheckSquare className="h-4 w-4 text-green-600" />
+                                    </Button>
+                                  </Link>
+                                ) : (
+                                  <AddTodoFromNoteDialog 
+                                    noteContent={note.note}
+                                    customerId={customer.id}
+                                    customerName={customer.name}
+                                    noteId={note.id}
+                                  />
+                                )}
+                              </>
+                            )}
+                          </div>
                         </div>
-                        <div 
-                          className="text-sm text-foreground prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline"
-                          dangerouslySetInnerHTML={{ __html: note.note }}
-                        />
+                        
+                        {isEditing ? (
+                          <div className="space-y-3">
+                            <RichTextEditor
+                              value={editedNoteContent}
+                              onChange={setEditedNoteContent}
+                              placeholder="Edit note..."
+                            />
+                            <div className="flex justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleCancelEdit}
+                                disabled={isPending}
+                              >
+                                <X className="h-4 w-4 mr-1" />
+                                Cancel
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={() => handleSaveNote(note.id)}
+                                disabled={isPending}
+                              >
+                                {isPending ? "Saving..." : "Save"}
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div 
+                            className="text-sm text-foreground prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline"
+                            dangerouslySetInnerHTML={{ __html: note.note }}
+                          />
+                        )}
                       </div>
                     );
                   })}

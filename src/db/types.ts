@@ -1,4 +1,4 @@
-import { customersTable, customerNotesTable, customerAuditLogTable, todosTable, todoAuditLogTable } from './schema';
+import { customersTable, customerNotesTable, customerAuditLogTable, customerNoteAuditLogTable, todosTable, todoAuditLogTable } from './schema';
 
 // Customer types
 export type InsertCustomer = typeof customersTable.$inferInsert;
@@ -11,6 +11,10 @@ export type SelectCustomerNote = typeof customerNotesTable.$inferSelect;
 // Customer Audit Log types
 export type InsertCustomerAuditLog = typeof customerAuditLogTable.$inferInsert;
 export type SelectCustomerAuditLog = typeof customerAuditLogTable.$inferSelect;
+
+// Customer Note Audit Log types
+export type InsertCustomerNoteAuditLog = typeof customerNoteAuditLogTable.$inferInsert;
+export type SelectCustomerNoteAuditLog = typeof customerNoteAuditLogTable.$inferSelect;
 
 // Todo types
 export type InsertTodo = typeof todosTable.$inferInsert;

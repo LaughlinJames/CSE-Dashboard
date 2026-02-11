@@ -41,7 +41,14 @@ export const addNoteSchema = z.object({
   note: z.string().min(1, "Note cannot be empty").max(5000, "Note is too long"),
 });
 
+// Schema for updating a note
+export const updateNoteSchema = z.object({
+  noteId: z.number().positive(),
+  note: z.string().min(1, "Note cannot be empty").max(5000, "Note is too long"),
+});
+
 // Type inference
 export type CreateCustomerInput = z.infer<typeof createCustomerSchema>;
 export type UpdateCustomerInput = z.infer<typeof updateCustomerSchema>;
 export type AddNoteInput = z.infer<typeof addNoteSchema>;
+export type UpdateNoteInput = z.infer<typeof updateNoteSchema>;

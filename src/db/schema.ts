@@ -47,6 +47,20 @@ export const customerAuditLogTable = pgTable("customer_audit_log", {
   userId: text("user_id").notNull(), // Clerk user ID who made the change
 });
 
+// Customer Note Audit Log table - track all changes to customer note records
+export const customerNoteAuditLogTable = pgTable("customer_note_audit_log", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  noteId: integer("note_id")
+    .notNull()
+    .references(() => customerNotesTable.id, { onDelete: "cascade" }),
+  action: varchar({ length: 50 }).notNull(), // create, update, delete
+  fieldName: varchar("field_name", { length: 100 }), // Field that was changed (null for create/delete actions)
+  oldValue: text("old_value"), // Previous value (JSON stringified for complex types)
+  newValue: text("new_value"), // New value (JSON stringified for complex types)
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  userId: text("user_id").notNull(), // Clerk user ID who made the change
+});
+
 // Todos table - track user to-do items
 export const todosTable = pgTable("todos", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
