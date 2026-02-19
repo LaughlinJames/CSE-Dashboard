@@ -98,90 +98,96 @@ export function AddTodoDialog({ defaultCustomerId }: AddTodoDialogProps) {
           Add To-Do
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[525px]">
-        <form ref={formRef} onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Add New To-Do</DialogTitle>
-            <DialogDescription>
-              Create a new to-do item. Fill in the details below.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="title">Title *</Label>
-              <Input
-                id="title"
-                name="title"
-                placeholder="Enter to-do title"
-                required
-                disabled={isPending}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
-              <RichTextEditor
-                value={description}
-                onChange={setDescription}
-                placeholder="Enter description (optional)"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="customer">Customer (Optional)</Label>
-              <Select 
-                name="customerId" 
-                value={selectedCustomerId} 
-                onValueChange={setSelectedCustomerId}
-                disabled={isPending || loadingCustomers}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={loadingCustomers ? "Loading customers..." : "Select customer (optional)"} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">None</SelectItem>
-                  {customers.map((customer) => (
-                    <SelectItem key={customer.id} value={customer.id.toString()}>
-                      {customer.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="priority">Priority</Label>
-              <Select name="priority" defaultValue="medium" disabled={isPending}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="dueDate">Due Date</Label>
-              <Input
-                id="dueDate"
-                name="dueDate"
-                type="date"
-                disabled={isPending}
-              />
+      <DialogContent className="sm:max-w-[525px] max-h-[90vh] overflow-hidden p-0">
+        <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col max-h-[90vh]">
+          <div className="px-6 pt-6 pb-2 shrink-0">
+            <DialogHeader>
+              <DialogTitle>Add New To-Do</DialogTitle>
+              <DialogDescription>
+                Create a new to-do item. Fill in the details below.
+              </DialogDescription>
+            </DialogHeader>
+          </div>
+          <div className="overflow-y-auto px-6 py-4">
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="title">Title *</Label>
+                <Input
+                  id="title"
+                  name="title"
+                  placeholder="Enter to-do title"
+                  required
+                  disabled={isPending}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="description">Description</Label>
+                <RichTextEditor
+                  value={description}
+                  onChange={setDescription}
+                  placeholder="Enter description (optional)"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="customer">Customer (Optional)</Label>
+                <Select 
+                  name="customerId" 
+                  value={selectedCustomerId} 
+                  onValueChange={setSelectedCustomerId}
+                  disabled={isPending || loadingCustomers}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={loadingCustomers ? "Loading customers..." : "Select customer (optional)"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">None</SelectItem>
+                    {customers.map((customer) => (
+                      <SelectItem key={customer.id} value={customer.id.toString()}>
+                        {customer.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="priority">Priority</Label>
+                <Select name="priority" defaultValue="medium" disabled={isPending}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="dueDate">Due Date</Label>
+                <Input
+                  id="dueDate"
+                  name="dueDate"
+                  type="date"
+                  disabled={isPending}
+                />
+              </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              disabled={isPending}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Creating..." : "Create To-Do"}
-            </Button>
-          </DialogFooter>
+          <div className="px-6 pb-6 pt-4 border-t shrink-0 bg-background">
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Creating..." : "Create To-Do"}
+              </Button>
+            </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

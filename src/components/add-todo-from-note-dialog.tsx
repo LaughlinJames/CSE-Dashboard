@@ -82,76 +82,82 @@ export function AddTodoFromNoteDialog({
           <ListPlus className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[525px]">
-        <form ref={formRef} onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Create To-Do from Note</DialogTitle>
-            <DialogDescription>
-              Create a to-do for {customerName}. The note content will be used as the description.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="title">Title *</Label>
-              <Input
-                id="title"
-                name="title"
-                placeholder="Enter to-do title"
-                required
-                disabled={isPending}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>Customer</Label>
-              <Input
-                value={customerName}
-                disabled
-                className="bg-muted"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="priority">Priority</Label>
-              <Select name="priority" defaultValue="medium" disabled={isPending}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="dueDate">Due Date</Label>
-              <Input
-                id="dueDate"
-                name="dueDate"
-                type="date"
-                disabled={isPending}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>Description (from note)</Label>
-              <div 
-                className="text-sm border rounded-md p-3 bg-muted max-h-32 overflow-y-auto prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground"
-                dangerouslySetInnerHTML={{ __html: noteContent }}
-              />
+      <DialogContent className="sm:max-w-[525px] max-h-[90vh] overflow-hidden p-0">
+        <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col max-h-[90vh]">
+          <div className="px-6 pt-6 pb-2 shrink-0">
+            <DialogHeader>
+              <DialogTitle>Create To-Do from Note</DialogTitle>
+              <DialogDescription>
+                Create a to-do for {customerName}. The note content will be used as the description.
+              </DialogDescription>
+            </DialogHeader>
+          </div>
+          <div className="overflow-y-auto px-6 py-4">
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="title">Title *</Label>
+                <Input
+                  id="title"
+                  name="title"
+                  placeholder="Enter to-do title"
+                  required
+                  disabled={isPending}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Customer</Label>
+                <Input
+                  value={customerName}
+                  disabled
+                  className="bg-muted"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="priority">Priority</Label>
+                <Select name="priority" defaultValue="medium" disabled={isPending}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="dueDate">Due Date</Label>
+                <Input
+                  id="dueDate"
+                  name="dueDate"
+                  type="date"
+                  disabled={isPending}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Description (from note)</Label>
+                <div 
+                  className="text-sm border rounded-md p-3 bg-muted max-h-32 overflow-y-auto prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground"
+                  dangerouslySetInnerHTML={{ __html: noteContent }}
+                />
+              </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              disabled={isPending}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Creating..." : "Create To-Do"}
-            </Button>
-          </DialogFooter>
+          <div className="px-6 pb-6 pt-4 border-t shrink-0 bg-background">
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Creating..." : "Create To-Do"}
+              </Button>
+            </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

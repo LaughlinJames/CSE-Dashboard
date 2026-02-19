@@ -55,19 +55,25 @@ export async function createTodo(data: CreateTodoInput) {
     }
   }
 
-  const result = await db.insert(todosTable).values({
-    title: validated.title,
-    description: validated.description,
-    priority: validated.priority,
-    dueDate: formattedDueDate,
-    customerId: validated.customerId || null,
-    noteId: validated.noteId || null,
-    userId,
-  }).returning();
+  const result = await db.transaction(async (tx) => {
+    const inserted = await tx.insert(todosTable).values({
+      title: validated.title,
+      description: validated.description,
+      priority: validated.priority,
+      dueDate: formattedDueDate,
+      customerId: validated.customerId || null,
+      noteId: validated.noteId || null,
+      userId,
+    }).returning();
 
-  // Log the creation
-  if (result.length > 0) {
-    await logTodoCreate(result[0].id, result[0], userId);
+    if (inserted.length > 0) {
+      await logTodoCreate(inserted[0].id, inserted[0], userId, tx);
+    }
+    return inserted;
+  });
+
+  if (result.length === 0) {
+    throw new Error("Failed to create todo");
   }
 
   revalidatePath("/todos");
@@ -122,23 +128,27 @@ export async function updateTodo(data: UpdateTodoInput) {
   if (validated.customerId !== undefined) updateData.customerId = validated.customerId || null;
   if (validated.completed !== undefined) updateData.completed = validated.completed;
 
-  const result = await db
-    .update(todosTable)
-    .set(updateData)
-    .where(
-      and(
-        eq(todosTable.id, validated.id),
-        eq(todosTable.userId, userId)
+  const result = await db.transaction(async (tx) => {
+    const updated = await tx
+      .update(todosTable)
+      .set(updateData)
+      .where(
+        and(
+          eq(todosTable.id, validated.id),
+          eq(todosTable.userId, userId)
+        )
       )
-    )
-    .returning();
+      .returning();
+
+    if (updated.length > 0) {
+      await logTodoUpdate(validated.id, oldTodo, updateData, userId, tx);
+    }
+    return updated;
+  });
 
   if (result.length === 0) {
     throw new Error("Todo not found or unauthorized");
   }
-
-  // Log the update
-  await logTodoUpdate(validated.id, oldTodo, updateData, userId);
 
   revalidatePath("/todos");
 
@@ -171,18 +181,17 @@ export async function deleteTodo(data: DeleteTodoInput) {
 
   const todoToDelete = todos[0];
 
-  // Log the deletion BEFORE actually deleting (while foreign key still valid)
-  await logTodoDelete(validated.id, todoToDelete, userId);
-
-  // Now delete the todo
-  await db
-    .delete(todosTable)
-    .where(
-      and(
-        eq(todosTable.id, validated.id),
-        eq(todosTable.userId, userId)
-      )
-    );
+  await db.transaction(async (tx) => {
+    await logTodoDelete(validated.id, todoToDelete, userId, tx);
+    await tx
+      .delete(todosTable)
+      .where(
+        and(
+          eq(todosTable.id, validated.id),
+          eq(todosTable.userId, userId)
+        )
+      );
+  });
 
   revalidatePath("/todos");
 
@@ -214,26 +223,26 @@ export async function toggleTodoComplete(todoId: number) {
   const todo = todos[0];
   const newCompletedStatus = !todo.completed;
 
-  // Toggle the completed status
-  await db
-    .update(todosTable)
-    .set({
-      completed: newCompletedStatus,
-      updatedAt: new Date(),
-    })
-    .where(
-      and(
-        eq(todosTable.id, todoId),
-        eq(todosTable.userId, userId)
-      )
-    );
+  await db.transaction(async (tx) => {
+    await tx
+      .update(todosTable)
+      .set({
+        completed: newCompletedStatus,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(todosTable.id, todoId),
+          eq(todosTable.userId, userId)
+        )
+      );
 
-  // Log the completion/uncompletion
-  if (newCompletedStatus) {
-    await logTodoComplete(todoId, userId);
-  } else {
-    await logTodoUncomplete(todoId, userId);
-  }
+    if (newCompletedStatus) {
+      await logTodoComplete(todoId, userId, tx);
+    } else {
+      await logTodoUncomplete(todoId, userId, tx);
+    }
+  });
 
   revalidatePath("/todos");
 

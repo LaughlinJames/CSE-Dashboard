@@ -258,86 +258,92 @@ export function TodoItem({ todo, highlight = false }: TodoItemProps) {
 
       {/* Edit Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent className="sm:max-w-[525px]">
-          <form onSubmit={handleEdit}>
-            <DialogHeader>
-              <DialogTitle>Edit To-Do</DialogTitle>
-              <DialogDescription>
-                Update the details of your to-do item.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="edit-title">Title *</Label>
-                <Input
-                  id="edit-title"
-                  name="title"
-                  defaultValue={todo.title}
-                  required
-                  disabled={isPending}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="edit-description">Description</Label>
-                <RichTextEditor
-                  value={editDescription}
-                  onChange={setEditDescription}
-                  placeholder="Enter description (optional)"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="edit-customer">Customer (Optional)</Label>
-                <Select name="customerId" defaultValue={todo.customerId?.toString() || "none"} disabled={isPending || loadingCustomers}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={loadingCustomers ? "Loading customers..." : "Select customer (optional)"} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">None</SelectItem>
-                    {customers.map((customer) => (
-                      <SelectItem key={customer.id} value={customer.id.toString()}>
-                        {customer.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="edit-priority">Priority</Label>
-                <Select name="priority" defaultValue={todo.priority} disabled={isPending}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select priority" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="edit-dueDate">Due Date</Label>
-                <Input
-                  id="edit-dueDate"
-                  name="dueDate"
-                  type="date"
-                  defaultValue={todo.dueDate || ""}
-                  disabled={isPending}
-                />
+        <DialogContent className="sm:max-w-[525px] max-h-[90vh] overflow-hidden p-0">
+          <form onSubmit={handleEdit} className="flex flex-col max-h-[90vh]">
+            <div className="px-6 pt-6 pb-2 shrink-0">
+              <DialogHeader>
+                <DialogTitle>Edit To-Do</DialogTitle>
+                <DialogDescription>
+                  Update the details of your to-do item.
+                </DialogDescription>
+              </DialogHeader>
+            </div>
+            <div className="overflow-y-auto px-6 py-4">
+              <div className="grid gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-title">Title *</Label>
+                  <Input
+                    id="edit-title"
+                    name="title"
+                    defaultValue={todo.title}
+                    required
+                    disabled={isPending}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-description">Description</Label>
+                  <RichTextEditor
+                    value={editDescription}
+                    onChange={setEditDescription}
+                    placeholder="Enter description (optional)"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-customer">Customer (Optional)</Label>
+                  <Select name="customerId" defaultValue={todo.customerId?.toString() || "none"} disabled={isPending || loadingCustomers}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={loadingCustomers ? "Loading customers..." : "Select customer (optional)"} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">None</SelectItem>
+                      {customers.map((customer) => (
+                        <SelectItem key={customer.id} value={customer.id.toString()}>
+                          {customer.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-priority">Priority</Label>
+                  <Select name="priority" defaultValue={todo.priority} disabled={isPending}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select priority" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-dueDate">Due Date</Label>
+                  <Input
+                    id="edit-dueDate"
+                    name="dueDate"
+                    type="date"
+                    defaultValue={todo.dueDate || ""}
+                    disabled={isPending}
+                  />
+                </div>
               </div>
             </div>
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setEditOpen(false)}
-                disabled={isPending}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isPending}>
-                {isPending ? "Saving..." : "Save Changes"}
-              </Button>
-            </DialogFooter>
+            <div className="px-6 pb-6 pt-4 border-t shrink-0 bg-background">
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setEditOpen(false)}
+                  disabled={isPending}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? "Saving..." : "Save Changes"}
+                </Button>
+              </DialogFooter>
+            </div>
           </form>
         </DialogContent>
       </Dialog>

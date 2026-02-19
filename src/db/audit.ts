@@ -168,9 +168,11 @@ export async function logCustomerNoteDelete(
 export async function logTodoCreate(
   todoId: number,
   todoData: Partial<SelectTodo>,
-  userId: string
+  userId: string,
+  tx?: typeof db
 ) {
-  await db.insert(todoAuditLogTable).values({
+  const client = tx ?? db;
+  await client.insert(todoAuditLogTable).values({
     todoId,
     action: "create",
     fieldName: null,
@@ -186,9 +188,11 @@ export async function logTodoCreate(
 export async function logTodoDelete(
   todoId: number,
   todoData: SelectTodo,
-  userId: string
+  userId: string,
+  tx?: typeof db
 ) {
-  await db.insert(todoAuditLogTable).values({
+  const client = tx ?? db;
+  await client.insert(todoAuditLogTable).values({
     todoId,
     action: "delete",
     fieldName: null,
@@ -203,9 +207,11 @@ export async function logTodoDelete(
  */
 export async function logTodoComplete(
   todoId: number,
-  userId: string
+  userId: string,
+  tx?: typeof db
 ) {
-  await db.insert(todoAuditLogTable).values({
+  const client = tx ?? db;
+  await client.insert(todoAuditLogTable).values({
     todoId,
     action: "complete",
     fieldName: "completed",
@@ -220,9 +226,11 @@ export async function logTodoComplete(
  */
 export async function logTodoUncomplete(
   todoId: number,
-  userId: string
+  userId: string,
+  tx?: typeof db
 ) {
-  await db.insert(todoAuditLogTable).values({
+  const client = tx ?? db;
+  await client.insert(todoAuditLogTable).values({
     todoId,
     action: "uncomplete",
     fieldName: "completed",
@@ -233,17 +241,27 @@ export async function logTodoUncomplete(
 }
 
 /**
- * Log individual field updates for a todo
+ * Log individual field updates for a todo.
+ * Always writes at least one row to todo_audit_log for every update (per-field rows when changed, or one summary row).
  */
 export async function logTodoUpdate(
   todoId: number,
   oldTodo: SelectTodo,
   newTodo: Partial<SelectTodo>,
-  userId: string
+  userId: string,
+  tx?: typeof db
 ) {
-  const auditEntries = [];
+  const client = tx ?? db;
+  const auditEntries: Array<{
+    todoId: number;
+    action: "update";
+    fieldName: string | null;
+    oldValue: string | null;
+    newValue: string | null;
+    userId: string;
+  }> = [];
 
-  // Check each field for changes and log them
+  // Check each field for changes and log them (including description for todo_audit_log)
   const fieldsToTrack: Array<keyof SelectTodo> = [
     "title",
     "description",
@@ -276,7 +294,7 @@ export async function logTodoUpdate(
             ? newValue.toISOString().split('T')[0] 
             : String(newValue);
       } else {
-        // For non-date fields, simple string conversion
+        // For non-date fields (title, description, priority, etc.), simple string conversion
         normalizedOldValue = oldValue === null || oldValue === undefined ? null : String(oldValue);
         normalizedNewValue = newValue === null || newValue === undefined ? null : String(newValue);
       }
@@ -295,8 +313,17 @@ export async function logTodoUpdate(
     }
   }
 
-  // Insert all audit entries in a single transaction if there are changes
-  if (auditEntries.length > 0) {
-    await db.insert(todoAuditLogTable).values(auditEntries);
+  // Always write at least one audit row for every update (so no update goes unlogged)
+  if (auditEntries.length === 0) {
+    auditEntries.push({
+      todoId,
+      action: "update" as const,
+      fieldName: null,
+      oldValue: JSON.stringify(oldTodo),
+      newValue: JSON.stringify(newTodo),
+      userId,
+    });
   }
+
+  await client.insert(todoAuditLogTable).values(auditEntries);
 }
