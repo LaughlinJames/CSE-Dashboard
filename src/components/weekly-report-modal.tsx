@@ -154,6 +154,40 @@ export function WeeklyReportModal({ open, onOpenChange }: WeeklyReportModalProps
         report += `${cleanExecutiveSummary(item.executiveSummary)}\n\n`;
       }
 
+      // To-dos this week (opened, updated, closed)
+      const ta = item.todosActivity;
+      const hasTodoActivity =
+        ta.opened.length > 0 || ta.updated.length > 0 || ta.closed.length > 0;
+      if (hasTodoActivity) {
+        report += "TO-DOS THIS WEEK:\n";
+        report += thinSeparator + "\n";
+        if (ta.opened.length > 0) {
+          report += "Opened:\n";
+          ta.opened.forEach((t) => {
+            report += `  - ${t.title} (${formatDate(t.createdAt)})\n`;
+          });
+          report += "\n";
+        }
+        if (ta.updated.length > 0) {
+          report += "Updated:\n";
+          ta.updated.forEach((t) => {
+            report += `  - ${t.title} (${formatDate(t.createdAt)})\n`;
+          });
+          report += "\n";
+        }
+        if (ta.closed.length > 0) {
+          report += "Closed:\n";
+          ta.closed.forEach((t) => {
+            report += `  - ${t.title} (${t.action} ${formatDate(t.closedAt)})\n`;
+          });
+          report += "\n";
+        }
+      } else {
+        report += "TO-DOS THIS WEEK:\n";
+        report += thinSeparator + "\n";
+        report += "No to-do activity this week\n\n";
+      }
+
       // Notes section
       if (item.notes.length > 0) {
         report += `NOTES FOR THIS WEEK (${item.notes.length}):\n`;

@@ -2,7 +2,7 @@
 
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/db";
-import { customersTable, customerNotesTable, customerAuditLogTable, customerNoteAuditLogTable, todosTable } from "@/db/schema";
+import { customersTable, customerNotesTable, customerAuditLogTable, customerNoteAuditLogTable, todosTable, todoAuditLogTable } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 import { 
   createCustomerSchema, 
@@ -14,7 +14,7 @@ import {
   type AddNoteInput,
   type UpdateNoteInput
 } from "@/lib/validations/customers";
-import { eq, and, desc, gte, lte, between, isNotNull } from "drizzle-orm";
+import { eq, and, desc, gte, lte, between, isNotNull, leftJoin } from "drizzle-orm";
 import { z } from "zod";
 import { logCustomerCreate, logCustomerUpdate, logCustomerArchive, logCustomerNoteCreate, logCustomerNoteUpdate } from "@/db/audit";
 import OpenAI from "openai";
@@ -321,6 +321,13 @@ const weeklyReportSchema = z.object({
 
 type WeeklyReportInput = z.infer<typeof weeklyReportSchema>;
 
+/** To-do activity for the week: opened (created), updated, or closed (completed/deleted) */
+export type WeeklyReportTodoActivity = {
+  opened: Array<{ title: string; createdAt: Date }>;
+  updated: Array<{ title: string; createdAt: Date }>;
+  closed: Array<{ title: string; closedAt: Date; action: "completed" | "deleted" }>;
+};
+
 export type WeeklyReportData = {
   customer: {
     id: number;
@@ -336,6 +343,7 @@ export type WeeklyReportData = {
     note: string;
     createdAt: Date;
   }>;
+  todosActivity: WeeklyReportTodoActivity;
   executiveSummary?: string;
 };
 
@@ -365,31 +373,66 @@ async function generateExecutiveSummary(
     temperament: string;
     lastPatchVersion: string | null;
   },
-  notes: Array<{ note: string; createdAt: Date }>
+  notes: Array<{ note: string; createdAt: Date }>,
+  todosActivity: WeeklyReportTodoActivity
 ): Promise<string> {
-  // If no notes, return a default message
-  if (notes.length === 0) {
+  const hasNotes = notes.length > 0;
+  const hasTodoActivity =
+    todosActivity.opened.length > 0 ||
+    todosActivity.updated.length > 0 ||
+    todosActivity.closed.length > 0;
+
+  if (!hasNotes && !hasTodoActivity) {
     return "No activity recorded for this customer during the week.";
   }
 
-  // Initialize OpenAI client
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
 
-  // Prepare notes text
-  const notesText = notes
-    .map((note, idx) => {
-      const plainText = stripHtml(note.note);
-      const date = note.createdAt.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      });
-      return `[${date}] ${plainText}`;
-    })
-    .join("\n\n");
+  const notesText = hasNotes
+    ? notes
+        .map((note) => {
+          const plainText = stripHtml(note.note);
+          const date = note.createdAt.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          });
+          return `[${date}] ${plainText}`;
+        })
+        .join("\n\n")
+    : "None this week.";
 
-  // Create the prompt
+  const todoLines: string[] = [];
+  if (todosActivity.opened.length > 0) {
+    const list = todosActivity.opened
+      .map(
+        (t) =>
+          `- ${t.title} (opened ${t.createdAt.toLocaleDateString("en-US", { month: "short", day: "numeric" })})`
+      )
+      .join("\n");
+    todoLines.push(`To-dos opened:\n${list}`);
+  }
+  if (todosActivity.updated.length > 0) {
+    const list = todosActivity.updated
+      .map(
+        (t) =>
+          `- ${t.title} (updated ${t.createdAt.toLocaleDateString("en-US", { month: "short", day: "numeric" })})`
+      )
+      .join("\n");
+    todoLines.push(`To-dos updated:\n${list}`);
+  }
+  if (todosActivity.closed.length > 0) {
+    const list = todosActivity.closed
+      .map(
+        (t) =>
+          `- ${t.title} (${t.action} ${t.closedAt.toLocaleDateString("en-US", { month: "short", day: "numeric" })})`
+      )
+      .join("\n");
+    todoLines.push(`To-dos closed:\n${list}`);
+  }
+  const todosText = todoLines.length > 0 ? todoLines.join("\n\n") : "None this week.";
+
   const prompt = `You are a Customer Success Engineer (CSE) creating a weekly executive summary for management. 
 
 Customer: ${customerName}
@@ -401,11 +444,15 @@ Customer Temperament: ${customerInfo.temperament}
 Weekly Notes:
 ${notesText}
 
+To-dos this week (opened, updated, closed):
+${todosText}
+
 Please create a concise 2-3 sentence executive summary that:
 1. Highlights the most important activities and outcomes
 2. Identifies any risks or blockers
 3. Notes progress on LTS migration if mentioned
-4. Uses professional, business-appropriate language
+4. Incorporates to-do activity (opened, updated, completed, or deleted) where relevant
+5. Uses professional, business-appropriate language
 
 Keep it brief and actionable for executive review.`;
 
@@ -415,7 +462,8 @@ Keep it brief and actionable for executive review.`;
       messages: [
         {
           role: "system",
-          content: "You are a professional Customer Success Engineer writing executive summaries for weekly customer reports. Be concise, clear, and focus on business value.",
+          content:
+            "You are a professional Customer Success Engineer writing executive summaries for weekly customer reports. Be concise, clear, and focus on business value. Include to-do activity (opened, updated, closed) when relevant.",
         },
         {
           role: "user",
@@ -481,14 +529,94 @@ export async function getWeeklyReport(data: WeeklyReportInput) {
       )
     );
 
+  // Fetch todo audit log for the week (left join todos for customerId/title; deleted todos have no row)
+  const todoAuditRows = await db
+    .select({
+      action: todoAuditLogTable.action,
+      createdAt: todoAuditLogTable.createdAt,
+      todoId: todoAuditLogTable.todoId,
+      oldValue: todoAuditLogTable.oldValue,
+      newValue: todoAuditLogTable.newValue,
+      customerId: todosTable.customerId,
+      title: todosTable.title,
+    })
+    .from(todoAuditLogTable)
+    .leftJoin(
+      todosTable,
+      and(
+        eq(todoAuditLogTable.todoId, todosTable.id),
+        eq(todosTable.userId, userId)
+      )
+    )
+    .where(
+      and(
+        eq(todoAuditLogTable.userId, userId),
+        gte(todoAuditLogTable.createdAt, weekStartDate),
+        lte(todoAuditLogTable.createdAt, weekEndDate)
+      )
+    );
+
+  // Helper to get title and customerId from audit row (for deleted todos, parse oldValue/newValue)
+  const getTodoInfo = (
+    row: (typeof todoAuditRows)[0]
+  ): { title: string; customerId: number | null } => {
+    if (row.title != null && row.title !== "") {
+      return { title: row.title, customerId: row.customerId };
+    }
+    try {
+      const json = row.action === "delete" ? row.oldValue : row.newValue;
+      if (!json) return { title: "Untitled", customerId: row.customerId };
+      const data = JSON.parse(json) as { title?: string; customerId?: number | null };
+      return {
+        title: typeof data.title === "string" ? data.title : "Untitled",
+        customerId: data.customerId ?? row.customerId,
+      };
+    } catch {
+      return { title: "Untitled", customerId: row.customerId };
+    }
+  };
+
+  // Group todo activity by customer
+  const todosByCustomer = new Map<
+    number,
+    WeeklyReportTodoActivity
+  >();
+  const emptyActivity = (): WeeklyReportTodoActivity => ({
+    opened: [],
+    updated: [],
+    closed: [],
+  });
+  for (const row of todoAuditRows) {
+    const { title, customerId } = getTodoInfo(row);
+    if (customerId == null) continue;
+    if (!todosByCustomer.has(customerId)) {
+      todosByCustomer.set(customerId, emptyActivity());
+    }
+    const act = todosByCustomer.get(customerId)!;
+    const createdAt = new Date(row.createdAt);
+    if (row.action === "create") {
+      act.opened.push({ title, createdAt });
+    } else if (row.action === "update") {
+      act.updated.push({ title, createdAt });
+    } else if (row.action === "complete" || row.action === "delete") {
+      act.closed.push({
+        title,
+        closedAt: createdAt,
+        action: row.action === "complete" ? "completed" : "deleted",
+      });
+    }
+    // "uncomplete" is not counted as opened/closed for the report
+  }
+
   // Build report data with AI-generated summaries
   const reportData: WeeklyReportData[] = await Promise.all(
     customers.map(async (customer) => {
       const customerNotes = weekNotes
-        .filter(note => note.customerId === customer.id)
+        .filter((note) => note.customerId === customer.id)
         .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
-      // Generate executive summary using OpenAI
+      const todosActivity = todosByCustomer.get(customer.id) ?? emptyActivity();
+
       const executiveSummary = await generateExecutiveSummary(
         customer.name,
         {
@@ -497,10 +625,11 @@ export async function getWeeklyReport(data: WeeklyReportInput) {
           temperament: customer.temperament,
           lastPatchVersion: customer.lastPatchVersion,
         },
-        customerNotes.map(note => ({
+        customerNotes.map((note) => ({
           note: note.note,
           createdAt: note.createdAt,
-        }))
+        })),
+        todosActivity
       );
 
       return {
@@ -513,11 +642,12 @@ export async function getWeeklyReport(data: WeeklyReportInput) {
           topology: customer.topology,
           dumbledoreStage: customer.dumbledoreStage,
         },
-        notes: customerNotes.map(note => ({
+        notes: customerNotes.map((note) => ({
           id: note.id,
           note: note.note,
           createdAt: note.createdAt,
         })),
+        todosActivity,
         executiveSummary,
       };
     })
