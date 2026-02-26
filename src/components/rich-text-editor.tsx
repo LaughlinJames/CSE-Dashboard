@@ -3,12 +3,30 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
+import Image from "@tiptap/extension-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Link2, Unlink } from "lucide-react";
+import { toast } from "sonner";
+
+const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
+const IMAGE_TYPES = new Set(["image/png", "image/jpeg", "image/gif", "image/webp"]);
+
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      reject(new Error("Image must be under 2MB"));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
 
 type RichTextEditorProps = {
   value: string;
@@ -21,6 +39,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   const [linkUrl, setLinkUrl] = useState("");
   const [hasSelection, setHasSelection] = useState(false);
   const [isLinkActive, setIsLinkActive] = useState(false);
+  const editorRef = useRef<ReturnType<typeof useEditor>>(null);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -34,11 +53,47 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
           rel: "noopener noreferrer",
         },
       }),
+      Image.configure({
+        inline: false,
+        allowBase64: true,
+        HTMLAttributes: { class: "rounded-md max-w-full h-auto" },
+      }),
     ],
     content: value,
     editorProps: {
       attributes: {
         class: "prose prose-sm max-w-none focus:outline-none min-h-[100px] p-3 border rounded-md bg-background text-foreground",
+      },
+      handleDrop(view, event, slice, moved) {
+        if (moved) return false;
+        const files = event.dataTransfer?.files;
+        if (!files?.length) return false;
+        const file = files[0];
+        if (!IMAGE_TYPES.has(file.type)) return false;
+        event.preventDefault();
+        const pos = view.posAtCoords({ left: event.clientX, top: event.clientY });
+        if (pos == null) return false;
+        fileToDataUrl(file)
+          .then((src) => {
+            const ed = editorRef.current;
+            if (ed) ed.chain().focus().setTextSelection(pos.pos).insertContent([{ type: "image", attrs: { src } }]).run();
+          })
+          .catch(() => toast.error("Image must be under 2MB"));
+        return true;
+      },
+      handlePaste(view, event) {
+        const files = event.clipboardData?.files;
+        if (!files?.length) return false;
+        const file = files[0];
+        if (!IMAGE_TYPES.has(file.type)) return false;
+        event.preventDefault();
+        fileToDataUrl(file)
+          .then((src) => {
+            const ed = editorRef.current;
+            if (ed) ed.chain().focus().insertContent([{ type: "image", attrs: { src } }]).run();
+          })
+          .catch(() => toast.error("Image must be under 2MB"));
+        return true;
       },
     },
     onUpdate: ({ editor }) => {
@@ -49,6 +104,10 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
       setIsLinkActive(editor.isActive("link"));
     },
   });
+
+  useEffect(() => {
+    editorRef.current = editor;
+  }, [editor]);
 
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {

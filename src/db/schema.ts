@@ -89,3 +89,15 @@ export const todoAuditLogTable = pgTable("todo_audit_log", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   userId: text("user_id").notNull(), // Clerk user ID who made the change
 });
+
+// Learned notes table - commemorate things you've learned how to do
+export const learnedNotesTable = pgTable("learned_notes", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  title: varchar({ length: 255 }).notNull(),
+  content: text("content").notNull(),
+  category: varchar("category", { length: 50 })
+    .notNull()
+    .default("AMS Core Tools"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  userId: text("user_id").notNull(), // Clerk user ID who owns this note
+});
