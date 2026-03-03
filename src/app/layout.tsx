@@ -53,6 +53,11 @@ export default function RootLayout({
                       What I Learned
                     </Button>
                   </Link>
+                  <Link href="/system">
+                    <Button variant="ghost" size="sm">
+                      System
+                    </Button>
+                  </Link>
                 </nav>
               </SignedIn>
             </div>
