@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useState, useCallback, useEffect, useRef } from "react";
-import { Link2, Unlink } from "lucide-react";
+import { Link2, Unlink, Code } from "lucide-react";
 import { toast } from "sonner";
 
 const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
@@ -39,6 +39,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   const [linkUrl, setLinkUrl] = useState("");
   const [hasSelection, setHasSelection] = useState(false);
   const [isLinkActive, setIsLinkActive] = useState(false);
+  const [isCodeActive, setIsCodeActive] = useState(false);
   const editorRef = useRef<ReturnType<typeof useEditor>>(null);
 
   const editor = useEditor({
@@ -62,7 +63,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     content: value,
     editorProps: {
       attributes: {
-        class: "prose prose-sm max-w-none focus:outline-none min-h-[100px] p-3 border rounded-md bg-background text-foreground",
+        class: "prose prose-sm max-w-none min-w-0 focus:outline-none min-h-[100px] p-3 border rounded-md bg-background text-foreground [&_code]:font-mono [&_code]:text-sm [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:bg-muted",
       },
       handleDrop(view, event, slice, moved) {
         if (moved) return false;
@@ -102,6 +103,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     onSelectionUpdate: ({ editor }) => {
       setHasSelection(!editor.state.selection.empty);
       setIsLinkActive(editor.isActive("link"));
+      setIsCodeActive(editor.isActive("code"));
     },
   });
 
@@ -119,6 +121,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     if (editor) {
       setHasSelection(!editor.state.selection.empty);
       setIsLinkActive(editor.isActive("link"));
+      setIsCodeActive(editor.isActive("code"));
     }
   }, [editor]);
 
@@ -156,9 +159,20 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 rich-text-editor min-w-0">
       {/* Toolbar */}
       <div className="flex gap-1 border rounded-md p-1 bg-muted/50">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => editor.chain().focus().toggleCode().run()}
+          disabled={!hasSelection && !isCodeActive}
+          className={isCodeActive ? "bg-muted" : ""}
+          title="Inline code (monospace)"
+        >
+          <Code className="h-4 w-4" />
+        </Button>
         <Button
           type="button"
           variant="ghost"
@@ -170,7 +184,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
         >
           <Link2 className="h-4 w-4" />
         </Button>
-        
+
         {isLinkActive && (
           <Button
             type="button"

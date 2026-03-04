@@ -115,6 +115,15 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Inline code: real monospace + wrap long lines to prevent horizontal scroll */
+.rich-text-editor .ProseMirror code,
+.prose code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace !important;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
