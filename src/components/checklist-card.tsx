@@ -139,11 +139,10 @@ function SortableChecklistRow({
 
 function persistOrder(
   checklistId: number,
-  incomplete: ChecklistItemDTO[],
-  complete: ChecklistItemDTO[],
+  items: ChecklistItemDTO[],
   startTransition: (fn: () => void | Promise<void>) => void
 ) {
-  const orderedItemIds = [...incomplete, ...complete].map((i) => i.id);
+  const orderedItemIds = items.map((i) => i.id);
   startTransition(async () => {
     try {
       await reorderChecklistItems({ checklistId, orderedItemIds });
@@ -151,6 +150,10 @@ function persistOrder(
       toast.error(err instanceof Error ? err.message : "Failed to reorder");
     }
   });
+}
+
+function sortItemsByOrder(items: ChecklistItemDTO[]): ChecklistItemDTO[] {
+  return [...items].sort((a, b) => a.sortOrder - b.sortOrder);
 }
 
 export function ChecklistCard({ checklist }: ChecklistCardProps) {
@@ -163,11 +166,8 @@ export function ChecklistCard({ checklist }: ChecklistCardProps) {
   const [editingItem, setEditingItem] = useState<ChecklistItemDTO | null>(null);
   const [editItemText, setEditItemText] = useState("");
 
-  const [localIncomplete, setLocalIncomplete] = useState<ChecklistItemDTO[]>(() =>
-    checklist.items.filter((i) => !i.completed)
-  );
-  const [localComplete, setLocalComplete] = useState<ChecklistItemDTO[]>(() =>
-    checklist.items.filter((i) => i.completed)
+  const [localItems, setLocalItems] = useState<ChecklistItemDTO[]>(() =>
+    sortItemsByOrder(checklist.items)
   );
 
   const serverFingerprint = checklist.items
@@ -175,8 +175,7 @@ export function ChecklistCard({ checklist }: ChecklistCardProps) {
     .join("|");
 
   useEffect(() => {
-    setLocalIncomplete(checklist.items.filter((i) => !i.completed));
-    setLocalComplete(checklist.items.filter((i) => i.completed));
+    setLocalItems(sortItemsByOrder(checklist.items));
   }, [serverFingerprint]);
 
   const sensors = useSensors(
@@ -192,27 +191,15 @@ export function ChecklistCard({ checklist }: ChecklistCardProps) {
       const activeId = active.id as number;
       const overId = over.id as number;
 
-      const incOld = localIncomplete;
-      const compOld = localComplete;
-      const activeInc = incOld.findIndex((i) => i.id === activeId);
-      const overInc = incOld.findIndex((i) => i.id === overId);
-      const activeComp = compOld.findIndex((i) => i.id === activeId);
-      const overComp = compOld.findIndex((i) => i.id === overId);
+      const oldIndex = localItems.findIndex((i) => i.id === activeId);
+      const newIndex = localItems.findIndex((i) => i.id === overId);
+      if (oldIndex < 0 || newIndex < 0) return;
 
-      if (activeInc >= 0 && overInc >= 0) {
-        const next = arrayMove(incOld, activeInc, overInc);
-        setLocalIncomplete(next);
-        persistOrder(checklist.id, next, compOld, startTransition);
-        return;
-      }
-
-      if (activeComp >= 0 && overComp >= 0) {
-        const next = arrayMove(compOld, activeComp, overComp);
-        setLocalComplete(next);
-        persistOrder(checklist.id, incOld, next, startTransition);
-      }
+      const next = arrayMove(localItems, oldIndex, newIndex);
+      setLocalItems(next);
+      persistOrder(checklist.id, next, startTransition);
     },
-    [checklist.id, localIncomplete, localComplete, startTransition]
+    [checklist.id, localItems, startTransition]
   );
 
   const openEditItem = (item: ChecklistItemDTO) => {
@@ -305,8 +292,8 @@ export function ChecklistCard({ checklist }: ChecklistCardProps) {
     });
   };
 
-  const incompleteIds = localIncomplete.map((i) => i.id);
-  const completeIds = localComplete.map((i) => i.id);
+  const itemIds = localItems.map((i) => i.id);
+  const doneCount = localItems.filter((i) => i.completed).length;
 
   return (
     <>
@@ -315,9 +302,9 @@ export function ChecklistCard({ checklist }: ChecklistCardProps) {
           <div className="min-w-0 flex-1">
             <h2 className="text-lg font-semibold leading-tight truncate">{checklist.title}</h2>
             <p className="text-xs text-muted-foreground mt-1">
-              {checklist.items.length === 0
+              {localItems.length === 0
                 ? "No items yet"
-                : `${localComplete.length} of ${checklist.items.length} done`}
+                : `${doneCount} of ${localItems.length} done`}
             </p>
           </div>
           <div className="flex shrink-0 gap-1">
@@ -350,15 +337,15 @@ export function ChecklistCard({ checklist }: ChecklistCardProps) {
         </CardHeader>
         <CardContent className="space-y-4">
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            {localIncomplete.length > 0 && (
-              <SortableContext items={incompleteIds} strategy={verticalListSortingStrategy}>
+            {localItems.length > 0 && (
+              <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
                 <ul className="space-y-2">
-                  {localIncomplete.map((item) => (
+                  {localItems.map((item) => (
                     <SortableChecklistRow
                       key={item.id}
                       item={item}
                       disabled={isPending}
-                      completedLook={false}
+                      completedLook={item.completed}
                       onToggle={handleToggleItem}
                       onEdit={openEditItem}
                       onDelete={handleDeleteItem}
@@ -367,33 +354,11 @@ export function ChecklistCard({ checklist }: ChecklistCardProps) {
                 </ul>
               </SortableContext>
             )}
-
-            {localComplete.length > 0 && (
-              <div>
-                {localIncomplete.length > 0 && <hr className="border-border mb-3" />}
-                <p className="text-xs font-medium text-muted-foreground mb-2">Completed</p>
-                <SortableContext items={completeIds} strategy={verticalListSortingStrategy}>
-                  <ul className="space-y-2">
-                    {localComplete.map((item) => (
-                      <SortableChecklistRow
-                        key={item.id}
-                        item={item}
-                        disabled={isPending}
-                        completedLook
-                        onToggle={handleToggleItem}
-                        onEdit={openEditItem}
-                        onDelete={handleDeleteItem}
-                      />
-                    ))}
-                  </ul>
-                </SortableContext>
-              </div>
-            )}
           </DndContext>
 
-          {checklist.items.length > 0 && (
+          {localItems.length > 0 && (
             <p className="text-xs text-muted-foreground -mt-2">
-              Drag the grip handle to reorder items within each section (active vs completed).
+              Drag the grip handle to reorder items.
             </p>
           )}
 
