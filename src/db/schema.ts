@@ -101,3 +101,24 @@ export const learnedNotesTable = pgTable("learned_notes", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   userId: text("user_id").notNull(), // Clerk user ID who owns this note
 });
+
+// Checklists — reusable lists the user builds and checks off
+export const checklistsTable = pgTable("checklists", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  title: varchar({ length: 255 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  userId: text("user_id").notNull(),
+});
+
+export const checklistItemsTable = pgTable("checklist_items", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  checklistId: integer("checklist_id")
+    .notNull()
+    .references(() => checklistsTable.id, { onDelete: "cascade" }),
+  text: text("text").notNull(),
+  completed: boolean().notNull().default(false),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});

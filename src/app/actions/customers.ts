@@ -14,7 +14,7 @@ import {
   type AddNoteInput,
   type UpdateNoteInput
 } from "@/lib/validations/customers";
-import { eq, and, desc, gte, lte, between, isNotNull, leftJoin } from "drizzle-orm";
+import { eq, and, desc, gte, lte, between, isNotNull } from "drizzle-orm";
 import { z } from "zod";
 import { logCustomerCreate, logCustomerUpdate, logCustomerArchive, logCustomerNoteCreate, logCustomerNoteUpdate } from "@/db/audit";
 import OpenAI from "openai";

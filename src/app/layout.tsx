@@ -48,6 +48,11 @@ export default function RootLayout({
                       To-Do List
                     </Button>
                   </Link>
+                  <Link href="/checklists">
+                    <Button variant="ghost" size="sm">
+                      Checklists
+                    </Button>
+                  </Link>
                   <Link href="/what-i-learned">
                     <Button variant="ghost" size="sm">
                       What I Learned
