@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AddCustomerDialog } from "@/components/add-customer-dialog";
 import { CustomerCard } from "@/components/customer-card";
 import { WeeklyReportButton } from "@/components/weekly-report-button";
+import { getAmstoolPatchLevelsForTargets } from "@/lib/amstool/patch-level";
 
 // Define types for the query results
 type CustomerWithNote = {
@@ -20,7 +21,9 @@ type CustomerWithNote = {
   patchFrequency: string;
   workLoad: string;
   cloudManager: string;
+  products: string;
   mscUrl: string | null;
+  prodAuthorTargetName: string | null;
   runbookUrl: string | null;
   snowUrl: string | null;
   archived: boolean;
@@ -29,6 +32,9 @@ type CustomerWithNote = {
   userId: string;
   latestNote: string | null;
   latestNoteDate: Date | null;
+  /** From `amstool info -e <prodAuthorTargetName> patch-level` when target is set */
+  amstoolResolvedPatchLevel: string | null;
+  amstoolPatchLevelErrorMessage: string | null;
 };
 
 export default async function DashboardPage() {
@@ -52,16 +58,33 @@ export default async function DashboardPage() {
     .where(eq(customerNotesTable.userId, userId))
     .orderBy(desc(customerNotesTable.createdAt));
 
-  // Combine customers with their latest note
-  const customers: CustomerWithNote[] = customersData.map(customer => {
-    // Find the latest note for this customer
-    const latestNote = allNotes.find(note => note.customerId === customer.id);
-    
+  const prodAuthorTargets = customersData
+    .map((c) => c.prodAuthorTargetName?.trim())
+    .filter((t): t is string => Boolean(t));
+  const patchLevelByTarget = await getAmstoolPatchLevelsForTargets(prodAuthorTargets);
+
+  // Combine customers with their latest note and amstool patch level
+  const customers: CustomerWithNote[] = customersData.map((customer) => {
+    const latestNote = allNotes.find((note) => note.customerId === customer.id);
+    const targetKey = customer.prodAuthorTargetName?.trim() ?? "";
+    let amstoolResolvedPatchLevel: string | null = null;
+    let amstoolPatchLevelErrorMessage: string | null = null;
+    if (targetKey) {
+      const resolved = patchLevelByTarget.get(targetKey);
+      if (resolved?.ok) {
+        amstoolResolvedPatchLevel = resolved.patchLevel;
+      } else if (resolved) {
+        amstoolPatchLevelErrorMessage = resolved.message;
+      }
+    }
+
     return {
       ...customer,
       lastPatchDate: customer.lastPatchDate,
       latestNote: latestNote?.note ?? null,
       latestNoteDate: latestNote?.createdAt ?? null,
+      amstoolResolvedPatchLevel,
+      amstoolPatchLevelErrorMessage,
     };
   });
 

@@ -59,6 +59,7 @@ export async function logCustomerUpdate(
     "dumbledoreStage",
     "patchFrequency",
     "mscUrl",
+    "prodAuthorTargetName",
     "runbookUrl",
     "snowUrl",
   ];

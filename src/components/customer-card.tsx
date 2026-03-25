@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArchiveButton } from "@/components/archive-button";
@@ -21,12 +21,15 @@ type Customer = {
   cloudManager: string;
   products: string;
   mscUrl: string | null;
+  prodAuthorTargetName: string | null;
   runbookUrl: string | null;
   snowUrl: string | null;
   archived: boolean;
   createdAt: Date;
   updatedAt: Date;
   userId: string;
+  amstoolResolvedPatchLevel: string | null;
+  amstoolPatchLevelErrorMessage: string | null;
 };
 
 type CustomerWithNote = Customer & {
@@ -260,12 +263,21 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
                 {formatDate(customer.lastPatchDate)}
               </span>
             </div>
-            {customer.lastPatchVersion && (
+            {customer.prodAuthorTargetName?.trim() && (
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Patch Version:</span>
-                <span className="font-medium">
-                  {customer.lastPatchVersion}
-                </span>
+                {customer.amstoolResolvedPatchLevel ? (
+                  <span className="font-medium text-right max-w-[55%] break-all">
+                    {customer.amstoolResolvedPatchLevel}
+                  </span>
+                ) : (
+                  <span
+                    className="font-medium text-muted-foreground text-right max-w-[55%]"
+                    title={customer.amstoolPatchLevelErrorMessage ?? undefined}
+                  >
+                    check prod author target
+                  </span>
+                )}
               </div>
             )}
             <div className="flex justify-between text-sm">

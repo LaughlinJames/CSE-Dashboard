@@ -10,7 +10,13 @@ import { Badge } from "@/components/ui/badge";
 import { RichTextEditor } from "@/components/rich-text-editor";
 import { AddTodoFromNoteDialog } from "@/components/add-todo-from-note-dialog";
 import { AddCoverCSEDialog } from "@/components/add-cover-cse-dialog";
-import { updateCustomer, addNote, updateNote, getCustomerNotes, getTodosByCustomer } from "@/app/actions/customers";
+import {
+  updateCustomer,
+  addNote,
+  updateNote,
+  getCustomerNotes,
+  getTodosByCustomer,
+} from "@/app/actions/customers";
 import { useEffect } from "react";
 import { CheckSquare, Pencil, X } from "lucide-react";
 import Link from "next/link";
@@ -28,6 +34,7 @@ type Customer = {
   cloudManager: string;
   products: string;
   mscUrl: string | null;
+  prodAuthorTargetName: string | null;
   runbookUrl: string | null;
   snowUrl: string | null;
   archived: boolean;
@@ -65,7 +72,6 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   // Form state for editing
   const [name, setName] = useState("");
   const [lastPatchDate, setLastPatchDate] = useState("");
-  const [lastPatchVersion, setLastPatchVersion] = useState("");
   const [temperament, setTemperament] = useState<"happy" | "satisfied" | "neutral" | "concerned" | "frustrated">("neutral");
   const [topology, setTopology] = useState<"dev" | "qa" | "stage" | "prod">("dev");
   const [dumbledoreStage, setDumbledoreStage] = useState(1);
@@ -74,6 +80,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   const [cloudManager, setCloudManager] = useState<"no" | "implementing" | "yes">("no");
   const [products, setProducts] = useState<"sites" | "assets" | "sites and assets">("sites");
   const [mscUrl, setMscUrl] = useState("");
+  const [prodAuthorTargetName, setProdAuthorTargetName] = useState("");
   const [runbookUrl, setRunbookUrl] = useState("");
   const [snowUrl, setSnowUrl] = useState("");
 
@@ -82,7 +89,6 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
     if (open && customer) {
       setName(customer.name);
       setLastPatchDate(customer.lastPatchDate || "");
-      setLastPatchVersion(customer.lastPatchVersion || "");
       setTemperament(customer.temperament as "happy" | "satisfied" | "neutral" | "concerned" | "frustrated");
       setTopology(customer.topology as "dev" | "qa" | "stage" | "prod");
       setDumbledoreStage(customer.dumbledoreStage);
@@ -91,6 +97,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
       setCloudManager(customer.cloudManager as "no" | "implementing" | "yes");
       setProducts(customer.products as "sites" | "assets" | "sites and assets");
       setMscUrl(customer.mscUrl || "");
+      setProdAuthorTargetName(customer.prodAuthorTargetName || "");
       setRunbookUrl(customer.runbookUrl || "");
       setSnowUrl(customer.snowUrl || "");
       setNewNote("<p></p>");
@@ -137,7 +144,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
           id: customer.id,
           name,
           lastPatchDate: lastPatchDate || null,
-          lastPatchVersion: lastPatchVersion || null,
+          lastPatchVersion: customer.lastPatchVersion,
           temperament,
           topology,
           dumbledoreStage,
@@ -146,6 +153,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
           cloudManager,
           products,
           mscUrl: mscUrl || null,
+          prodAuthorTargetName: prodAuthorTargetName.trim() || null,
           runbookUrl: runbookUrl || null,
           snowUrl: snowUrl || null,
         });
@@ -295,27 +303,14 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="lastPatchDate">Last Patch Date</Label>
-                  <Input
-                    id="lastPatchDate"
-                    type="date"
-                    value={formatDateInput(lastPatchDate)}
-                    onChange={(e) => setLastPatchDate(e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="lastPatchVersion">Last Patch Version</Label>
-                  <Input
-                    id="lastPatchVersion"
-                    type="text"
-                    placeholder="e.g., v1.2.3"
-                    value={lastPatchVersion}
-                    onChange={(e) => setLastPatchVersion(e.target.value)}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastPatchDate">Last Patch Date</Label>
+                <Input
+                  id="lastPatchDate"
+                  type="date"
+                  value={formatDateInput(lastPatchDate)}
+                  onChange={(e) => setLastPatchDate(e.target.value)}
+                />
               </div>
 
               <div className="space-y-2">
@@ -427,6 +422,20 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="prodAuthorTargetName">Prod author target (optional)</Label>
+                <Input
+                  id="prodAuthorTargetName"
+                  placeholder="e.g. haworth-prod65-author1useast1-b80"
+                  value={prodAuthorTargetName}
+                  onChange={(e) => setProdAuthorTargetName(e.target.value)}
+                  className="font-mono text-sm"
+                />
+                <p className="text-xs text-muted-foreground">
+                  First hostname label for prod author (not shown on the customer card).
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">

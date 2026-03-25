@@ -58,6 +58,11 @@ export default function RootLayout({
                       What I Learned
                     </Button>
                   </Link>
+                  <Link href="/amstool">
+                    <Button variant="ghost" size="sm">
+                      AMSTOOL
+                    </Button>
+                  </Link>
                   <Link href="/system">
                     <Button variant="ghost" size="sm">
                       System

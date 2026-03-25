@@ -4,15 +4,15 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { customersTable, customerNotesTable, customerAuditLogTable, customerNoteAuditLogTable, todosTable, todoAuditLogTable } from "@/db/schema";
 import { revalidatePath } from "next/cache";
-import { 
-  createCustomerSchema, 
+import {
+  createCustomerSchema,
   updateCustomerSchema,
   addNoteSchema,
   updateNoteSchema,
   type CreateCustomerInput,
   type UpdateCustomerInput,
   type AddNoteInput,
-  type UpdateNoteInput
+  type UpdateNoteInput,
 } from "@/lib/validations/customers";
 import { eq, and, desc, gte, lte, between, isNotNull } from "drizzle-orm";
 import { z } from "zod";
@@ -41,6 +41,7 @@ export async function createCustomer(data: CreateCustomerInput) {
     cloudManager: validatedData.cloudManager,
     products: validatedData.products,
     mscUrl: validatedData.mscUrl || null,
+    prodAuthorTargetName: validatedData.prodAuthorTargetName?.trim() || null,
     runbookUrl: validatedData.runbookUrl || null,
     snowUrl: validatedData.snowUrl || null,
     userId,
@@ -140,6 +141,7 @@ export async function updateCustomer(data: UpdateCustomerInput) {
     cloudManager: validatedData.cloudManager,
     products: validatedData.products,
     mscUrl: validatedData.mscUrl || null,
+    prodAuthorTargetName: validatedData.prodAuthorTargetName?.trim() || null,
     runbookUrl: validatedData.runbookUrl || null,
     snowUrl: validatedData.snowUrl || null,
     updatedAt: new Date(),
