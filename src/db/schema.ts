@@ -14,8 +14,8 @@ export const customersTable = pgTable("customers", {
   cloudManager: varchar("cloud_manager", { length: 20 }).notNull().default("no"), // no, implementing, yes
   products: varchar({ length: 20 }).notNull().default("sites"), // sites, assets, sites and assets
   mscUrl: text("msc_url"), // URL for MSC button
-  /** AMS prod author hostname (first DNS label), e.g. haworth-prod65-author1useast1-b80 — edit modal only */
-  prodAuthorTargetName: text("prod_author_target_name"),
+  /** Short string to match AMS topology names (e.g. solstice, acme-prod) — shown on card */
+  topologyStub: text("topology_stub"),
   runbookUrl: text("runbook_url"), // URL for Runbook button
   snowUrl: text("snow_url"), // URL for SNOW button
   archived: boolean().notNull().default(false), // Archive status

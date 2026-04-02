@@ -11,8 +11,7 @@ import { RichTextEditor } from "@/components/rich-text-editor";
 import { AddTodoFromNoteDialog } from "@/components/add-todo-from-note-dialog";
 import { AddCoverCSEDialog } from "@/components/add-cover-cse-dialog";
 import {
-  updateCustomer,
-  addNote,
+  updateCustomerWithOptionalNote,
   updateNote,
   getCustomerNotes,
   getTodosByCustomer,
@@ -34,7 +33,7 @@ type Customer = {
   cloudManager: string;
   products: string;
   mscUrl: string | null;
-  prodAuthorTargetName: string | null;
+  topologyStub: string | null;
   runbookUrl: string | null;
   snowUrl: string | null;
   archived: boolean;
@@ -72,6 +71,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   // Form state for editing
   const [name, setName] = useState("");
   const [lastPatchDate, setLastPatchDate] = useState("");
+  const [lastPatchVersion, setLastPatchVersion] = useState("");
   const [temperament, setTemperament] = useState<"happy" | "satisfied" | "neutral" | "concerned" | "frustrated">("neutral");
   const [topology, setTopology] = useState<"dev" | "qa" | "stage" | "prod">("dev");
   const [dumbledoreStage, setDumbledoreStage] = useState(1);
@@ -80,7 +80,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
   const [cloudManager, setCloudManager] = useState<"no" | "implementing" | "yes">("no");
   const [products, setProducts] = useState<"sites" | "assets" | "sites and assets">("sites");
   const [mscUrl, setMscUrl] = useState("");
-  const [prodAuthorTargetName, setProdAuthorTargetName] = useState("");
+  const [topologyStub, setTopologyStub] = useState("");
   const [runbookUrl, setRunbookUrl] = useState("");
   const [snowUrl, setSnowUrl] = useState("");
 
@@ -89,6 +89,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
     if (open && customer) {
       setName(customer.name);
       setLastPatchDate(customer.lastPatchDate || "");
+      setLastPatchVersion(customer.lastPatchVersion || "");
       setTemperament(customer.temperament as "happy" | "satisfied" | "neutral" | "concerned" | "frustrated");
       setTopology(customer.topology as "dev" | "qa" | "stage" | "prod");
       setDumbledoreStage(customer.dumbledoreStage);
@@ -97,7 +98,7 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
       setCloudManager(customer.cloudManager as "no" | "implementing" | "yes");
       setProducts(customer.products as "sites" | "assets" | "sites and assets");
       setMscUrl(customer.mscUrl || "");
-      setProdAuthorTargetName(customer.prodAuthorTargetName || "");
+      setTopologyStub(customer.topologyStub || "");
       setRunbookUrl(customer.runbookUrl || "");
       setSnowUrl(customer.snowUrl || "");
       setNewNote("<p></p>");
@@ -139,12 +140,13 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
 
     startTransition(async () => {
       try {
-        // Update customer information
-        await updateCustomer({
+        const noteText = newNote.replace(/<[^>]*>/g, "").trim();
+
+        await updateCustomerWithOptionalNote({
           id: customer.id,
           name,
           lastPatchDate: lastPatchDate || null,
-          lastPatchVersion: customer.lastPatchVersion,
+          lastPatchVersion: lastPatchVersion.trim() || null,
           temperament,
           topology,
           dumbledoreStage,
@@ -153,28 +155,20 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
           cloudManager,
           products,
           mscUrl: mscUrl || null,
-          prodAuthorTargetName: prodAuthorTargetName.trim() || null,
+          topologyStub: topologyStub.trim() || null,
           runbookUrl: runbookUrl || null,
           snowUrl: snowUrl || null,
+          note: newNote,
         });
 
-        // Add note only if there is content (strip HTML tags to check)
-        const noteText = newNote.replace(/<[^>]*>/g, '').trim();
         if (noteText) {
-          await addNote({
-            customerId: customer.id,
-            note: newNote,
-          });
-          
-          // Refresh notes and todos list
           const [updatedNotes, todos] = await Promise.all([
             getCustomerNotes(customer.id),
-            getTodosByCustomer(customer.id)
+            getTodosByCustomer(customer.id),
           ]);
           setNotes(updatedNotes);
-          // Update todo map
           const todoMap = new Map<number, number>();
-          todos.forEach(todo => {
+          todos.forEach((todo) => {
             if (todo.noteId) {
               todoMap.set(todo.noteId, todo.id);
             }
@@ -303,14 +297,28 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="lastPatchDate">Last Patch Date</Label>
-                <Input
-                  id="lastPatchDate"
-                  type="date"
-                  value={formatDateInput(lastPatchDate)}
-                  onChange={(e) => setLastPatchDate(e.target.value)}
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="lastPatchDate">Last Patch Date</Label>
+                  <Input
+                    id="lastPatchDate"
+                    type="date"
+                    value={formatDateInput(lastPatchDate)}
+                    onChange={(e) => setLastPatchDate(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="lastPatchVersion">Last Patch Version</Label>
+                  <Input
+                    id="lastPatchVersion"
+                    type="text"
+                    placeholder="e.g., ams-rh8x-aws-202601"
+                    value={lastPatchVersion}
+                    onChange={(e) => setLastPatchVersion(e.target.value)}
+                    className="font-mono text-sm"
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -425,16 +433,17 @@ export function CustomerDetailModal({ customer, open, onOpenChange }: CustomerDe
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="prodAuthorTargetName">Prod author target (optional)</Label>
+                <Label htmlFor="topologyStub">Topology stub (optional)</Label>
                 <Input
-                  id="prodAuthorTargetName"
-                  placeholder="e.g. haworth-prod65-author1useast1-b80"
-                  value={prodAuthorTargetName}
-                  onChange={(e) => setProdAuthorTargetName(e.target.value)}
+                  id="topologyStub"
+                  placeholder="e.g. solstice, acme-prod65"
+                  value={topologyStub}
+                  onChange={(e) => setTopologyStub(e.target.value)}
                   className="font-mono text-sm"
                 />
                 <p className="text-xs text-muted-foreground">
-                  First hostname label for prod author (not shown on the customer card).
+                  Matches <code className="text-[0.75rem]">amstool list</code> (like{" "}
+                  <code className="text-[0.75rem]">grep -i</code>), shown on the card, and used for dashboard patch level (prod author from cache).
                 </p>
               </div>
 

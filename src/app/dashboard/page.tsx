@@ -5,9 +5,8 @@ import { customersTable, customerNotesTable } from "@/db/schema";
 import { eq, asc, desc } from "drizzle-orm";
 import { Card, CardContent } from "@/components/ui/card";
 import { AddCustomerDialog } from "@/components/add-customer-dialog";
-import { CustomerCard } from "@/components/customer-card";
 import { WeeklyReportButton } from "@/components/weekly-report-button";
-import { getAmstoolPatchLevelsForTargets } from "@/lib/amstool/patch-level";
+import { DashboardCustomerGrid } from "@/components/dashboard-customer-grid";
 
 // Define types for the query results
 type CustomerWithNote = {
@@ -23,7 +22,7 @@ type CustomerWithNote = {
   cloudManager: string;
   products: string;
   mscUrl: string | null;
-  prodAuthorTargetName: string | null;
+  topologyStub: string | null;
   runbookUrl: string | null;
   snowUrl: string | null;
   archived: boolean;
@@ -32,7 +31,7 @@ type CustomerWithNote = {
   userId: string;
   latestNote: string | null;
   latestNoteDate: Date | null;
-  /** From `amstool info -e <prodAuthorTargetName> patch-level` when target is set */
+  /** From prod Author in `amstool list` (topology stub → Sites over Assets) + `amstool info -e` patch-level */
   amstoolResolvedPatchLevel: string | null;
   amstoolPatchLevelErrorMessage: string | null;
 };
@@ -58,33 +57,17 @@ export default async function DashboardPage() {
     .where(eq(customerNotesTable.userId, userId))
     .orderBy(desc(customerNotesTable.createdAt));
 
-  const prodAuthorTargets = customersData
-    .map((c) => c.prodAuthorTargetName?.trim())
-    .filter((t): t is string => Boolean(t));
-  const patchLevelByTarget = await getAmstoolPatchLevelsForTargets(prodAuthorTargets);
-
-  // Combine customers with their latest note and amstool patch level
+  // Patch levels load in a client follow-up action so dashboard RSC (and POST /dashboard) is not blocked on amstool CLI.
   const customers: CustomerWithNote[] = customersData.map((customer) => {
     const latestNote = allNotes.find((note) => note.customerId === customer.id);
-    const targetKey = customer.prodAuthorTargetName?.trim() ?? "";
-    let amstoolResolvedPatchLevel: string | null = null;
-    let amstoolPatchLevelErrorMessage: string | null = null;
-    if (targetKey) {
-      const resolved = patchLevelByTarget.get(targetKey);
-      if (resolved?.ok) {
-        amstoolResolvedPatchLevel = resolved.patchLevel;
-      } else if (resolved) {
-        amstoolPatchLevelErrorMessage = resolved.message;
-      }
-    }
 
     return {
       ...customer,
       lastPatchDate: customer.lastPatchDate,
       latestNote: latestNote?.note ?? null,
       latestNoteDate: latestNote?.createdAt ?? null,
-      amstoolResolvedPatchLevel,
-      amstoolPatchLevelErrorMessage,
+      amstoolResolvedPatchLevel: null,
+      amstoolPatchLevelErrorMessage: null,
     };
   });
 
@@ -112,36 +95,10 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-8">
-          {/* Active Customers */}
-          {activeCustomers.length > 0 && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Active Customers</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {activeCustomers.map((customer) => (
-                  <CustomerCard key={customer.id} customer={customer} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Archived Customers */}
-          {archivedCustomers.length > 0 && (
-            <div>
-              {activeCustomers.length > 0 && (
-                <div className="my-8">
-                  <hr className="border-t border-border" />
-                </div>
-              )}
-              <h2 className="text-2xl font-semibold mb-4 text-muted-foreground">Archived Customers</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {archivedCustomers.map((customer) => (
-                  <CustomerCard key={customer.id} customer={customer} archived />
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        <DashboardCustomerGrid
+          activeCustomers={activeCustomers}
+          archivedCustomers={archivedCustomers}
+        />
       )}
     </div>
   );

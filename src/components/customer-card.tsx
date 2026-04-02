@@ -21,7 +21,7 @@ type Customer = {
   cloudManager: string;
   products: string;
   mscUrl: string | null;
-  prodAuthorTargetName: string | null;
+  topologyStub: string | null;
   runbookUrl: string | null;
   snowUrl: string | null;
   archived: boolean;
@@ -35,6 +35,8 @@ type Customer = {
 type CustomerWithNote = Customer & {
   latestNote: string | null;
   latestNoteDate: Date | null;
+  /** When patch level is fetched after paint (dashboard); show loading until stub → author resolves. */
+  patchLevelPending?: boolean;
 };
 
 type CustomerCardProps = {
@@ -257,25 +259,44 @@ export function CustomerCard({ customer, archived = false }: CustomerCardProps) 
                 {customer.products.charAt(0).toUpperCase() + customer.products.slice(1)}
               </Badge>
             </div>
+            {customer.topologyStub?.trim() && (
+              <div className="flex justify-between text-sm gap-2">
+                <span className="text-muted-foreground shrink-0">Topology stub:</span>
+                <span
+                  className="font-medium font-mono text-sm text-right break-all max-w-[58%]"
+                  title={customer.topologyStub.trim()}
+                >
+                  {customer.topologyStub.trim()}
+                </span>
+              </div>
+            )}
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Last Patch:</span>
               <span className="font-medium">
                 {formatDate(customer.lastPatchDate)}
               </span>
             </div>
-            {customer.prodAuthorTargetName?.trim() && (
+            {customer.topologyStub?.trim() && (
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Patch Version:</span>
-                {customer.amstoolResolvedPatchLevel ? (
+                {customer.patchLevelPending ? (
+                  <span className="font-medium text-muted-foreground text-right max-w-[55%]">
+                    Loading…
+                  </span>
+                ) : customer.amstoolResolvedPatchLevel ? (
                   <span className="font-medium text-right max-w-[55%] break-all">
                     {customer.amstoolResolvedPatchLevel}
                   </span>
-                ) : (
+                ) : customer.amstoolPatchLevelErrorMessage ? (
                   <span
-                    className="font-medium text-muted-foreground text-right max-w-[55%]"
-                    title={customer.amstoolPatchLevelErrorMessage ?? undefined}
+                    className="font-medium text-destructive/90 text-right max-w-[55%] text-xs leading-snug line-clamp-4 break-words"
+                    title={customer.amstoolPatchLevelErrorMessage}
                   >
-                    check prod author target
+                    {customer.amstoolPatchLevelErrorMessage}
+                  </span>
+                ) : (
+                  <span className="font-medium text-muted-foreground text-right max-w-[55%]">
+                    resolving prod author from stub…
                   </span>
                 )}
               </div>

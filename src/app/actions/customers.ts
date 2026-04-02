@@ -7,10 +7,12 @@ import { revalidatePath } from "next/cache";
 import {
   createCustomerSchema,
   updateCustomerSchema,
+  updateCustomerWithOptionalNoteSchema,
   addNoteSchema,
   updateNoteSchema,
   type CreateCustomerInput,
   type UpdateCustomerInput,
+  type UpdateCustomerWithOptionalNoteInput,
   type AddNoteInput,
   type UpdateNoteInput,
 } from "@/lib/validations/customers";
@@ -41,7 +43,7 @@ export async function createCustomer(data: CreateCustomerInput) {
     cloudManager: validatedData.cloudManager,
     products: validatedData.products,
     mscUrl: validatedData.mscUrl || null,
-    prodAuthorTargetName: validatedData.prodAuthorTargetName?.trim() || null,
+    topologyStub: validatedData.topologyStub?.trim() || null,
     runbookUrl: validatedData.runbookUrl || null,
     snowUrl: validatedData.snowUrl || null,
     userId,
@@ -141,7 +143,7 @@ export async function updateCustomer(data: UpdateCustomerInput) {
     cloudManager: validatedData.cloudManager,
     products: validatedData.products,
     mscUrl: validatedData.mscUrl || null,
-    prodAuthorTargetName: validatedData.prodAuthorTargetName?.trim() || null,
+    topologyStub: validatedData.topologyStub?.trim() || null,
     runbookUrl: validatedData.runbookUrl || null,
     snowUrl: validatedData.snowUrl || null,
     updatedAt: new Date(),
@@ -165,6 +167,102 @@ export async function updateCustomer(data: UpdateCustomerInput) {
 
   // Log the changes to the audit log
   await logCustomerUpdate(validatedData.id, oldCustomer[0], updateData, userId);
+
+  revalidatePath("/dashboard");
+
+  return { success: true };
+}
+
+function noteHtmlHasText(html: string): boolean {
+  return html.replace(/<[^>]*>/g, "").trim().length > 0;
+}
+
+/**
+ * Updates the customer and optionally adds a note, with a single dashboard revalidation.
+ * Use this from the customer detail modal instead of calling `updateCustomer` + `addNote`.
+ */
+export async function updateCustomerWithOptionalNote(
+  data: UpdateCustomerWithOptionalNoteInput,
+) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const validatedData = updateCustomerWithOptionalNoteSchema.parse(data);
+
+  const oldCustomer = await db
+    .select()
+    .from(customersTable)
+    .where(
+      and(
+        eq(customersTable.id, validatedData.id),
+        eq(customersTable.userId, userId),
+      ),
+    );
+
+  if (oldCustomer.length === 0) {
+    throw new Error("Customer not found or unauthorized");
+  }
+
+  const updateData = {
+    name: validatedData.name,
+    lastPatchDate: validatedData.lastPatchDate || null,
+    lastPatchVersion: validatedData.lastPatchVersion || null,
+    temperament: validatedData.temperament,
+    topology: validatedData.topology,
+    dumbledoreStage: validatedData.dumbledoreStage,
+    patchFrequency: validatedData.patchFrequency,
+    workLoad: validatedData.workLoad,
+    cloudManager: validatedData.cloudManager,
+    products: validatedData.products,
+    mscUrl: validatedData.mscUrl || null,
+    topologyStub: validatedData.topologyStub?.trim() || null,
+    runbookUrl: validatedData.runbookUrl || null,
+    snowUrl: validatedData.snowUrl || null,
+    updatedAt: new Date(),
+  };
+
+  const result = await db
+    .update(customersTable)
+    .set(updateData)
+    .where(
+      and(
+        eq(customersTable.id, validatedData.id),
+        eq(customersTable.userId, userId),
+      ),
+    )
+    .returning();
+
+  if (result.length === 0) {
+    throw new Error("Customer not found or unauthorized");
+  }
+
+  await logCustomerUpdate(validatedData.id, oldCustomer[0], updateData, userId);
+
+  const noteBody = validatedData.note;
+  if (noteBody !== undefined && noteHtmlHasText(noteBody)) {
+    const noteData = {
+      customerId: validatedData.id,
+      note: noteBody,
+      userId,
+    };
+
+    const noteResult = await db
+      .insert(customerNotesTable)
+      .values(noteData)
+      .returning();
+
+    if (noteResult.length > 0) {
+      await logCustomerNoteCreate(noteResult[0].id, noteData, userId);
+    }
+
+    await db
+      .update(customersTable)
+      .set({ updatedAt: new Date() })
+      .where(eq(customersTable.id, validatedData.id));
+  }
 
   revalidatePath("/dashboard");
 

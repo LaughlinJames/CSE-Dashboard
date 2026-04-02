@@ -13,7 +13,7 @@ export const createCustomerSchema = z.object({
   cloudManager: z.enum(["no", "implementing", "yes"]).default("no"),
   products: z.enum(["sites", "assets", "sites and assets"]).default("sites"),
   mscUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
-  prodAuthorTargetName: z.string().max(255, "Too long").optional().or(z.literal("")),
+  topologyStub: z.string().max(255, "Too long").optional().or(z.literal("")),
   runbookUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   snowUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
 });
@@ -32,7 +32,7 @@ export const updateCustomerSchema = z.object({
   cloudManager: z.enum(["no", "implementing", "yes"]),
   products: z.enum(["sites", "assets", "sites and assets"]),
   mscUrl: z.string().url("Must be a valid URL").optional().nullable().or(z.literal("")),
-  prodAuthorTargetName: z.string().max(255, "Too long").optional().nullable().or(z.literal("")),
+  topologyStub: z.string().max(255, "Too long").optional().nullable().or(z.literal("")),
   runbookUrl: z.string().url("Must be a valid URL").optional().nullable().or(z.literal("")),
   snowUrl: z.string().url("Must be a valid URL").optional().nullable().or(z.literal("")),
 });
@@ -49,8 +49,16 @@ export const updateNoteSchema = z.object({
   note: z.string().min(1, "Note cannot be empty").max(5000, "Note is too long"),
 });
 
+/** Save customer row and optionally append one note in a single server round-trip. */
+export const updateCustomerWithOptionalNoteSchema = updateCustomerSchema.extend({
+  note: z.string().max(5000).optional(),
+});
+
 // Type inference
 export type CreateCustomerInput = z.infer<typeof createCustomerSchema>;
 export type UpdateCustomerInput = z.infer<typeof updateCustomerSchema>;
 export type AddNoteInput = z.infer<typeof addNoteSchema>;
 export type UpdateNoteInput = z.infer<typeof updateNoteSchema>;
+export type UpdateCustomerWithOptionalNoteInput = z.infer<
+  typeof updateCustomerWithOptionalNoteSchema
+>;

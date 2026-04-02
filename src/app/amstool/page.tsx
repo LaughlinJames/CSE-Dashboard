@@ -18,7 +18,11 @@ export default async function AmstoolPage() {
       <div className="mb-6">
         <h1 className="text-3xl font-bold">AMSTOOL</h1>
         <p className="text-muted-foreground mt-1">
-          Local topology cache from <code className="text-sm">amstool list</code>
+          Uses each customer&apos;s{" "}
+          <span className="font-medium text-foreground">topology stub</span> to
+          filter <code className="text-sm">amstool list</code> (like{" "}
+          <code className="text-sm">grep -i</code>), then lists instances under
+          each AMS topology.
         </p>
       </div>
 
