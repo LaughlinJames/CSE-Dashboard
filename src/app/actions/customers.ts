@@ -467,12 +467,7 @@ function stripHtml(html: string): string {
  */
 async function generateExecutiveSummary(
   customerName: string,
-  customerInfo: {
-    topology: string;
-    dumbledoreStage: number;
-    temperament: string;
-    lastPatchVersion: string | null;
-  },
+  customerInfo: { temperament: string },
   notes: Array<{ note: string; createdAt: Date }>,
   todosActivity: WeeklyReportTodoActivity
 ): Promise<string> {
@@ -536,12 +531,9 @@ async function generateExecutiveSummary(
   const prompt = `You are a Customer Success Engineer (CSE) creating a weekly executive summary for management. 
 
 Customer: ${customerName}
-Environment: ${customerInfo.topology.toUpperCase()}
-LTS Migration Stage: Stage ${customerInfo.dumbledoreStage}
-Current Version: ${customerInfo.lastPatchVersion || "Unknown"}
 Customer Temperament: ${customerInfo.temperament}
 
-Weekly Notes:
+Weekly Notes (this is the only source for LTS/long-term support, migration stage, environment/topology, or version details—do not infer them from anywhere else):
 ${notesText}
 
 To-dos this week (opened, updated, closed):
@@ -550,7 +542,7 @@ ${todosText}
 Please create a concise 2-3 sentence executive summary that:
 1. Highlights the most important activities and outcomes
 2. Identifies any risks or blockers
-3. Notes progress on LTS migration if mentioned
+3. Discusses LTS migration, patching, or environment/version only if that appears in the Weekly Notes or to-do text above—not from assumptions
 4. Incorporates to-do activity (opened, updated, completed, or deleted) where relevant
 5. Uses professional, business-appropriate language
 
@@ -563,7 +555,7 @@ Keep it brief and actionable for executive review.`;
         {
           role: "system",
           content:
-            "You are a professional Customer Success Engineer writing executive summaries for weekly customer reports. Be concise, clear, and focus on business value. Include to-do activity (opened, updated, closed) when relevant.",
+            "You are a professional Customer Success Engineer writing executive summaries for weekly customer reports. Be concise, clear, and focus on business value. Include to-do activity (opened, updated, closed) when relevant. Do not state LTS migration stage, topology, or patch/version unless the user provided that context in the weekly notes or to-do titles.",
         },
         {
           role: "user",
@@ -719,12 +711,7 @@ export async function getWeeklyReport(data: WeeklyReportInput) {
 
       const executiveSummary = await generateExecutiveSummary(
         customer.name,
-        {
-          topology: customer.topology,
-          dumbledoreStage: customer.dumbledoreStage,
-          temperament: customer.temperament,
-          lastPatchVersion: customer.lastPatchVersion,
-        },
+        { temperament: customer.temperament },
         customerNotes.map((note) => ({
           note: note.note,
           createdAt: note.createdAt,

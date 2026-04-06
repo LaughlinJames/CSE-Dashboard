@@ -1,219 +1,161 @@
-# CSE Dashboard
+# CSE Whiteboard
 
-A Next.js dashboard application for Customer Success Engineering, built with modern web technologies.
+A Next.js app for **Customer Success Engineering**: customer and note tracking, to-dos, checklists, personal “what I learned” notes, optional **AMSTOOL** integration for AMS topologies, and **AI-assisted weekly reports**. The UI brands the product as **CSE Whiteboard** (see `src/app/layout.tsx`).
 
 ## Tech Stack
 
-- **Next.js 16** - React framework
-- **TypeScript** - Type safety
-- **Clerk** - Authentication
-- **Drizzle ORM** - Database ORM
-- **Neon** - Serverless Postgres
-- **shadcn/ui** - UI components
-- **Tailwind CSS** - Styling
-- **OpenAI** - AI-powered executive summaries
+- **Next.js 16** (App Router) — `src/app/`
+- **React 19** & **TypeScript**
+- **Clerk** — authentication and per-user data isolation
+- **Drizzle ORM** + **Neon** (Postgres)
+- **Zod** — validation for server actions
+- **shadcn/ui**, **Tailwind CSS**
+- **OpenAI** — executive summaries in weekly reports
+- **TipTap** — rich text for learned notes
+- **@dnd-kit** — drag-and-drop (e.g. checklists)
+- **Sonner** — toasts
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Signed-in users are sent to `/dashboard`. The landing page is `src/app/page.tsx`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## App Routes (signed-in)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Poppins](https://fonts.google.com/specimen/Poppins) from Google Fonts.
+| Route | Purpose |
+|--------|---------|
+| `/dashboard` | Customers: cards, notes, archive, links (MSC, runbook, ServiceNow), topology stub, optional live patch level via AMSTOOL |
+| `/todos` | To-dos with priority, due dates, optional link to a customer; filter by customer |
+| `/checklists` | Named checklists with reorderable items and check-off state |
+| `/what-i-learned` | Personal learned notes (title, category, rich content) |
+| `/amstool` | Per-customer topology stub → filtered `amstool list` and instance listing (requires local `amstool` CLI) |
+| `/system` | Export your data as JSON |
+| `/get-user-id` | Shows your Clerk user ID (useful for seeding) |
 
-## Database Setup (Drizzle ORM + Neon)
+Navigation for authenticated users is in the header (`src/app/layout.tsx`).
 
-This project uses Drizzle ORM with Neon Postgres for database management.
+## Environment Variables
 
-### Environment Variables
-
-Copy `.env.example` to `.env` and fill in your credentials:
+Copy `.env.example` to `.env` and fill in values:
 
 ```bash
-# Clerk Authentication
+# Clerk — https://dashboard.clerk.com
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_xxxxx
 CLERK_SECRET_KEY=sk_test_xxxxx
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/dashboard
+NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/dashboard
 
-# Neon Database
+# Neon
 DATABASE_URL=postgresql://username:password@host/database?sslmode=require
 
-# OpenAI API (for executive summaries)
+# Weekly report executive summaries
 OPENAI_API_KEY=sk-xxxxx
+
+# Optional: local AMSTOOL CLI (dashboard invokes it on the server host)
+# AMSTOOL_PATH=/usr/local/bin/amstool
+# AMSTOOL_TABLE_ROW_LIMIT=75
+# Set to 0 to disable all AMSTOOL calls (dashboard patch level + /amstool page)
+# AMSTOOL_INTEGRATION=0
 ```
 
-### Database Commands
+## Database (Drizzle + Neon)
+
+Schema lives in `src/db/schema.ts`. Typical commands:
 
 ```bash
-# Push schema changes to database (without migrations)
-npm run db:push
-
-# Generate migration files
-npm run db:generate
-
-# Apply migrations to database
-npm run db:migrate
-
-# Open Drizzle Studio (GUI for your database)
-npm run db:studio
+npm run db:push      # push schema (dev)
+npm run db:generate  # generate migrations
+npm run db:migrate   # apply migrations
+npm run db:studio    # Drizzle Studio (127.0.0.1:4983)
+npm run db:test      # connection / CRUD smoke test
+npm run db:seed      # seed sample data (pass Clerk user id)
+npm run db:verify    # verify data script
+npm run db:connection
+npm run db:clear-notes
+npm run db:audit-logs
 ```
 
-### Database Schema
+### Tables (overview)
 
-The application uses two main tables:
+- **`customers`** — name; patch date & version; **temperament**; topology; Dumbledore stage (1–9); patch frequency; workload; cloud manager; products; **MSC / runbook / SNOW URLs**; **topology stub** (for AMSTOOL); **archived**; timestamps; `user_id`
+- **`customer_notes`** — note text per customer; timestamps; `user_id`
+- **`customer_audit_log`** / **`customer_note_audit_log`** — field-level history for customers and notes
+- **`todos`** — title, description, completed, priority, due date, optional `customer_id` / `note_id`; timestamps; `user_id`
+- **`todo_audit_log`** — todo change history
+- **`learned_notes`** — title, rich **content**, **category**; timestamps; `user_id`
+- **`checklists`** / **`checklist_items`** — user-owned lists with ordered, completable lines
 
-#### Customers Table
+All user-owned rows are scoped by Clerk `user_id` in queries and server actions.
 
-Tracks customer information and patch status:
+### Seeding
 
-- `id` - Auto-incrementing primary key
-- `name` - Customer name (varchar 255)
-- `last_patch_date` - Date of last patch applied (date, nullable)
-- `topology` - Customer topology environment (varchar 20: dev, qa, stage, prod, default: "dev")
-- `dumbledore_stage` - Dumbledore stage number (integer 1-9, default: 1)
-- `created_at` - Record creation timestamp
-- `updated_at` - Record last updated timestamp
-- `user_id` - Clerk user ID (for multi-tenancy)
+1. Run `npm run dev`, sign in, open `/get-user-id`, copy your Clerk user ID.  
+2. Run `npm run db:seed YOUR_USER_ID`.  
+3. Open `/dashboard` to see sample customers.
 
-#### Customer Notes Table
+Details: [SEEDING_GUIDE.md](./SEEDING_GUIDE.md).
 
-Timestamped notes for each customer:
-
-- `id` - Auto-incrementing primary key
-- `customer_id` - Foreign key to customers table (cascade delete)
-- `note` - Note content (text)
-- `created_at` - Note creation timestamp
-- `user_id` - Clerk user ID of note author
-
-Schema files are located in `src/db/schema.ts`. After making changes to your schema:
-
-1. Run `npm run db:push` for quick development iterations
-2. Or run `npm run db:generate` followed by `npm run db:migrate` for production-ready migrations
-
-### Using the Database
-
-Import the database client and schema in your code:
+### Using the database in code
 
 ```typescript
-import { db } from '@/db';
-import { customersTable, customerNotesTable } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { db } from "@/db";
+import { customersTable, customerNotesTable } from "@/db/schema";
+import { eq, and } from "drizzle-orm";
 
-// Get all customers for a user
 const customers = await db
   .select()
   .from(customersTable)
   .where(eq(customersTable.userId, userId));
-
-// Get notes for a specific customer
-const notes = await db
-  .select()
-  .from(customerNotesTable)
-  .where(eq(customerNotesTable.customerId, customerId));
-
-// Insert a new customer
-await db.insert(customersTable).values({
-  name: 'Acme Corp',
-  lastPatchDate: new Date('2024-01-15'),
-  topology: 'prod',
-  dumbledoreStage: 5,
-  userId: 'user_123',
-});
-
-// Add a note to a customer
-await db.insert(customerNotesTable).values({
-  customerId: 1,
-  note: 'Initial setup completed',
-  userId: 'user_123',
-});
 ```
 
-### Running Tests
-
-Test the database connection and CRUD operations:
-
-```bash
-npm run db:test
-```
-
-### Seeding the Database
-
-To populate your database with sample customer data:
-
-1. Start the dev server and sign in: `npm run dev`
-2. Visit `/get-user-id` to get your Clerk User ID
-3. Run the seed script with your User ID:
-
-```bash
-npm run db:seed YOUR_USER_ID_HERE
-```
-
-This will create 4 sample customers with notes that you can view in the `/dashboard`.
-
-For detailed seeding instructions, see [SEEDING_GUIDE.md](./SEEDING_GUIDE.md).
+Mutations use **server actions** under `src/app/actions/` with Zod-validated inputs (not raw `FormData` types on the server).
 
 ## Features
 
 ### Dashboard
 
-View all your customers at `/dashboard` with:
-- Customer cards showing name, topology, Dumbledore stage, and patch dates
-- Latest note for each customer
-- Color-coded topology badges (Dev, QA, Stage, Prod)
-- Stage indicators (1-9)
-- Responsive grid layout
+- Active vs **archived** customer sections  
+- Rich customer fields (temperament, patch cadence, workload, cloud manager, products, quick links)  
+- Timestamped **notes** per customer (with audit logging)  
+- **Weekly report** — pick a week-ending date; ASCII-style report plus **OpenAI** executive summary when `OPENAI_API_KEY` is set  
+- Optional **AMSTOOL**: with a **topology stub** on the customer and `amstool` on the server, resolved patch level can load on cards (see AMSTOOL env vars)
 
-### User Authentication
+### To-do list (`/todos`)
 
-Powered by Clerk, providing:
-- Sign up / Sign in
-- User profile management
-- Multi-tenant data isolation (users only see their own data)
+- Priorities, due dates, completion, optional customer link  
+- Filter by customer; deep-link support via query params  
 
-### AI-Powered Weekly Reports
+### Checklists (`/checklists`)
 
-Generate comprehensive weekly customer reports with AI assistance:
-- **Executive Summaries**: OpenAI automatically analyzes customer notes and generates concise executive summaries
-- **Automated Report Generation**: Select a week ending date to generate a formatted report of all customer activities
-- **Copy-Paste Ready**: ASCII-formatted reports optimized for email distribution
-- **Comprehensive Data**: Includes customer status, patch information, temperament, and all notes from the week
+- Multiple lists; add/edit/reorder items; check off progress  
 
-The weekly report feature uses **OpenAI's GPT models** to:
-1. Analyze all customer notes from the selected week
-2. Extract key activities, concerns, and progress updates
-3. Generate professional executive summaries highlighting the most important information
-4. Provide context-aware insights for customer status tracking
+### What I learned (`/what-i-learned`)
 
-To use this feature, you'll need an OpenAI API key. Add it to your `.env` file:
+- Categorized notes with **TipTap** rich content  
 
-```bash
-OPENAI_API_KEY=sk-xxxxx
-```
+### AMSTOOL (`/amstool`)
 
-Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys).
+- Uses each customer’s **topology stub** to filter `amstool list` output and show instances per topology  
+- Requires a working **Adobe Managed Services `amstool` CLI** on the machine running the Next.js server (or set `AMSTOOL_PATH`)
+
+### System (`/system`)
+
+- **Export** downloads JSON containing your customers, customer notes, todos, learned notes, and related audit log rows (export does not yet include checklists)
+
+### Authentication
+
+- Clerk sign-in / sign-up; **UserButton** in header; data isolated per Clerk user  
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+- [Next.js Documentation](https://nextjs.org/docs)  
+- [Clerk + Next.js](https://clerk.com/docs/quickstarts/nextjs)  
+- [Drizzle ORM](https://orm.drizzle.team/docs/overview)  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploy like any Next.js app (e.g. [Vercel](https://vercel.com)). Set the same environment variables in the host. **AMSTOOL** only works if the deployment environment can run the `amstool` binary and reach AMS networks as your local setup would.

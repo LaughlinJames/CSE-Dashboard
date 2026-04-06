@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useState, useCallback, useEffect, useRef } from "react";
-import { Link2, Unlink, Code } from "lucide-react";
+import { Link2, Unlink, Code, Bold, Italic } from "lucide-react";
 import { toast } from "sonner";
 
 const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
@@ -40,6 +40,8 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   const [hasSelection, setHasSelection] = useState(false);
   const [isLinkActive, setIsLinkActive] = useState(false);
   const [isCodeActive, setIsCodeActive] = useState(false);
+  const [isBoldActive, setIsBoldActive] = useState(false);
+  const [isItalicActive, setIsItalicActive] = useState(false);
   const editorRef = useRef<ReturnType<typeof useEditor>>(null);
 
   const editor = useEditor({
@@ -104,6 +106,8 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
       setHasSelection(!editor.state.selection.empty);
       setIsLinkActive(editor.isActive("link"));
       setIsCodeActive(editor.isActive("code"));
+      setIsBoldActive(editor.isActive("bold"));
+      setIsItalicActive(editor.isActive("italic"));
     },
   });
 
@@ -122,6 +126,8 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
       setHasSelection(!editor.state.selection.empty);
       setIsLinkActive(editor.isActive("link"));
       setIsCodeActive(editor.isActive("code"));
+      setIsBoldActive(editor.isActive("bold"));
+      setIsItalicActive(editor.isActive("italic"));
     }
   }, [editor]);
 
@@ -162,6 +168,26 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     <div className="space-y-2 rich-text-editor min-w-0">
       {/* Toolbar */}
       <div className="flex gap-1 border rounded-md p-1 bg-muted/50">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={isBoldActive ? "bg-muted" : ""}
+          title="Bold"
+        >
+          <Bold className="h-4 w-4" />
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={isItalicActive ? "bg-muted" : ""}
+          title="Italic"
+        >
+          <Italic className="h-4 w-4" />
+        </Button>
         <Button
           type="button"
           variant="ghost"
